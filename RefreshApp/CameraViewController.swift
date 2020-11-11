@@ -133,8 +133,8 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, UIN
         shutterButton.addTarget(self, action: #selector(shot(_:)), for: .touchUpInside)
         view.addSubview(shutterButton)
         // tagLabelを生成
-        
-        let label_y = self.view.frame.size.height-self.toolbar.frame.size.height-160
+        let height = min(self.view.frame.size.width, self.view.frame.size.height)
+        let label_y = height-self.toolbar.frame.size.height-160
         tagLabel = UILabel(frame: CGRect(x: 20, y: label_y, width: 512, height: 120))
         
         //tagNOがあれば表示
