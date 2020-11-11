@@ -87,7 +87,7 @@ class ViewController: UIViewController, ScannerViewDelegate {
     }
     
     func getData(data: String) {
-        print(data)
+        //print(data)
         tagNO = String(Array(data)[4...11])
         setTag()
     }
@@ -150,7 +150,7 @@ extension ViewController:UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        print(textField.text!)
+        //print(textField.text!)
         if tagField.text! == "" {return}
         if Int(tagField.text!) == nil {
             self.showAlert(title: "数字８桁で入力してください", message: "")

@@ -48,10 +48,7 @@ class Camera2ViewController: UIViewController {
         // Do any additional setup after loading the view.
         self.navigationController?.setNavigationBarHidden(true, animated: false)
 
-        print(self.view.frame)
-        print(imgView.frame)
         imgView.image = dispImg
-        
         //tagNOがあれば表示
         if tagNO == "" {
             tagLabel.font = UIFont.boldSystemFont(ofSize: 50)

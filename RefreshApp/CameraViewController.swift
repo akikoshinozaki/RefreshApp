@@ -133,7 +133,10 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, UIN
         shutterButton.addTarget(self, action: #selector(shot(_:)), for: .touchUpInside)
         view.addSubview(shutterButton)
         // tagLabelを生成
-        tagLabel = UILabel(frame: CGRect(x: 20, y: 564, width: 512, height: 120))
+        
+        let label_y = self.view.frame.size.height-self.toolbar.frame.size.height-160
+        tagLabel = UILabel(frame: CGRect(x: 20, y: label_y, width: 512, height: 120))
+        
         //tagNOがあれば表示
         if tagNO == "" {
             tagLabel.font = UIFont.boldSystemFont(ofSize: 50)
@@ -151,6 +154,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, UIN
         tagLabel.minimumScaleFactor = 0.5
         
         self.view.addSubview(tagLabel)
+
     }
     
 

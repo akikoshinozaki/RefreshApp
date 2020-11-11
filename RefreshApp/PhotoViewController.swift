@@ -66,7 +66,7 @@ class PhotoViewController: UIViewController {
     }
     var postAlert: UIAlertController!
     @IBAction func upload(_ sender: UIButton) {
-        print(#function)
+//        print(#function)
         postAlert = UIAlertController(title: "データ送信中", message: "", preferredStyle: .alert)
         
         sender.isEnabled = false
