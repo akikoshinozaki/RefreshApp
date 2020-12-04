@@ -19,7 +19,6 @@ class PhotoViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
         navigationItem.hidesBackButton = true
         let backBtn = UIBarButtonItem(title: "＜ 戻る", style: .done, target: self, action: #selector(back))
         edtBtn = UIBarButtonItem(title: "編集", style: .plain, target: self, action: #selector(editCollection(_:)))
@@ -30,6 +29,11 @@ class PhotoViewController: UIViewController {
         
         uploadBtn.layer.cornerRadius = 8
 
+    }
+
+    override func viewDidLayoutSubviews() {
+        print("photo" + #function)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     @objc func editCollection(_ sender:UIBarButtonItem){

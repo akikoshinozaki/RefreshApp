@@ -211,28 +211,27 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, UIN
     //撮影ボタンを押した時の処理
     @objc func shot(_ sender: AnyObject) {
         let setting = AVCapturePhotoSettings()
-        setting.isAutoStillImageStabilizationEnabled = true
+        //setting.isAutoStillImageStabilizationEnabled = true
         setting.isHighResolutionPhotoEnabled = false
         output?.capturePhoto(with: setting, delegate: self)
         
     }
-
-    func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-        //セッションストップ
-        self.session.stopRunning()
-        if let photoSampleBuffer = photoSampleBuffer {
-            let photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
-            
-            //self.session.stopRunning()
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        print(#function)
+          //セッションストップ
+                self.session.stopRunning()
+        if let photoData = photo.fileDataRepresentation() {
             //シャッターボタン非表示
-            //self.shutterButton.isHidden = true
-            self.image = UIImage(data: photoData!)
-//            self.imageExist = true
-            self.usePhoto()
             
-            //self.setToolBar()
+            self.image = UIImage(data: photoData)
+            
+            self.usePhoto()
         }
+        
+
     }
+
     
     //デバイスが回転したことを通知する（回転しないからいらない）
     @objc func changeOrientation(notification: NSNotification){

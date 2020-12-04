@@ -21,4 +21,8 @@ extension Date {
         return toString(format: "yyyy-MM-dd")
     }
     
+    var short:String {
+        return toString(format: "MM/dd")
+    }
+    
 }

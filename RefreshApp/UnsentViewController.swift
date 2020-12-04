@@ -20,7 +20,7 @@ class UnsentViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        //self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationItem.title = "未送信データ"
         list = getFileInfoListInDir(basePath)
         print(list)
@@ -28,6 +28,17 @@ class UnsentViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView.dataSource = self
         
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("unsent" + #function)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+
+    /*
+    override func viewDidLayoutSubviews() {
+        print("unsent" + #function)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+    }*/
     
     func getFileInfoListInDir(_ dirName: String) -> [String] {
         var files: [String] = []

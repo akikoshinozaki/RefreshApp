@@ -42,10 +42,13 @@ class ViewController: UIViewController, ScannerViewDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        //print("vc" + #function)
         setTag()
     }
-    
+    override func viewDidLayoutSubviews() {
+        //print("vc" + #function)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
     func setTag(){
         if tagNO == "" {
             tagLabel.text = "TagNo.未入力"
@@ -112,7 +115,7 @@ class ViewController: UIViewController, ScannerViewDelegate {
 //        self.navigationController?.pushViewController(camera, animated: true)
     }
 
-    @IBAction func showPhoto(_ sender: Any) {
+    @IBAction func showPhoto(_ sender: UIButton) {
         if imageArr.count == 0 {
             showAlert(title: "表示する写真がありません", message: "")
             return
@@ -141,6 +144,12 @@ class ViewController: UIViewController, ScannerViewDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
+    @IBAction func printSample(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let print = storyboard.instantiateViewController(withIdentifier: "print")
+        self.navigationController?.pushViewController(print, animated: true)
+    }
+    
 }
 
 extension ViewController:UITextFieldDelegate {
@@ -167,5 +176,7 @@ extension ViewController:UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
     }
+    
+    
     
 }
