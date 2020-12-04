@@ -198,23 +198,34 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
     
     
     @IBAction func printAssist(_ sender: Any) {
-        let str = "ABCDEFG"
-        var path = "printassist-x-callback-url://x-callback-url/open?x-success=m8-refresh://"
-        
-        path += "&waitforprintcomplete=1"
-        path += "&paper=10443"
-//        path += "&media=89"
-        path += "&1=\(str),5,10,48,5,HiraMinProN-W3,3,0,0,0"
-//        path += "&printer=QL-820NWB(6077716D08EC)"
-//        path += "&printer=RJ-4030Ai9711"
-//        path += "&2=%3C%3C%3CLine%3E%3E%3E,5,10,53,10,1,#000000"
-//        path += "&3=%3C%3C%3CBarcode%3E%3E%3E,12,15,50,15,2,\(barcode)"
+        let str = "ABCDEFG%0Dabcde%0DABCDEFG%0Dabcde"
+//        var path = "printassist-x-callback-url://x-callback-url/open?x-success=m8-refresh://"
+        let path = "printassist-x-callback-url://x-callback-url/open?" +
+            "x-success=m8-refresh://" +
+            "&previewmode=1" +
+//            "&orientation=0" +
+//            "&unit=0" +
+            "&width=62" +
+            "&height=43" +
+//            "&paper=1" +
+//            "&copies=1" +
+            "&1=\(str),31,3,28,37,HiraMinProN-W3,3,0,0,0" +
+//            "&1=%3C%3C%3CFrame%3E%3E%3E,5,5,90,40,0,0.2" +
+//            "&2=\(str),12,8,50,10,HiraKakuProN-W3,8,0,0,0"
+//            "&3=John%20Smith,12,20,50,10,HiraKakuProNW3,8,0,0,0"
+//        "&waitforprintcomplete=1"
+//        "&paper=10443"
+//        "&media=89"
+//        "&printer=QL-820NWB(6077716D08EC)"
+//        "&printer=RJ-4030Ai9711"
+//        "&2=%3C%3C%3CLine%3E%3E%3E,5,10,53,10,1,#000000"
+        "&2=%3C%3C%3CBarcode%3E%3E%3E,3,15,25,25,1,RF=87654321"
 
-//        path += "&1=abcdefgABCDEFG"
-//        path += "&orientation=0&unit=0&paper=10425&papercut=1"
-//        path += "&orientation=0&unit=0&width=100&height=50&paper=1&copies=1"
-//        path += "&1=%3C%3C%3CFrame%3E%3E%3E,5,5,48,30,0,0.2,0"
-//        path += "&2=abcdefg%20ABCDEFG,12,8,40,10,HiraKakuProNW3,8,0,0,0"
+//        "&1=abcdefgABCDEFG"
+//        "&orientation=0&unit=0&paper=10425&papercut=1"
+//        "&orientation=0&unit=0&width=100&height=50&paper=1&copies=1"
+//        "&1=%3C%3C%3CFrame%3E%3E%3E,5,5,48,30,0,0.2,0"
+//        "&2=abcdefg%20ABCDEFG,12,8,40,10,HiraKakuProNW3,8,0,0,0"
         
         /*
         $&orientation=0&unit=0&width=100&height=50&paper=1&copies=1&1=%3C%3C%3CFrame%3E%3E%3E
