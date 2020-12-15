@@ -28,16 +28,12 @@
 		C322589F2559215A007BB719 /* UnsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589E2559215A007BB719 /* UnsentViewController.swift */; };
 		C32B7EBA2574CDB4008FDE4F /* BRLMPrinterKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C32B7EBB2574CDC4008FDE4F /* BRLMPrinterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */; };
-		C32B7EC52574D3B5008FDE4F /* BRSelectDeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32B7EC42574D3B5008FDE4F /* BRSelectDeviceTableViewController.swift */; };
-		C32B7EC72574E042008FDE4F /* jan_2106002307937.png in Resources */ = {isa = PBXBuildFile; fileRef = C32B7EC62574E042008FDE4F /* jan_2106002307937.png */; };
 		C35E2FB3255A15F2009C9057 /* qrScan.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FB2255A15F2009C9057 /* qrScan.png */; };
 		C35E2FB5255A1627009C9057 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FB4255A1627009C9057 /* camera.png */; };
 		C35E2FB9255A165C009C9057 /* upload.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FB8255A165C009C9057 /* upload.png */; };
 		C35E2FBB255A1669009C9057 /* unsent.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FBA255A1669009C9057 /* unsent.png */; };
 		C35E2FBD255A191E009C9057 /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FBC255A191D009C9057 /* barcode.png */; };
 		C35E2FBF255A6F71009C9057 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E2FBE255A6F71009C9057 /* Common.swift */; };
-		C392D8362575C389006951A0 /* Main2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C392D8352575C389006951A0 /* Main2.storyboard */; };
-		C3B74FB92574C71300C78794 /* PrintSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B74FB82574C71300C78794 /* PrintSampleViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -79,17 +75,13 @@
 		C322589E2559215A007BB719 /* UnsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsentViewController.swift; sourceTree = "<group>"; };
 		C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BRLMPrinterKit.framework; sourceTree = "<group>"; };
 		C32B7EBD2574CFCB008FDE4F /* RefreshApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RefreshApp-Bridging-Header.h"; sourceTree = "<group>"; };
-		C32B7EC42574D3B5008FDE4F /* BRSelectDeviceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRSelectDeviceTableViewController.swift; sourceTree = "<group>"; };
-		C32B7EC62574E042008FDE4F /* jan_2106002307937.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jan_2106002307937.png; sourceTree = "<group>"; };
 		C35E2FB2255A15F2009C9057 /* qrScan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qrScan.png; sourceTree = "<group>"; };
 		C35E2FB4255A1627009C9057 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
 		C35E2FB8255A165C009C9057 /* upload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload.png; sourceTree = "<group>"; };
 		C35E2FBA255A1669009C9057 /* unsent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unsent.png; sourceTree = "<group>"; };
 		C35E2FBC255A191D009C9057 /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
 		C35E2FBE255A6F71009C9057 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
-		C392D8352575C389006951A0 /* Main2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main2.storyboard; sourceTree = "<group>"; };
 		C3B74FB42574C6A700C78794 /* BRLMPrinterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BRLMPrinterKit.framework; path = "../../Xcode練習/bpsdkiall402/bpsdki402/libs/BRLMPrinterKit.framework"; sourceTree = "<group>"; };
-		C3B74FB82574C71300C78794 /* PrintSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintSampleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,7 +122,6 @@
 				C322589D255911B1007BB719 /* img */,
 				4EEC4D5725556C69003AF923 /* AppDelegate.swift */,
 				4EEC4D5B25556C69003AF923 /* ViewController.swift */,
-				C392D8342575C0E7006951A0 /* PrintTest */,
 				4E776DD92557B6C4009344EB /* PhotoViewController.swift */,
 				4E776DDC2557B853009344EB /* MyCollectionViewCell.swift */,
 				4E5DB92D25557C7700A53584 /* CameraViewController.swift */,
@@ -172,17 +163,6 @@
 				C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */,
 			);
 			path = libs;
-			sourceTree = "<group>";
-		};
-		C392D8342575C0E7006951A0 /* PrintTest */ = {
-			isa = PBXGroup;
-			children = (
-				C32B7EC62574E042008FDE4F /* jan_2106002307937.png */,
-				C3B74FB82574C71300C78794 /* PrintSampleViewController.swift */,
-				C32B7EC42574D3B5008FDE4F /* BRSelectDeviceTableViewController.swift */,
-				C392D8352575C389006951A0 /* Main2.storyboard */,
-			);
-			path = PrintTest;
 			sourceTree = "<group>";
 		};
 		C3B74FB32574C6A700C78794 /* Frameworks */ = {
@@ -252,7 +232,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C32B7EC72574E042008FDE4F /* jan_2106002307937.png in Resources */,
 				4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */,
 				4E5DB92B2555748300A53584 /* ScannerView.xib in Resources */,
 				4E776DE725580EEA009344EB /* left.png in Resources */,
@@ -265,7 +244,6 @@
 				C35E2FBD255A191E009C9057 /* barcode.png in Resources */,
 				4E776DE825580EEA009344EB /* right.png in Resources */,
 				C322589A2558DEC1007BB719 /* deletebtn.png in Resources */,
-				C392D8362575C389006951A0 /* Main2.storyboard in Resources */,
 				C35E2FBB255A1669009C9057 /* unsent.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,8 +261,6 @@
 				4E776DE02557C96C009344EB /* DispViewController.swift in Sources */,
 				C35E2FBF255A6F71009C9057 /* Common.swift in Sources */,
 				4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */,
-				C3B74FB92574C71300C78794 /* PrintSampleViewController.swift in Sources */,
-				C32B7EC52574D3B5008FDE4F /* BRSelectDeviceTableViewController.swift in Sources */,
 				4E5DB9282555747100A53584 /* ScannerView.swift in Sources */,
 				C322589C2558E4D3007BB719 /* Upload.swift in Sources */,
 				4EEC4D5825556C69003AF923 /* AppDelegate.swift in Sources */,
@@ -436,8 +412,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.01;
+				CURRENT_PROJECT_VERSION = 1.02;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
@@ -450,7 +427,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.01;
+				MARKETING_VERSION = 1.02;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -465,8 +442,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.01;
+				CURRENT_PROJECT_VERSION = 1.02;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
+				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
@@ -479,7 +457,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.01;
+				MARKETING_VERSION = 1.02;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";

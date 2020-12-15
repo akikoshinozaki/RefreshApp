@@ -272,7 +272,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, UIN
         let resizedImg = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        print(resizedImg?.size)
+        //print(resizedImg?.size)
         dispImg = resizedImg
 
         let storyboard: UIStoryboard = self.storyboard!

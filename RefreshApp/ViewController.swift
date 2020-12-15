@@ -22,6 +22,7 @@ class ViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var tagField: UITextField!
     @IBOutlet var btns: [UIButton]!
     @IBOutlet weak var versionLabel: UILabel!
+    var scanner:ScannerView!
     
     
     override func viewDidLoad() {
@@ -37,7 +38,7 @@ class ViewController: UIViewController, ScannerViewDelegate {
             btn.layer.cornerRadius = 8
         }
         
-        scanBtn.addTarget(self, action: #selector(startScan), for: .touchUpInside)
+        scanBtn.addTarget(self, action: #selector(imgChk), for: .touchUpInside)
         cameraBtn.addTarget(self, action: #selector(takePhoto), for: .touchUpInside)
     }
     
@@ -61,13 +62,29 @@ class ViewController: UIViewController, ScannerViewDelegate {
     }
     
     //MARK: - ScannerDelegate
-    var scanner:ScannerView!
-    @objc func startScan() {
+    @objc func imgChk() {
         //スキャナー起動・各種ボタン無効に
 //        backButton.isEnabled = false
 //        listButton.isEnabled = false
         
+        if imageArr.count > 0 {
+            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "画像を破棄", style: .destructive, handler: {
+//                Void in
+//                imageArr = []
+//                self.scan()
+//            }))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+        }else {
+            self.scan()
+        }
 
+    }
+    
+    func scan() {
+        tagField.text = ""
         scanner = ScannerView(frame: self.view.frame)
         
         scanner.delegate = self
@@ -82,7 +99,6 @@ class ViewController: UIViewController, ScannerViewDelegate {
         scanner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         scanner.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         scanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-
     }
     
     func removeView() {
@@ -95,8 +111,22 @@ class ViewController: UIViewController, ScannerViewDelegate {
         setTag()
     }
     @IBAction func clearTag(_ sender: Any) {
-        tagNO = ""
-        setTag()
+        if imageArr.count > 0 {
+            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "画像を破棄", style: .destructive, handler: {
+//                Void in
+//                imageArr = []
+//                tagNO = ""
+//                self.setTag()
+//            }))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+            return
+        }else {
+            tagNO = ""
+            setTag()
+        }
     }
     
     //MARK: - カメラ起動
@@ -144,18 +174,26 @@ class ViewController: UIViewController, ScannerViewDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func printSample(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
-        let print = storyboard.instantiateViewController(withIdentifier: "print")
-        self.navigationController?.pushViewController(print, animated: true)
-    }
+//    @IBAction func printSample(_ sender: Any) {
+//        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+//        let print = storyboard.instantiateViewController(withIdentifier: "print")
+//        self.navigationController?.pushViewController(print, animated: true)
+//    }
     
 }
 
 extension ViewController:UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return true
+        if imageArr.count > 0 {
+            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+            return false
+        }else {
+            return true
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

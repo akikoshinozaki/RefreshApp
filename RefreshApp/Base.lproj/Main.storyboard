@@ -118,14 +118,6 @@
                                     <action selector="clearTag:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ma3-g5-k3C"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Cmd-ad-7F6">
-                                <rect key="frame" x="40" y="58" width="245" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="PrintAssist"/>
-                                <connections>
-                                    <action selector="printSample:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g9k-5U-iPY"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>

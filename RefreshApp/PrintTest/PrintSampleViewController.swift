@@ -78,6 +78,7 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
     var prtSerial = ""
     var prtName = ""
     var deviceListByMfi : [BRPtouchDeviceInfo]?
+    let defaults = UserDefaults.standard
     
     deinit {
         print("deinit")
@@ -117,12 +118,30 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         print(#function)
         print(prtSerial)
-        connectLabel(connect: prtSerial != "")
+        super.viewWillAppear(animated)
+        
+        connectChk()
     }
+    
+    func connectChk(){
+        deviceListByMfi = BRPtouchBluetoothManager.shared()?.pairedDevices() as? [BRPtouchDeviceInfo] ?? []
+        
+        prtSerial = ""
+        prtName = ""
+        connectLabel(connect: false)
+        
+        if let serial = defaults.string(forKey: "prtSerial") {
+            if let info = deviceListByMfi?.first(where: {$0.strSerialNumber==serial}){
+                prtSerial = info.strSerialNumber
+                prtName = info.strPrinterName
+                connectLabel(connect: true)
+            }
+        }
 
+    }
     
     @objc func connectLabel(connect:Bool) {
         if connect{
@@ -148,6 +167,7 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
         print(deviceInfo.strPrinterName!)
         prtSerial = deviceInfo.strSerialNumber
         prtName = deviceInfo.strPrinterName
+        defaults.set(deviceInfo.strSerialNumber, forKey: "prtSerial")
         connectLabel(connect: prtName != "")
 
     }
@@ -159,6 +179,7 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
         guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
             let printerDriver = generateResult.driver else {
                 print("Error - Open Channel: \(generateResult.error.code)")
+                showAlert(title: "Error", message: "プリンターが見つかりません")
                 return
         }
         defer {
@@ -178,63 +199,75 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
             let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
             else {
                 print("Error - Image file is not found.")
+                showAlert(title: "Error", message: "オブジェクトが見つかりません")
                 return
         }
-//        printSettings.printOrientation = .landscape
-//        printSettings.labelSize = .dieCutW29H90
         
-        printSettings.labelSize = .rollW62RB
+        //printSettings.labelSize = .rollW62RB
+        printSettings.labelSize = .rollW62
         printSettings.autoCut = true
                 
         let printError = printerDriver.printImage(with: img, settings: printSettings)
 
         if printError.code != .noError {
             print("Error - Print Image: \(printError)")
+            showAlert(title: "印刷できません", message: "\(printError)")
         }
         else {
             print("Success - Print Image")
         }
     }
     
+    func showAlert(title:String, message:String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     
     @IBAction func printAssist(_ sender: Any) {
-        let str = "ABCDEFG%0Dabcde%0DABCDEFG%0Dabcde"
+        let tagNo = "24789838"
+        let QR = "RF="+tagNo
+        let itemCD = "285152"
+        let itemName = "UFDXﾘﾌﾚｯｼｭCL3FP"
+        let str1 = Date().short+"-00001"
+        let str2 = "丸八　太郎"
+        let str3 = tagNo
+        let str4 = itemCD
+        let str5 = itemName
+        let kai = "\n"
+        
+        let str = str1+kai+str2+kai+str3+kai+str4+kai+str5
+//        let str = "ABCDEFG%0Dabcde%0DABCDEFG%0Dabcde"
 //        var path = "printassist-x-callback-url://x-callback-url/open?x-success=m8-refresh://"
         let path = "printassist-x-callback-url://x-callback-url/open?" +
             "x-success=m8-refresh://" +
-            "&previewmode=1" +
+//            "&previewmode=1" +
 //            "&orientation=0" +
-//            "&unit=0" +
+            "&unit=0" +
             "&width=62" +
-            "&height=43" +
+            "&height=40" +
 //            "&paper=1" +
 //            "&copies=1" +
-            "&1=\(str),31,3,28,37,HiraMinProN-W3,3,0,0,0" +
+            "&1=\(str),24,5,36,30,HelveticaNeue,4,0,0,0,0" +
 //            "&1=%3C%3C%3CFrame%3E%3E%3E,5,5,90,40,0,0.2" +
 //            "&2=\(str),12,8,50,10,HiraKakuProN-W3,8,0,0,0"
 //            "&3=John%20Smith,12,20,50,10,HiraKakuProNW3,8,0,0,0"
 //        "&waitforprintcomplete=1"
-//        "&paper=10443"
+        "&paper=10443" +
 //        "&media=89"
 //        "&printer=QL-820NWB(6077716D08EC)"
 //        "&printer=RJ-4030Ai9711"
 //        "&2=%3C%3C%3CLine%3E%3E%3E,5,10,53,10,1,#000000"
-        "&2=%3C%3C%3CBarcode%3E%3E%3E,3,15,25,25,1,RF=87654321"
-
-//        "&1=abcdefgABCDEFG"
-//        "&orientation=0&unit=0&paper=10425&papercut=1"
-//        "&orientation=0&unit=0&width=100&height=50&paper=1&copies=1"
-//        "&1=%3C%3C%3CFrame%3E%3E%3E,5,5,48,30,0,0.2,0"
-//        "&2=abcdefg%20ABCDEFG,12,8,40,10,HiraKakuProNW3,8,0,0,0"
+        "&2=<<<Barcode>>>,2,8,20,20,1,\(QR)"
         
-        /*
-        $&orientation=0&unit=0&width=100&height=50&paper=1&copies=1&1=%3C%3C%3CFrame%3E%3E%3E
-        ,5,5,90,40,0,0.2,0%20&2=John%20Smith,12,8,50,10,HiraKakuProNW3,8,0,0,0&3=%3C%3C%3CBarcode%3E%3E%3E,
-        12,25,50,15,2,020000220150&4=%3C%3C%3CObject%3E%3E%3E,70,10,20,20,[image decode data] "
-        */
-        
-        print(path)
-        UIApplication.shared.open(URL(string: path)!, options: [:], completionHandler: nil)
+        //print(path)
+        let path2 = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let url = URL(string: path2)
+        //print(url)
+        UIApplication.shared.open(url!, options: [:], completionHandler: nil)
         
     }
 
@@ -278,7 +311,10 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
         
     }
     @IBAction func printerDisconnect(_ sender: Any) {
-        
+        defaults.removeObject(forKey: "prtSerial")
+        prtSerial = ""
+        prtName = ""
+        connectLabel(connect: false)
     }
     
     @objc func printerDidConnect( notification : Notification) {
@@ -286,8 +322,7 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
         if let connectedAccessory = notification.userInfo?[BRDeviceKey] {
             print("ConnectDevice : \(String(describing: (connectedAccessory as? BRPtouchDeviceInfo)?.description()))")
         }
-
-        deviceListByMfi = BRPtouchBluetoothManager.shared()?.pairedDevices() as? [BRPtouchDeviceInfo] ?? []
+        connectChk()
         
     }
     
@@ -296,16 +331,85 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
         if let disconnectedAccessory = notification.userInfo?[BRDeviceKey] {
             print("DisconnectDevice : \(String(describing: (disconnectedAccessory as? BRPtouchDeviceInfo)?.description()))")
         }
-
-        deviceListByMfi = BRPtouchBluetoothManager.shared()?.pairedDevices()  as? [BRPtouchDeviceInfo] ?? []
+        connectChk()
         
-        if deviceListByMfi!.contains(where: {$0.strSerialNumber==prtSerial}){
-            connectLabel(connect: true)
-        }else {
-            prtSerial = ""
-            connectLabel(connect: false)
+    }
+    weak var secureTextAlertAction: UIAlertAction?
+    private var textDidChangeObserver: NSObjectProtocol!
+    
+    @IBAction func showSecureTextEntryAlert(_ sender:Any) {
+        let title = "A Short Title is Best"
+        let message = "A message should be a short, complete sentence."
+        let cancelButtonTitle = "Cancel"
+        let otherButtonTitle = "OK"
+//        let title = NSLocalizedString("A Short Title is Best", comment: "")
+//        let message = NSLocalizedString("A message should be a short, complete sentence.", comment: "")
+//        let cancelButtonTitle = NSLocalizedString("Cancel", comment: "")
+//        let otherButtonTitle = NSLocalizedString("OK", comment: "")
+
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        // Add the text field for the secure text entry.
+        alertController.addTextField { textField in
+
+            self.textDidChangeObserver = NotificationCenter.default.addObserver(
+                forName: UITextField.textDidChangeNotification,
+                object: textField,
+                queue: OperationQueue.main) { (notification) in
+                    if let textField = notification.object as? UITextField {
+                        // Enforce a minimum length of >= 5 characters for secure text alerts.
+                        if let text = textField.text {
+                            self.secureTextAlertAction!.isEnabled = text.count >= 5
+                        } else {
+                            self.secureTextAlertAction!.isEnabled = false
+                        }
+                    }
+            }
+            
+            textField.isSecureTextEntry = true
         }
         
+        // Create the actions.
+        let cancelAction = UIAlertAction(title: cancelButtonTitle, style: .cancel) { _ in
+            print("The \"Secure Text Entry\" alert's cancel action occurred.")
+        }
+        
+        let otherAction = UIAlertAction(title: otherButtonTitle, style: .default) { _ in
+            print("The \"Secure Text Entry\" alert's other action occurred.")
+//            guard let textFields = alertController.textFields else {
+//                return
+//            }
+//
+//            guard !textFields.isEmpty else {
+//                return
+//            }
+            let textFields = alertController.textFields!
+            for field in textFields {
+                print(field.text!)
+//                if field.tag == 1 {
+//                    self.label1.text = text.text
+//                } else {
+//                    self.label2.text = text.text
+//                }
+            }
+            
+        }
+        
+        /** The text field initially has no text in the text field, so we'll disable it for now.
+            It will be re-enabled when the first character is typed.
+        */
+        otherAction.isEnabled = false
+        
+        /** Hold onto the secure text alert action to toggle the enabled / disabled
+            state when the text changed.
+        */
+        secureTextAlertAction = otherAction
+        
+        // Add the actions.
+        alertController.addAction(cancelAction)
+        alertController.addAction(otherAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
 }
