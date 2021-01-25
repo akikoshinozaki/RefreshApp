@@ -215,6 +215,7 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
         }
         else {
             print("Success - Print Image")
+            
         }
     }
     

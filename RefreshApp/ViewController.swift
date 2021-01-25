@@ -27,8 +27,6 @@ class ViewController: UIViewController, ScannerViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(#function)
-        print("isHostConnected=\(isHostConnected)")
         
         // Do any additional setup after loading the view.
         let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -46,15 +44,12 @@ class ViewController: UIViewController, ScannerViewDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        //print("vc" + #function)
         setTag()
-        print(#function)
-        print("isHostConnected=\(isHostConnected)")
     }
     override func viewDidLayoutSubviews() {
-        //print("vc" + #function)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
+    
     func setTag(){
         if tagNO == "" {
             tagLabel.text = "TagNo.未入力"
@@ -69,16 +64,9 @@ class ViewController: UIViewController, ScannerViewDelegate {
     //MARK: - ScannerDelegate
     @objc func imgChk() {
         //スキャナー起動・各種ボタン無効に
-//        backButton.isEnabled = false
-//        listButton.isEnabled = false
         
         if imageArr.count > 0 {
             let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "画像を破棄", style: .destructive, handler: {
-//                Void in
-//                imageArr = []
-//                self.scan()
-//            }))
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             
             self.present(alert, animated: true, completion: nil)

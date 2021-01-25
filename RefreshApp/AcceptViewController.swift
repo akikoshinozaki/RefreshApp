@@ -75,8 +75,8 @@ struct PrintData {
     var kigen:String = ""
 }
 
-class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerDelegate {
-    
+class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerDelegate, SelectDateViewDelegate {
+
     var selectedDeviceInfo : BRPtouchDeviceInfo?
     @IBOutlet weak var printerConnectLabel: UILabel!
     @IBOutlet weak var printView: UIView!
@@ -92,7 +92,9 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
     var prtName = ""
     var deviceListByMfi : [BRPtouchDeviceInfo]?
     let defaults = UserDefaults.standard
+    var isConnectPrinter = false
     
+    @IBOutlet weak var printerConnectBtn:UIButton!
     @IBOutlet weak var tagLabel:UILabel!
     @IBOutlet weak var yoteiBtn:UIButton!
     
@@ -116,20 +118,20 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         
         // Do any additional setup after loading the view.
         tagLabel.text = tagNO
-        
+        printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidConnect), name: NSNotification.Name.BRDeviceDidConnect , object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidDisconnect), name: NSNotification.Name.BRDeviceDidDisconnect, object: nil)
         
     }
     
     override func viewDidLayoutSubviews() {
-        print(#function)
+        //print(#function)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print(#function)
-        print(prtSerial)
+        //print(#function)
+        //print(prtSerial)
         super.viewWillAppear(animated)
         
         connectChk()
@@ -139,7 +141,7 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         if printData == nil {
             return
         }
-        //let tagNo = "24789838"
+        
         let QR = "RF="+tagNO
 
         label1.text = printData.date+"-"+printData.renban
@@ -163,6 +165,11 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
 
         qrView.image = UIImage.makeQR(code: QR)
         
+        if isConnectPrinter {
+            self.printImage()
+        }else {
+            SimpleAlert.make(title: "プリンターに接続してください", message: "")
+        }
     }
     
     func connectChk(){
@@ -170,15 +177,16 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         
         prtSerial = ""
         prtName = ""
-        connectLabel(connect: false)
+        isConnectPrinter = false
         
         if let serial = defaults.string(forKey: "prtSerial") {
             if let info = deviceListByMfi?.first(where: {$0.strSerialNumber==serial}){
                 prtSerial = info.strSerialNumber
                 prtName = info.strPrinterName
-                connectLabel(connect: true)
+                isConnectPrinter = true
             }
         }
+        connectLabel(connect: isConnectPrinter)
         
     }
     
@@ -186,22 +194,30 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         if connect{
             printerConnectLabel.text = "\(prtName)(\(prtSerial)) is Connected"
             printerConnectLabel.backgroundColor = .systemBlue
+            printerConnectBtn.setTitle("プリンター切断", for: .normal)
         }else {
             printerConnectLabel.text = "プリンター未接続"
             printerConnectLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+            printerConnectBtn.setTitle("プリンター接続", for: .normal)
         }
     }
     
-    @IBAction func selectPrinter(_ sender: Any) {
-        let storyboard: UIStoryboard = self.storyboard!
-        let select = storyboard.instantiateViewController(withIdentifier: "select") as! BRSelectDeviceTableViewController
-        select.delegate = self
-        self.navigationController?.pushViewController(select, animated: true)
-        
+    @objc func printerControl(_ sender:Any) {
+        if isConnectPrinter {
+            defaults.removeObject(forKey: "prtSerial")
+            prtSerial = ""
+            prtName = ""
+            connectLabel(connect: false)
+        }else {
+            let storyboard: UIStoryboard = self.storyboard!
+            let select = storyboard.instantiateViewController(withIdentifier: "select") as! BRSelectDeviceTableViewController
+            select.delegate = self
+            self.navigationController?.pushViewController(select, animated: true)
+        }
     }
-    
+        
     func setSelected(deviceInfo: BRPtouchDeviceInfo) {
-        print(#function)
+        //print(#function)
         selectedDeviceInfo = deviceInfo
         print(deviceInfo.strPrinterName!)
         prtSerial = deviceInfo.strSerialNumber
@@ -212,6 +228,19 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
     }
     
     @IBAction func selectDate(_ sender: UIButton) {
+        
+        if #available(iOS 14.0, *) {
+            // iOS14以降の場合
+
+            let pickerView = SelectDateView(frame: self.view.frame)
+            pickerView.center = self.view.center
+            pickerView.delegate = self
+            pickerView.selectedDate = self.YOTEI_HI ?? Date()
+            self.view.addSubview(pickerView)
+            
+                        
+        } else {
+            // iOS14以前の場合
         let picker = DatePickerPopover(title: "日時選択")
             .setSelectedDate(self.YOTEI_HI ?? Date())
             .setLocale(identifier: "ja_JP")
@@ -230,21 +259,40 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
             } )
             .setCancelButton(action: { _, _ in print("キャンセル")})
         picker.appear(originView: sender, baseViewController: self)
+        }
 
     }
     
+    func setDate(date: Date) {
+        //print(date)
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
+        
+        self.YOTEI_HI = date
+        self.yoteiBtn.setTitle(formatter.string(from: date), for: .normal)
+    }
+        
     @IBAction func clearDate(_ sender: UIButton){
         YOTEI_HI = nil
         self.yoteiBtn.setTitle("予定日を選択", for: .normal)
     }
     
     @IBAction func entryData(_ sender: UIButton){
+
+        if tagNO == "" {
+            SimpleAlert.make(title: "TAG No.が未入力です", message: "")
+            return
+        }
         var type:String = ""
         var param:[String:Any] =
             ["TAG_NO":tagNO]
         switch sender.tag {
         case 901:
             type = "ENTRY"
+            if YOTEI_HI == nil {
+                SimpleAlert.make(title: "TAG No.が未入力です", message: "")
+                return
+            }
             param["YOTEI_HI"] = YOTEI_HI.toString(format: "yyyyMMdd")
         case 902:
             type = "INQUIRY"
@@ -261,19 +309,39 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
             if err == nil, json != nil {
                 print(json!)
                 print(json!["CUSTOMER_NM"] as? String ?? "")
-                self.printData = PrintData(date: json!["YOTEI_HI"] as? String ?? "",
-                                           renban: json!["RENBAN"] as? String ?? "",
-                                           customer: json!["CUSTOMER_NM"] as? String ?? "",
-                                           tagNO: json!["TAG_NO"] as? String ?? "",
-                                           itemCD: json!["SYOHIN_CD"] as? String ?? "",
-                                           itemNM: json!["SYOHIN_NM"] as? String ?? "",
-                                           nouki: json!["NOUKI"] as? String ?? "",
-                                           kigen: json!["KIGEN"] as? String ?? "")
-                                
-                DispatchQueue.main.async {
-                    self.labelDsp()
+                if json!["RTNCD"] as! String != "000" {
+                    var msg = ""
+                    for m in json!["RTNMSG"] as? [String] ?? [] {
+                        msg += m+"\n"
+                    }
+                    SimpleAlert.make(title: "エラー", message: msg)
+                    
+                    
+                }else {
+                    self.printData = PrintData(date: json!["YOTEI_HI"] as? String ?? "",
+                                               renban: json!["RENBAN"] as? String ?? "",
+                                               customer: json!["CUSTOMER_NM"] as? String ?? "",
+                                               tagNO: json!["TAG_NO"] as? String ?? "",
+                                               itemCD: json!["SYOHIN_CD"] as? String ?? "",
+                                               itemNM: json!["SYOHIN_NM"] as? String ?? "",
+                                               nouki: json!["NOUKI"] as? String ?? "",
+                                               kigen: json!["KIGEN"] as? String ?? "")
+                    
+                    DispatchQueue.main.async {
+                        if type == "DELETE" {
+                            let alert = UIAlertController(title: "削除完了", message: "前ページに戻ります", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                                Void in
+                                self.navigationController?.popViewController(animated: true)
+                                self.printData = nil
+                            }))
+                            
+                            self.present(alert, animated: true, completion: nil)
+                        }else {
+                            self.labelDsp()
+                        }
+                    }
                 }
-                
                 
             }else {
                 print(err!)
@@ -319,6 +387,14 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         }
         else {
             print("Success - Print Image")
+            let alert = UIAlertController(title: "完了", message: "前ページに戻ります", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                Void in
+                self.navigationController?.popViewController(animated: true)
+                self.printData = nil
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -329,29 +405,25 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
             self.present(alert, animated: true, completion: nil)
         }
     }
-
-    @IBAction func printerDisconnect(_ sender: Any) {
-        defaults.removeObject(forKey: "prtSerial")
-        prtSerial = ""
-        prtName = ""
-        connectLabel(connect: false)
-    }
+    
     
     //MARK: PrinterConnectNotification
     @objc func printerDidConnect( notification : Notification) {
-        print(#function)
+        //print(#function)
         if let connectedAccessory = notification.userInfo?[BRDeviceKey] {
             print("ConnectDevice : \(String(describing: (connectedAccessory as? BRPtouchDeviceInfo)?.description()))")
         }
+        isConnectPrinter = true
         connectChk()
         
     }
     
     @objc func printerDidDisconnect( notification : Notification) {
-        print(#function)
+        //print(#function)
         if let disconnectedAccessory = notification.userInfo?[BRDeviceKey] {
             print("DisconnectDevice : \(String(describing: (disconnectedAccessory as? BRPtouchDeviceInfo)?.description()))")
         }
+        isConnectPrinter = false
         connectChk()
     }
     
