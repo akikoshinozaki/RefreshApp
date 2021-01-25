@@ -27,6 +27,9 @@ class ViewController: UIViewController, ScannerViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(#function)
+        print("isHostConnected=\(isHostConnected)")
+        
         // Do any additional setup after loading the view.
         let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         versionLabel.text = "Ver. "+bundleVersion
@@ -45,6 +48,8 @@ class ViewController: UIViewController, ScannerViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         //print("vc" + #function)
         setTag()
+        print(#function)
+        print("isHostConnected=\(isHostConnected)")
     }
     override func viewDidLayoutSubviews() {
         //print("vc" + #function)
@@ -174,11 +179,11 @@ class ViewController: UIViewController, ScannerViewDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
-//    @IBAction func printSample(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
-//        let print = storyboard.instantiateViewController(withIdentifier: "print")
-//        self.navigationController?.pushViewController(print, animated: true)
-//    }
+    @IBAction func printSample(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let accept = storyboard.instantiateViewController(withIdentifier: "accept")
+        self.navigationController?.pushViewController(accept, animated: true)
+    }
     
 }
 

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/*
 extension UIImage {
     static func makeCode(type:String,code:String) -> UIImage? {
         guard let data = code.data(using: .utf8) else { return nil }
@@ -61,7 +61,7 @@ extension UIView {
         return image
     }
 
-}
+}*/
 
 class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewControllerDelegate {
 
@@ -203,8 +203,8 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
                 return
         }
         
-        //printSettings.labelSize = .rollW62RB
-        printSettings.labelSize = .rollW62
+        printSettings.labelSize = .rollW62RB
+        //printSettings.labelSize = .rollW62
         printSettings.autoCut = true
                 
         let printError = printerDriver.printImage(with: img, settings: printSettings)
