@@ -53,6 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+        print(#function)
         isHostConnected = false
         /* iPadNameとidfvを取得して保存 */
         #if targetEnvironment(simulator)//シュミレーターの場合
@@ -60,6 +61,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #else
         iPadName = UIDevice.current.name.uppercased()
         #endif
+        
+        devMode =  defaults.bool(forKey: "devMode")
+        //開発モードのチェック
+        if devMode {
+            //開発
+            hostURL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?"
+        }else {
+            //本番
+            hostURL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?"
+        }
         
         //最終更新日チェック
         if Date().string != defaults.object(forKey: "lastDataDownload") as? String {

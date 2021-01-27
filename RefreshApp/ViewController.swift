@@ -11,8 +11,6 @@ import AVFoundation
 
 var tagNO:String = ""
 
-
-
 class ViewController: UIViewController, ScannerViewDelegate {
 
     @IBOutlet var fields: [UITextField]!
@@ -22,12 +20,24 @@ class ViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var tagField: UITextField!
     @IBOutlet var btns: [UIButton]!
     @IBOutlet weak var versionLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
     var scanner:ScannerView!
     
+    //隠しボタンのテスト
+    @IBOutlet weak var hiddenBtn: UIButton!
+    var tapCnt:Int = 0
+    let maxCnt:Int = 5
+    let interval: TimeInterval = 2
+    var timer: Timer?
+    @IBOutlet weak var devView: UIView!
+    
+    @IBOutlet weak var label1: UILabel!
+    @IBOutlet weak var label2: UILabel!
+    @IBOutlet weak var devControl: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(#function)
         // Do any additional setup after loading the view.
         let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         versionLabel.text = "Ver. "+bundleVersion
@@ -41,7 +51,65 @@ class ViewController: UIViewController, ScannerViewDelegate {
         
         scanBtn.addTarget(self, action: #selector(imgChk), for: .touchUpInside)
         cameraBtn.addTarget(self, action: #selector(takePhoto), for: .touchUpInside)
+        
+        hiddenBtn.addTarget(self, action: #selector(tapHidBtn(_:)), for: .touchUpInside)
+
+        devMode =  defaults.bool(forKey: "devMode")
+        self.modeChange(dev: devMode)
+        devControl.addTarget(self, action: #selector(valueChange(_:)), for: .valueChanged)
+
     }
+    
+    @objc func tapHidBtn(_ sender: UIButton) {
+        self.timer?.invalidate() //タイマーを破棄
+        
+        tapCnt += 1
+        
+        if tapCnt >= maxCnt {
+            tapCnt = 0
+            devMode = !devMode
+            modeChange(dev: devMode)
+            defaults.set(devMode, forKey: "devMode")
+        }
+        label1.text = "タップした回数：\(tapCnt)回"
+        self.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true, block: { _ in
+            self.tapCnt = 0
+            self.label1.text = "タップした回数：0回"
+        })
+        
+    }
+    
+    func modeChange(dev:Bool) {
+        self.label1.text = hostURL
+        //print("hostURL=\(hostURL)")
+        devView.isHidden = !devMode
+        if dev {
+            //開発モード
+            label2.text = "開発"
+            titleLabel.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+            hostURL = m2URL
+            devControl.selectedSegmentIndex = 0
+            
+        }else {
+            //本番
+            label2.text = ""
+            titleLabel.backgroundColor = #colorLiteral(red: 0, green: 0.6475384831, blue: 0.5196911097, alpha: 1)
+            hostURL = m8URL
+        }
+        
+    }
+    
+    @objc func valueChange(_ sender: UISegmentedControl) {
+        //開発モードのみ使用（m2/m8の切替）
+        if sender.selectedSegmentIndex == 0 {
+            //開発
+            hostURL = m2URL
+        }else {
+            //本番
+            hostURL = m8URL
+        }
+    }
+    
     
     override func viewDidAppear(_ animated: Bool) {
         setTag()
@@ -112,12 +180,6 @@ class ViewController: UIViewController, ScannerViewDelegate {
     @IBAction func clearTag(_ sender: Any) {
         if imageArr.count > 0 {
             let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "画像を破棄", style: .destructive, handler: {
-//                Void in
-//                imageArr = []
-//                tagNO = ""
-//                self.setTag()
-//            }))
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             
             self.present(alert, animated: true, completion: nil)

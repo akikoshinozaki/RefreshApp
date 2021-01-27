@@ -62,11 +62,12 @@ var isHostConnected:Bool = false
 
 let defaults = UserDefaults.standard
 
+//#if DEV
 //let hostURL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?" //開発
-
-#if DEV
-let hostURL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?" //開発
-#else
-let hostURL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?"
-#endif
-
+//#else
+//let hostURL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?"
+//#endif
+var devMode:Bool = false
+let m2URL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?" //開発
+let m8URL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?" //本番
+var hostURL = m8URL
