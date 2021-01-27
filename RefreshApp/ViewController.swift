@@ -99,8 +99,14 @@ class ViewController: UIViewController, ScannerViewDelegate {
     }
     
     func getData(data: String) {
-        //print(data)
-        tagNO = String(Array(data)[4...11])
+        print(data)
+        if Int(data) != nil, data.count == 13 {
+            //バーコードの時
+            tagNO = String(Array(data)[4...11])
+        }else if data.hasPrefix("RF="){
+            //QRの時
+            tagNO = String(Array(data)[3...10])
+        }
         setTag()
     }
     @IBAction func clearTag(_ sender: Any) {
@@ -168,6 +174,10 @@ class ViewController: UIViewController, ScannerViewDelegate {
     }
     
     @IBAction func printSample(_ sender: Any) {
+        if tagNO == "" {
+            showAlert(title: "TAG No.を入力してください", message: "")
+            return
+        }
         let storyboard = UIStoryboard(name: "Main2", bundle: nil)
         let accept = storyboard.instantiateViewController(withIdentifier: "accept")
         self.navigationController?.pushViewController(accept, animated: true)

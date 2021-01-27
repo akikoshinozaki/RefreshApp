@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     let hostName = "maru8ibm.maruhachi.co.jp"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        print(hostURL)
         // Override point for customization after application launch.
         window_ = self.window! //SimpleAlert用
         // このバンドルのバージョンを調べる

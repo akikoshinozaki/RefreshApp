@@ -138,6 +138,18 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
                     cautionLabel.isHidden = false
                     cautionLabel.text = "このコードは読み取れません"
                 }
+            }else if metadata.type == .qr {
+                if let data = metadata.stringValue, data.hasPrefix("RF=") {
+                    print(data)
+                    AudioServicesPlaySystemSound(1000)
+                    cautionLabel.isHidden = true
+                    self.session.stopRunning()
+                    delegate?.getData(data: data)
+                    self.close()
+                }else {
+                    cautionLabel.isHidden = false
+                    cautionLabel.text = "このコードは読み取れません"
+                }
             }else {
                 cautionLabel.isHidden = false
                 cautionLabel.text = "このコードは読み取れません"
