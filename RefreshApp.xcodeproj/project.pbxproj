@@ -46,6 +46,7 @@
 		C3C95DF425889D6F00BBE180 /* rj4030ai_102mm.bin in Resources */ = {isa = PBXBuildFile; fileRef = C3C95DEE25889D6F00BBE180 /* rj4030ai_102mm.bin */; };
 		C3C95DF525889D6F00BBE180 /* Main2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3C95DEF25889D6F00BBE180 /* Main2.storyboard */; };
 		C3C95DF625889D6F00BBE180 /* PrintSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C95DF025889D6F00BBE180 /* PrintSampleViewController.swift */; };
+		C3CD18B525C27E050088DE56 /* EnvironmentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */; };
 		C3E4C31225BFB63E009AD55C /* reception.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E4C31125BFB63C009AD55C /* reception.png */; };
 		D0B742593C4CD1136AB208F7 /* Pods_RefreshApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13000F623F650A5F2C7ED428 /* Pods_RefreshApp.framework */; };
 /* End PBXBuildFile section */
@@ -111,6 +112,7 @@
 		C3C95DEE25889D6F00BBE180 /* rj4030ai_102mm.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = rj4030ai_102mm.bin; sourceTree = "<group>"; };
 		C3C95DEF25889D6F00BBE180 /* Main2.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main2.storyboard; sourceTree = "<group>"; };
 		C3C95DF025889D6F00BBE180 /* PrintSampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintSampleViewController.swift; sourceTree = "<group>"; };
+		C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentSwitch.swift; sourceTree = "<group>"; };
 		C3E4C31125BFB63C009AD55C /* reception.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reception.png; sourceTree = "<group>"; };
 		E67E3B21BE9B904FC51D8590 /* Pods-RefreshApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.debug.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.debug.xcconfig"; sourceTree = "<group>"; };
 		E90B360D0AE395D81EBCEF83 /* Pods-RefreshApp.dev-debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.dev-debug.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.dev-debug.xcconfig"; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				4E776DE22557D010009344EB /* Camera2ViewController.swift */,
 				4EEC4D5D25556C69003AF923 /* Main.storyboard */,
 				C322589E2559215A007BB719 /* UnsentViewController.swift */,
+				C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */,
 				C38C13DA25BA8FB000653CE9 /* AcceptViewController.swift */,
 				4EBCC91125BE9A0100882906 /* SelectDateView.xib */,
 				4EBCC91325BE9A2C00882906 /* SelectDateView.swift */,
@@ -390,6 +393,7 @@
 				4EEC4D5825556C69003AF923 /* AppDelegate.swift in Sources */,
 				C38C13D425BA8BBE00653CE9 /* IBM.swift in Sources */,
 				4EEC4D6225556C69003AF923 /* RefreshApp.xcdatamodeld in Sources */,
+				C3CD18B525C27E050088DE56 /* EnvironmentSwitch.swift in Sources */,
 				4E776DDA2557B6C4009344EB /* PhotoViewController.swift in Sources */,
 				C322589F2559215A007BB719 /* UnsentViewController.swift in Sources */,
 			);

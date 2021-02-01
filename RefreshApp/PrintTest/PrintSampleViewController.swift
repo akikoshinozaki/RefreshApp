@@ -78,7 +78,7 @@ class PrintSampleViewController: UIViewController, BRSelectDeviceTableViewContro
     var prtSerial = ""
     var prtName = ""
     var deviceListByMfi : [BRPtouchDeviceInfo]?
-    let defaults = UserDefaults.standard
+    //let defaults = UserDefaults.standard
     
     deinit {
         print("deinit")

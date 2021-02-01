@@ -47,7 +47,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             //保存
             keychain.setString(idfv, forKey: "idfv")
         }
-        print("idfv="+idfv)
+//        print("idfv="+idfv)
+        
+        var id = "dev"
+        #if DEV
+        hostURL = m2URL //開発
+        //id = "dev"
+        devMode = true
+        #else
+        devMode =  defaults.bool(forKey: "devMode")
+        //開発モードのチェック
+        if devMode {
+            hostURL = m2URL //開発
+            //id = "dev"
+        }else {
+            hostURL = m8URL //本番
+            id = "vc"
+        }
+        #endif
+        print(id)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(identifier: id)
+        window?.rootViewController = UINavigationController(rootViewController: vc)
         
         return true
     }
@@ -61,16 +82,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #else
         iPadName = UIDevice.current.name.uppercased()
         #endif
-        
-        devMode =  defaults.bool(forKey: "devMode")
-        //開発モードのチェック
-        if devMode {
-            //開発
-            hostURL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?"
-        }else {
-            //本番
-            hostURL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?"
-        }
         
         //最終更新日チェック
         if Date().string != defaults.object(forKey: "lastDataDownload") as? String {

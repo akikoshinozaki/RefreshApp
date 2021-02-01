@@ -32,7 +32,6 @@ class ViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var devView: UIView!
     
     @IBOutlet weak var label1: UILabel!
-    @IBOutlet weak var label2: UILabel!
     @IBOutlet weak var devControl: UISegmentedControl!
     
     override func viewDidLoad() {
@@ -51,12 +50,17 @@ class ViewController: UIViewController, ScannerViewDelegate {
         
         scanBtn.addTarget(self, action: #selector(imgChk), for: .touchUpInside)
         cameraBtn.addTarget(self, action: #selector(takePhoto), for: .touchUpInside)
-        
+        #if DEV
+        #else
         hiddenBtn.addTarget(self, action: #selector(tapHidBtn(_:)), for: .touchUpInside)
+        #endif
 
-        devMode =  defaults.bool(forKey: "devMode")
-        self.modeChange(dev: devMode)
-        devControl.addTarget(self, action: #selector(valueChange(_:)), for: .valueChanged)
+//        devMode =  defaults.bool(forKey: "devMode")
+//        self.modeSet(dev: devMode)
+        label1.text = hostURL
+        if devMode {
+            devControl.addTarget(self, action: #selector(valueChange(_:)), for: .valueChanged)
+        }
 
     }
     
@@ -64,56 +68,36 @@ class ViewController: UIViewController, ScannerViewDelegate {
         self.timer?.invalidate() //タイマーを破棄
         
         tapCnt += 1
-        
+        label1.text = "タップした回数：\(tapCnt)回"
         if tapCnt >= maxCnt {
             tapCnt = 0
-            devMode = !devMode
-            modeChange(dev: devMode)
-            defaults.set(devMode, forKey: "devMode")
+            EnvironmentSwitch().make(dev: devMode)
         }
-        label1.text = "タップした回数：\(tapCnt)回"
+
         self.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true, block: { _ in
             self.tapCnt = 0
-            self.label1.text = "タップした回数：0回"
+            //self.label1.text = "タップした回数：0回"
         })
         
     }
     
-    func modeChange(dev:Bool) {
+    func modeSet(dev:Bool) {
         self.label1.text = hostURL
-        //print("hostURL=\(hostURL)")
-        devView.isHidden = !devMode
-        if dev {
-            //開発モード
-            label2.text = "開発"
-            titleLabel.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
-            hostURL = m2URL
-            devControl.selectedSegmentIndex = 0
-            
-        }else {
-            //本番
-            label2.text = ""
-            titleLabel.backgroundColor = #colorLiteral(red: 0, green: 0.6475384831, blue: 0.5196911097, alpha: 1)
-            hostURL = m8URL
-        }
-        
     }
     
     @objc func valueChange(_ sender: UISegmentedControl) {
         //開発モードのみ使用（m2/m8の切替）
         if sender.selectedSegmentIndex == 0 {
-            //開発
-            hostURL = m2URL
+            hostURL = m2URL //開発
         }else {
-            //本番
-            hostURL = m8URL
+            hostURL = m8URL //本番
         }
     }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         setTag()
     }
+    
     override func viewDidLayoutSubviews() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }

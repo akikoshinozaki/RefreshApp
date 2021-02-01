@@ -98,7 +98,7 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
     var prtSerial = ""
     var prtName = ""
     var deviceListByMfi : [BRPtouchDeviceInfo]?
-    let defaults = UserDefaults.standard
+    //let defaults = UserDefaults.standard
     var isConnectPrinter = false
     var conAlert:UIAlertController!
     var setting:PrinterSetting!
