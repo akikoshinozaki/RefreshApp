@@ -58,6 +58,7 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
                     do{
                         json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
                         IBMResponse = true
+                        print(json!)
                     }catch{
                         print("json error")
                         errMsg += "E3001:json error"

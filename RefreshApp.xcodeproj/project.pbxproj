@@ -40,6 +40,7 @@
 		C38C13D425BA8BBE00653CE9 /* IBM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13D325BA8BBE00653CE9 /* IBM.swift */; };
 		C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13D825BA8E5A00653CE9 /* SimpleAlert.swift */; };
 		C38C13DB25BA8FB000653CE9 /* AcceptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13DA25BA8FB000653CE9 /* AcceptViewController.swift */; };
+		C3B6423F25C8F11300A2AB50 /* RefreshAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B6423E25C8F11300A2AB50 /* RefreshAppTests.swift */; };
 		C3C95DF125889D6F00BBE180 /* BRSelectDeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C95DEB25889D6F00BBE180 /* BRSelectDeviceTableViewController.swift */; };
 		C3C95DF225889D6F00BBE180 /* rj4030ai_102mm152mm.bin in Resources */ = {isa = PBXBuildFile; fileRef = C3C95DEC25889D6F00BBE180 /* rj4030ai_102mm152mm.bin */; };
 		C3C95DF325889D6F00BBE180 /* 100×200.bmp in Resources */ = {isa = PBXBuildFile; fileRef = C3C95DED25889D6F00BBE180 /* 100×200.bmp */; };
@@ -50,6 +51,16 @@
 		C3E4C31225BFB63E009AD55C /* reception.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E4C31125BFB63C009AD55C /* reception.png */; };
 		D0B742593C4CD1136AB208F7 /* Pods_RefreshApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13000F623F650A5F2C7ED428 /* Pods_RefreshApp.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C3B6424125C8F11300A2AB50 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EEC4D4C25556C69003AF923 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4EEC4D5325556C69003AF923;
+			remoteInfo = RefreshApp;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		C3B74FB72574C6A700C78794 /* Embed Frameworks */ = {
@@ -105,6 +116,9 @@
 		C38C13D325BA8BBE00653CE9 /* IBM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IBM.swift; sourceTree = "<group>"; };
 		C38C13D825BA8E5A00653CE9 /* SimpleAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleAlert.swift; sourceTree = "<group>"; };
 		C38C13DA25BA8FB000653CE9 /* AcceptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptViewController.swift; sourceTree = "<group>"; };
+		C3B6423C25C8F11300A2AB50 /* RefreshAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RefreshAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3B6423E25C8F11300A2AB50 /* RefreshAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAppTests.swift; sourceTree = "<group>"; };
+		C3B6424025C8F11300A2AB50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3B74FB42574C6A700C78794 /* BRLMPrinterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BRLMPrinterKit.framework; path = "../../Xcode練習/bpsdkiall402/bpsdki402/libs/BRLMPrinterKit.framework"; sourceTree = "<group>"; };
 		C3C95DEB25889D6F00BBE180 /* BRSelectDeviceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRSelectDeviceTableViewController.swift; sourceTree = "<group>"; };
 		C3C95DEC25889D6F00BBE180 /* rj4030ai_102mm152mm.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = rj4030ai_102mm152mm.bin; sourceTree = "<group>"; };
@@ -128,6 +142,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3B6423925C8F11300A2AB50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -137,6 +158,7 @@
 				C32B7EBD2574CFCB008FDE4F /* RefreshApp-Bridging-Header.h */,
 				4EEC4D5625556C69003AF923 /* RefreshApp */,
 				C32B7EB62574CD7A008FDE4F /* libs */,
+				C3B6423D25C8F11300A2AB50 /* RefreshAppTests */,
 				4EEC4D5525556C69003AF923 /* Products */,
 				C3B74FB32574C6A700C78794 /* Frameworks */,
 				61E5AF5C83B4C7280AECF9AA /* Pods */,
@@ -147,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				4EEC4D5425556C69003AF923 /* RefreshApp.app */,
+				C3B6423C25C8F11300A2AB50 /* RefreshAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -221,6 +244,15 @@
 			path = libs;
 			sourceTree = "<group>";
 		};
+		C3B6423D25C8F11300A2AB50 /* RefreshAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				C3B6423E25C8F11300A2AB50 /* RefreshAppTests.swift */,
+				C3B6424025C8F11300A2AB50 /* Info.plist */,
+			);
+			path = RefreshAppTests;
+			sourceTree = "<group>";
+		};
 		C3B74FB32574C6A700C78794 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,18 +299,40 @@
 			productReference = 4EEC4D5425556C69003AF923 /* RefreshApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C3B6423B25C8F11300A2AB50 /* RefreshAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3B6424725C8F11300A2AB50 /* Build configuration list for PBXNativeTarget "RefreshAppTests" */;
+			buildPhases = (
+				C3B6423825C8F11300A2AB50 /* Sources */,
+				C3B6423925C8F11300A2AB50 /* Frameworks */,
+				C3B6423A25C8F11300A2AB50 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C3B6424225C8F11300A2AB50 /* PBXTargetDependency */,
+			);
+			name = RefreshAppTests;
+			productName = RefreshAppTests;
+			productReference = C3B6423C25C8F11300A2AB50 /* RefreshAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		4EEC4D4C25556C69003AF923 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1160;
+				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = "Akiko Shinozaki";
 				TargetAttributes = {
 					4EEC4D5325556C69003AF923 = {
 						CreatedOnToolsVersion = 11.6;
+					};
+					C3B6423B25C8F11300A2AB50 = {
+						CreatedOnToolsVersion = 12.2;
+						TestTargetID = 4EEC4D5325556C69003AF923;
 					};
 				};
 			};
@@ -296,6 +350,7 @@
 			projectRoot = "";
 			targets = (
 				4EEC4D5325556C69003AF923 /* RefreshApp */,
+				C3B6423B25C8F11300A2AB50 /* RefreshAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -324,6 +379,13 @@
 				4E776DE825580EEA009344EB /* right.png in Resources */,
 				C322589A2558DEC1007BB719 /* deletebtn.png in Resources */,
 				C35E2FBB255A1669009C9057 /* unsent.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C3B6423A25C8F11300A2AB50 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,7 +461,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3B6423825C8F11300A2AB50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3B6423F25C8F11300A2AB50 /* RefreshAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C3B6424225C8F11300A2AB50 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4EEC4D5325556C69003AF923 /* RefreshApp */;
+			targetProxy = C3B6424125C8F11300A2AB50 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4EEC4D5D25556C69003AF923 /* Main.storyboard */ = {
@@ -789,6 +867,90 @@
 			};
 			name = "Dev-Release";
 		};
+		C3B6424325C8F11300A2AB50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4JZMC2GW3;
+				INFOPLIST_FILE = RefreshAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RefreshApp.app/RefreshApp";
+			};
+			name = Debug;
+		};
+		C3B6424425C8F11300A2AB50 /* Dev-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4JZMC2GW3;
+				INFOPLIST_FILE = RefreshAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RefreshApp.app/RefreshApp";
+			};
+			name = "Dev-Debug";
+		};
+		C3B6424525C8F11300A2AB50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4JZMC2GW3;
+				INFOPLIST_FILE = RefreshAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RefreshApp.app/RefreshApp";
+			};
+			name = Release;
+		};
+		C3B6424625C8F11300A2AB50 /* Dev-Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = G4JZMC2GW3;
+				INFOPLIST_FILE = RefreshAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RefreshApp.app/RefreshApp";
+			};
+			name = "Dev-Release";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -810,6 +972,17 @@
 				C35A3AE325BFA25600EE9708 /* Dev-Debug */,
 				4EEC4D6D25556C6C003AF923 /* Release */,
 				C35A3AE525BFA28200EE9708 /* Dev-Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C3B6424725C8F11300A2AB50 /* Build configuration list for PBXNativeTarget "RefreshAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3B6424325C8F11300A2AB50 /* Debug */,
+				C3B6424425C8F11300A2AB50 /* Dev-Debug */,
+				C3B6424525C8F11300A2AB50 /* Release */,
+				C3B6424625C8F11300A2AB50 /* Dev-Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
