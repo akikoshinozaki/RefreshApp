@@ -1,17 +1,93 @@
 //
-//  AcceptViewController.swift
+//  ReceptionViewController.swift
 //  RefreshApp
 //
-//  Created by administrator on 2021/01/22.
+//  Created by 篠崎 明子 on 2021/02/03.
 //  Copyright © 2021 Akiko Shinozaki. All rights reserved.
 //
 
 import UIKit
 import SwiftyPickerPopover
+import AVFoundation
 
+extension UIImage {
+    static func makeCode(type:String,code:String) -> UIImage? {
+        guard let data = code.data(using: .utf8) else { return nil }
+        var str = ""
+        switch type {
+        case "EAN13":
+            print("EAN13")
+            str = "CICode128BarcodeGenerator"
+        case "QR":
+            print("QR")
+            str = "CIQRCodeGenerator"
+        default:
+            return nil
+        }
 
-class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerDelegate, SelectDateViewDelegate {
+        guard let filter = CIFilter(name: str, parameters: ["inputMessage": data]) else { return nil }
+        let transform = CGAffineTransform(scaleX: 10, y: 10)
+        guard let ciImage = filter.outputImage?.transformed(by: transform) else { return nil }
+        guard let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) else { return nil }
+        return UIImage(cgImage: cgImage)
+    }
+    
+    static func makeQR(code:String)-> UIImage? {
+        return makeCode(type: "QR", code: code)
+    }
 
+    static func makeEAN13(code:String)-> UIImage? {
+        return makeCode(type: "EAN13", code: code)
+    }
+
+}
+
+extension UIView {
+    //viewをimageに変換
+    public func toImage() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, 0.0)
+        guard let context = UIGraphicsGetCurrentContext() else {
+            print("現在のコンテキストを取得できませんでした。")
+            return UIImage()
+        }
+
+        self.layer.render(in: context)
+
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
+            print("ビューをイメージに変換できませんでした。")
+            return UIImage()
+        }
+
+        UIGraphicsEndImageContext()
+
+        return image
+    }
+
+}
+
+struct PrintData {
+    var date:String = ""
+    var renban:String = ""
+    var customer:String = ""
+    var tagNO:String = ""
+    var itemCD:String = ""
+    var itemNM:String = ""
+    var nouki:String = ""
+    var kigen:String = ""
+}
+
+struct PrinterSetting {
+    var printer:String = "QL-820NWB"
+    var model:BRLMPrinterModel = .QL_820NWB
+    var paperName:String = "ロール紙62mm赤黒"
+    var paper:BRLMQLPrintSettingsLabelSize = .rollW62RB
+}
+
+class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDateViewDelegate {
+    
+    @IBOutlet weak var scanBtn: UIButton!
+    
+/* Printer
     var selectedDeviceInfo : BRPtouchDeviceInfo?
     @IBOutlet weak var printerConnectLabel: UILabel!
     @IBOutlet weak var printView: UIView!
@@ -26,37 +102,41 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
     var prtSerial = ""
     var prtName = ""
     var deviceListByMfi : [BRPtouchDeviceInfo]?
-    //let defaults = UserDefaults.standard
     var isConnectPrinter = false
-    var conAlert:UIAlertController!
     var setting:PrinterSetting!
-    
-    @IBOutlet weak var printerConnectBtn:UIButton!
+     @IBOutlet weak var paperBtn: UIButton!
+     @IBOutlet weak var printerConnectBtn:UIButton!
+     let paperSizeArray:[(String,BRLMQLPrintSettingsLabelSize)] = [("ロール紙62mm赤黒",.rollW62RB),("ロール紙62mm",.rollW62)]
+*/
+    var scanner:ScannerView!
+    var conAlert:UIAlertController!
+    @IBOutlet weak var tagField: UITextField!
     @IBOutlet weak var tagLabel:UILabel!
     @IBOutlet weak var yoteiBtn:UIButton!
-    @IBOutlet weak var paperBtn: UIButton!
     
+    @IBOutlet var fields: [UITextField]!
     @IBOutlet var btns: [UIButton]!
-    
-    let paperSizeArray:[(String,BRLMQLPrintSettingsLabelSize)] = [("ロール紙62mm赤黒",.rollW62RB),("ロール紙62mm",.rollW62)]
+    @IBOutlet var jsonView: UITextView!
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     //受け取るパラメーター
     var printData:PrintData!
-    
+    /*
     deinit {
-        print("deinit")
+        //print("deinit")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidConnect, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidDisconnect, object: nil)
     }
-    
+    */
     override func viewDidLoad() {
         super.viewDidLoad()
-        let selectDeviceTableViewController = BRSelectDeviceTableViewController()
-        selectDeviceTableViewController.delegate = self
+//        let selectDeviceTableViewController = BRSelectDeviceTableViewController()
+//        selectDeviceTableViewController.delegate = self
         
         // Do any additional setup after loading the view.
         tagLabel.text = tagNO
+        
+        /*
         printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidConnect), name: NSNotification.Name.BRDeviceDidConnect , object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidDisconnect), name: NSNotification.Name.BRDeviceDidDisconnect, object: nil)
@@ -64,31 +144,22 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         printView.layer.borderColor = UIColor.gray.cgColor
         printView.layer.borderWidth = 1
         
-        for btn in btns {
-            btn.layer.cornerRadius = 8
-        }
         printerConnectBtn.layer.borderWidth = 2
         printerConnectBtn.layer.borderColor = UIColor.systemBlue.cgColor
         paperBtn.setTitle(paperSizeArray[0].0, for: .normal)
         paperBtn.addTarget(self, action: #selector(chagePaper), for: .touchUpInside)
         setting = PrinterSetting(paperName: paperSizeArray[0].0, paper: paperSizeArray[0].1)
-
-    }
-    
-    @objc func chagePaper(){
-        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
-        for paper in paperSizeArray {
-            alert.addAction(UIAlertAction(title: paper.0, style: .default, handler: {
-                Void in
-                self.setting.paperName = paper.0
-                self.setting.paper = paper.1
-                DispatchQueue.main.async {
-                    self.paperBtn.setTitle(paper.0, for: .normal)
-                }
-            }))
+        */
+        
+        scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
+        for field in fields {
+            field.delegate = self
         }
-        alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        
+        for btn in btns {
+            btn.layer.cornerRadius = 8
+        }
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -101,9 +172,9 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         //print(prtSerial)
         super.viewWillAppear(animated)
         
-        connectChk()
+        //connectChk()
     }
-    
+    /*
     func connectChk(){
         deviceListByMfi = BRPtouchBluetoothManager.shared()?.pairedDevices() as? [BRPtouchDeviceInfo] ?? []
         
@@ -135,7 +206,6 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
     }
     
     @objc func printerControl(_ sender:Any) {
-//        print(isConnectPrinter)
         if isConnectPrinter {
             defaults.removeObject(forKey: "prtSerial")
             prtSerial = ""
@@ -160,11 +230,86 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         defaults.set(deviceInfo.strSerialNumber, forKey: "prtSerial")
         connectLabel(connect: prtName != "")
         
+    }*/
+    
+    //MARK: - ScannerDelegate
+//    @objc func imgChk() {
+//        //スキャナー起動・各種ボタン無効に
+//
+//        if imageArr.count > 0 {
+//            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//
+//            self.present(alert, animated: true, completion: nil)
+//        }else {
+//            self.scan()
+//        }
+//
+//    }
+    
+    @objc func scan() {
+        tagField.text = ""
+        scanner = ScannerView(frame: self.view.frame)
+        
+        scanner.delegate = self
+        scanner.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        scanner.frame = self.view.frame
+        self.view.addSubview(scanner)
+
+        //画面回転に対応
+        scanner.translatesAutoresizingMaskIntoConstraints = false
+        
+        scanner.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        scanner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        scanner.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        scanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
     }
     
+    func removeView() {
+        //スキャナーが消えたときの処理・各種ボタン有効に
+    }
+    
+    func getData(data: String) {
+        print(data)
+        if Int(data) != nil, data.count == 13 {
+            //バーコードの時
+            tagNO = String(Array(data)[4...11])
+        }else if data.hasPrefix("RF="){
+            //QRの時
+            tagNO = String(Array(data)[3...10])
+        }
+        setTag()
+    }
+    
+    func setTag(){
+        if tagNO == "" {
+            tagLabel.text = "TagNo.未入力"
+            tagLabel.textColor = .gray
+            tagField.text = ""
+        }else {
+            tagLabel.text = tagNO
+            tagLabel.textColor = .black
+        }
+    }
+    
+    @IBAction func clearTag(_ sender: Any) {
+        if imageArr.count > 0 {
+            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+            return
+        }else {
+            tagNO = ""
+            setTag()
+        }
+    }
+    
+    
+    //MARK: - 日付ピッカー
     @IBAction func selectDate(_ sender: UIButton) {
         
-//        if #available(iOS 14.0, *) {
+        if #available(iOS 14.0, *) {
             // iOS14以降の場合
             
             let pickerView = SelectDateView(frame: self.view.frame)
@@ -174,27 +319,27 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
             self.view.addSubview(pickerView)
             
                         
-//        } else {
-//            // iOS14以前の場合
-//        let picker = DatePickerPopover(title: "日時選択")
-//            .setSelectedDate(self.YOTEI_HI ?? Date())
-//            .setLocale(identifier: "ja_JP")
-//            .setSelectedDate(Date())
-//            //.setMinimumDate(Date())
-//            .setValueChange(action: { _, selectedDate in
-//                //print("current date \(selectedDate)")
-//            })
-//            .setDoneButton(action: { popover, selectedDate in
-//                print("selectedDate \(selectedDate)")
-//                let formatter = DateFormatter()
-//                formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
-//                self.YOTEI_HI = selectedDate
-//                self.yoteiBtn.setTitle(formatter.string(from: selectedDate), for: .normal)
-//                print(formatter.string(from: selectedDate))
-//            } )
-//            .setCancelButton(action: { _, _ in print("キャンセル")})
-//        picker.appear(originView: sender, baseViewController: self)
-//        }
+        } else {
+            // iOS14以前の場合
+        let picker = DatePickerPopover(title: "日時選択")
+            .setSelectedDate(self.YOTEI_HI ?? Date())
+            .setLocale(identifier: "ja_JP")
+            .setSelectedDate(Date())
+            //.setMinimumDate(Date())
+            .setValueChange(action: { _, selectedDate in
+                //print("current date \(selectedDate)")
+            })
+            .setDoneButton(action: { popover, selectedDate in
+                print("selectedDate \(selectedDate)")
+                let formatter = DateFormatter()
+                formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
+                self.YOTEI_HI = selectedDate
+                self.yoteiBtn.setTitle(formatter.string(from: selectedDate), for: .normal)
+                print(formatter.string(from: selectedDate))
+            } )
+            .setCancelButton(action: { _, _ in print("キャンセル")})
+        picker.appear(originView: sender, baseViewController: self)
+        }
 
     }
     
@@ -212,6 +357,8 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         self.yoteiBtn.setTitle("日付を選択", for: .normal)
     }
     
+    
+    //MARK: - IBMへ登録
     @IBAction func entryData(_ sender: UIButton){
 
         if tagNO == "" {
@@ -221,6 +368,7 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         var type:String = ""
         var param:[String:Any] =
             ["TAG_NO":tagNO]
+        /*
         var alertTitle:String = ""
         switch sender.tag {
         case 901:
@@ -241,6 +389,8 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
             return
         }
     
+        
+        
         //print(param)
         let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
@@ -250,14 +400,20 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         
         alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
+ */
+        
+        self.request(type: "ENTCHK", param: param)
 
     }
     
-    func labelDsp(){
+    
+    func labelDsp(json:NSDictionary){
         if printData == nil {
             return
         }
         
+        jsonView.text = "\(json)"
+        /*
         let QR = "RF="+tagNO
         
         label1.text = printData.date+"-"+printData.renban
@@ -285,7 +441,7 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
             self.printLabel()
         }else {
             SimpleAlert.make(title: "プリンターに接続してください", message: "")
-        }
+        }*/
 
     }
     
@@ -340,7 +496,7 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
                             
                         }else {
                             self.conAlert.dismiss(animated: true, completion: nil)
-                            self.labelDsp()
+                            self.labelDsp(json:json!)
                         }
                     }
                 }
@@ -359,6 +515,25 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         })
         
     }
+    
+    /*
+    //MARK: PrinterSetting
+    @objc func chagePaper(){
+        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        for paper in paperSizeArray {
+            alert.addAction(UIAlertAction(title: paper.0, style: .default, handler: {
+                Void in
+                self.setting.paperName = paper.0
+                self.setting.paper = paper.1
+                DispatchQueue.main.async {
+                    self.paperBtn.setTitle(paper.0, for: .normal)
+                }
+            }))
+        }
+        alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @IBAction func printLabel() {
         printView.layer.borderColor = UIColor.clear.cgColor
         let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
@@ -391,7 +566,8 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         
         if printError.code != .noError {
             print("Error - Print Image: \(printError)")
-            showAlert(title: "印刷できません", message: "\(printError)")
+            SimpleAlert.make(title: "印刷できません", message: "\(printError)")
+            
         }
         else {
             print("Success - Print Image")
@@ -409,15 +585,6 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         }
         printView.layer.borderColor = UIColor.gray.cgColor
     }
-    
-    func showAlert(title:String, message:String){
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
-    
     
     //MARK: PrinterConnectNotification
     @objc func printerDidConnect( notification : Notification) {
@@ -438,6 +605,42 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         isConnectPrinter = false
         connectChk()
     }
-    
+    */
+}
 
+extension ReceptionViewController:UITextFieldDelegate {
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if imageArr.count > 0 {
+            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+
+            self.present(alert, animated: true, completion: nil)
+            return false
+        }else {
+            return true
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        //print(textField.text!)
+        if tagField.text! == "" {return}
+        if Int(tagField.text!) == nil {
+            SimpleAlert.make(title: "数字８桁で入力してください", message: "")
+            return
+        }
+        if tagField.text?.count != 8 {
+            SimpleAlert.make(title: "数字８桁で入力してください", message: "")
+            return
+        }
+        tagNO = textField.text!
+        setTag()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+    }
+    
+    
+    
 }

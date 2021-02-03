@@ -19,14 +19,14 @@ var json_:NSDictionary!
 //var ORDER_SPEC:String! = "" //オーダー仕様
 
 let semaphore = DispatchSemaphore(value: 0)
-
+var errMsg = ""
 class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
     
     func IBMRequest(type:String, parameter:[String:Any], completionClosure:@escaping CompletionClosure){
 
         IBMResponse = false
         var json:NSDictionary!
-        var errMsg = ""
+        errMsg = ""
         var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=\(type)&"
         
         for p in parameter {
@@ -76,6 +76,7 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
                 
                 errMsg += "E3003:\(err!.localizedDescription)"
             }
+            
             completionClosure(nil,json, err)
 
         })

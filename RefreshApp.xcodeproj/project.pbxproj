@@ -19,6 +19,7 @@
 		4E776DE825580EEA009344EB /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E776DE625580EEA009344EB /* right.png */; };
 		4EBCC91225BE9A0100882906 /* SelectDateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EBCC91125BE9A0100882906 /* SelectDateView.xib */; };
 		4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCC91325BE9A2C00882906 /* SelectDateView.swift */; };
+		4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */; };
 		4EEC4D5825556C69003AF923 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5725556C69003AF923 /* AppDelegate.swift */; };
 		4EEC4D5C25556C69003AF923 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5B25556C69003AF923 /* ViewController.swift */; };
 		4EEC4D5F25556C69003AF923 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5D25556C69003AF923 /* Main.storyboard */; };
@@ -91,6 +92,7 @@
 		4E776DE625580EEA009344EB /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
 		4EBCC91125BE9A0100882906 /* SelectDateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectDateView.xib; sourceTree = "<group>"; };
 		4EBCC91325BE9A2C00882906 /* SelectDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateView.swift; sourceTree = "<group>"; };
+		4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceptionViewController.swift; sourceTree = "<group>"; };
 		4EEC4D5425556C69003AF923 /* RefreshApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefreshApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EEC4D5725556C69003AF923 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EEC4D5B25556C69003AF923 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				C322589E2559215A007BB719 /* UnsentViewController.swift */,
 				C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */,
 				C38C13DA25BA8FB000653CE9 /* AcceptViewController.swift */,
+				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
 				4EBCC91125BE9A0100882906 /* SelectDateView.xib */,
 				4EBCC91325BE9A2C00882906 /* SelectDateView.swift */,
 				C322589B2558E4D3007BB719 /* Upload.swift */,
@@ -439,6 +442,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EEC4D5C25556C69003AF923 /* ViewController.swift in Sources */,
+				4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */,
 				C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */,
 				C38C13DB25BA8FB000653CE9 /* AcceptViewController.swift in Sources */,
 				4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */,

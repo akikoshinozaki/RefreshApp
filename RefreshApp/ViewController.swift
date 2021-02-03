@@ -220,12 +220,12 @@ class ViewController: UIViewController, ScannerViewDelegate {
     }
     
     @IBAction func printSample(_ sender: Any) {
-        if tagNO == "" {
-            showAlert(title: "TAG No.を入力してください", message: "")
-            return
-        }
+//        if tagNO == "" {
+//            showAlert(title: "TAG No.を入力してください", message: "")
+//            return
+//        }
         let storyboard = UIStoryboard(name: "Main2", bundle: nil)
-        let accept = storyboard.instantiateViewController(withIdentifier: "accept")
+        let accept = storyboard.instantiateViewController(withIdentifier: "recept")
         self.navigationController?.pushViewController(accept, animated: true)
     }
     
