@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import SafariServices
 
 var tagNO:String = ""
 
@@ -228,6 +229,21 @@ class ViewController: UIViewController, ScannerViewDelegate {
         let accept = storyboard.instantiateViewController(withIdentifier: "recept")
         self.navigationController?.pushViewController(accept, animated: true)
     }
+    
+    @IBAction func webCamera(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let accept = storyboard.instantiateViewController(withIdentifier: "web")
+        self.navigationController?.pushViewController(accept, animated: true)
+    }
+    
+    @IBAction func safariView(_ sender: UIButton) {
+        let url = URL(string:"https://www2.maruhati.com/ipad/test/a/index.html")
+        if let url = url{
+            let vc = SFSafariViewController(url: url)
+            self.present(vc, animated: true, completion: nil)
+        }
+    }
+    
     
 }
 

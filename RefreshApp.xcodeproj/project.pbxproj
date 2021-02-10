@@ -26,6 +26,7 @@
 		4EEC4D6225556C69003AF923 /* RefreshApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6025556C69003AF923 /* RefreshApp.xcdatamodeld */; };
 		4EEC4D6425556C6C003AF923 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6325556C6C003AF923 /* Assets.xcassets */; };
 		4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6525556C6C003AF923 /* LaunchScreen.storyboard */; };
+		C300140825CBB59800E114C6 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C300140725CBB59800E114C6 /* WebViewController.swift */; };
 		C322589A2558DEC1007BB719 /* deletebtn.png in Resources */ = {isa = PBXBuildFile; fileRef = C32258992558DEC1007BB719 /* deletebtn.png */; };
 		C322589C2558E4D3007BB719 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589B2558E4D3007BB719 /* Upload.swift */; };
 		C322589F2559215A007BB719 /* UnsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589E2559215A007BB719 /* UnsentViewController.swift */; };
@@ -103,6 +104,7 @@
 		4EEC4D6825556C6C003AF923 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C47E5FEF43F033786A47B69 /* Pods-RefreshApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.release.xcconfig"; sourceTree = "<group>"; };
 		ADAB64EF3A0D9F56C9F19713 /* Pods-RefreshApp.dev-release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.dev-release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.dev-release.xcconfig"; sourceTree = "<group>"; };
+		C300140725CBB59800E114C6 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		C32258992558DEC1007BB719 /* deletebtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletebtn.png; sourceTree = "<group>"; };
 		C322589B2558E4D3007BB719 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		C322589E2559215A007BB719 /* UnsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsentViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				4EEC4D5B25556C69003AF923 /* ViewController.swift */,
 				4E776DD92557B6C4009344EB /* PhotoViewController.swift */,
 				4E776DDC2557B853009344EB /* MyCollectionViewCell.swift */,
+				C300140725CBB59800E114C6 /* WebViewController.swift */,
 				4E5DB92D25557C7700A53584 /* CameraViewController.swift */,
 				4E776DE22557D010009344EB /* Camera2ViewController.swift */,
 				4EEC4D5D25556C69003AF923 /* Main.storyboard */,
@@ -442,6 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EEC4D5C25556C69003AF923 /* ViewController.swift in Sources */,
+				C300140825CBB59800E114C6 /* WebViewController.swift in Sources */,
 				4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */,
 				C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */,
 				C38C13DB25BA8FB000653CE9 /* AcceptViewController.swift in Sources */,

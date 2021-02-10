@@ -641,6 +641,21 @@
             </objects>
             <point key="canvasLocation" x="67.96875" y="347.4609375"/>
         </scene>
+        <!--Web View Controller-->
+        <scene sceneID="O4x-3i-mOy">
+            <objects>
+                <viewController storyboardIdentifier="web" id="jBB-9c-8uB" customClass="WebViewController" customModule="RefreshApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xib-hb-0EX">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="xSj-ya-GVa"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0y8-iu-cS5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="49" y="976"/>
+        </scene>
         <!--Reception View Controller-->
         <scene sceneID="oub-I3-KjE">
             <objects>
