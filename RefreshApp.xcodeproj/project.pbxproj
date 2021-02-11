@@ -11,6 +11,9 @@
 		4E5DB92B2555748300A53584 /* ScannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E5DB92A2555748300A53584 /* ScannerView.xib */; };
 		4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E5DB92D25557C7700A53584 /* CameraViewController.swift */; };
 		4E5DB93125557CD300A53584 /* shutter.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E5DB93025557CD300A53584 /* shutter.png */; };
+		4E6E771125D36F4E00BBA885 /* BRLabelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E6E771025D36F4E00BBA885 /* BRLabelView.xib */; };
+		4E6E771425D36F6500BBA885 /* BRLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E771325D36F6500BBA885 /* BRLabelView.swift */; };
+		4E6E772725D4F37800BBA885 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E772625D4F37800BBA885 /* InfoViewController.swift */; };
 		4E776DDA2557B6C4009344EB /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E776DD92557B6C4009344EB /* PhotoViewController.swift */; };
 		4E776DDD2557B853009344EB /* MyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E776DDC2557B853009344EB /* MyCollectionViewCell.swift */; };
 		4E776DE02557C96C009344EB /* DispViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E776DDF2557C96C009344EB /* DispViewController.swift */; };
@@ -26,7 +29,6 @@
 		4EEC4D6225556C69003AF923 /* RefreshApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6025556C69003AF923 /* RefreshApp.xcdatamodeld */; };
 		4EEC4D6425556C6C003AF923 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6325556C6C003AF923 /* Assets.xcassets */; };
 		4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6525556C6C003AF923 /* LaunchScreen.storyboard */; };
-		C300140825CBB59800E114C6 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C300140725CBB59800E114C6 /* WebViewController.swift */; };
 		C322589A2558DEC1007BB719 /* deletebtn.png in Resources */ = {isa = PBXBuildFile; fileRef = C32258992558DEC1007BB719 /* deletebtn.png */; };
 		C322589C2558E4D3007BB719 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589B2558E4D3007BB719 /* Upload.swift */; };
 		C322589F2559215A007BB719 /* UnsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589E2559215A007BB719 /* UnsentViewController.swift */; };
@@ -85,6 +87,9 @@
 		4E5DB92A2555748300A53584 /* ScannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScannerView.xib; sourceTree = "<group>"; };
 		4E5DB92D25557C7700A53584 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		4E5DB93025557CD300A53584 /* shutter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shutter.png; sourceTree = "<group>"; };
+		4E6E771025D36F4E00BBA885 /* BRLabelView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BRLabelView.xib; sourceTree = "<group>"; };
+		4E6E771325D36F6500BBA885 /* BRLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRLabelView.swift; sourceTree = "<group>"; };
+		4E6E772625D4F37800BBA885 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InfoViewController.swift; path = RefreshApp/InfoViewController.swift; sourceTree = SOURCE_ROOT; };
 		4E776DD92557B6C4009344EB /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 		4E776DDC2557B853009344EB /* MyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCollectionViewCell.swift; sourceTree = "<group>"; };
 		4E776DDF2557C96C009344EB /* DispViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispViewController.swift; sourceTree = "<group>"; };
@@ -104,7 +109,6 @@
 		4EEC4D6825556C6C003AF923 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C47E5FEF43F033786A47B69 /* Pods-RefreshApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.release.xcconfig"; sourceTree = "<group>"; };
 		ADAB64EF3A0D9F56C9F19713 /* Pods-RefreshApp.dev-release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.dev-release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.dev-release.xcconfig"; sourceTree = "<group>"; };
-		C300140725CBB59800E114C6 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		C32258992558DEC1007BB719 /* deletebtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletebtn.png; sourceTree = "<group>"; };
 		C322589B2558E4D3007BB719 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		C322589E2559215A007BB719 /* UnsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsentViewController.swift; sourceTree = "<group>"; };
@@ -188,10 +192,10 @@
 				C322589D255911B1007BB719 /* img */,
 				C3C95DEA25889D6F00BBE180 /* PrintTest */,
 				4EEC4D5725556C69003AF923 /* AppDelegate.swift */,
+				4E6E772625D4F37800BBA885 /* InfoViewController.swift */,
 				4EEC4D5B25556C69003AF923 /* ViewController.swift */,
 				4E776DD92557B6C4009344EB /* PhotoViewController.swift */,
 				4E776DDC2557B853009344EB /* MyCollectionViewCell.swift */,
-				C300140725CBB59800E114C6 /* WebViewController.swift */,
 				4E5DB92D25557C7700A53584 /* CameraViewController.swift */,
 				4E776DE22557D010009344EB /* Camera2ViewController.swift */,
 				4EEC4D5D25556C69003AF923 /* Main.storyboard */,
@@ -199,6 +203,8 @@
 				C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */,
 				C38C13DA25BA8FB000653CE9 /* AcceptViewController.swift */,
 				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
+				4E6E771025D36F4E00BBA885 /* BRLabelView.xib */,
+				4E6E771325D36F6500BBA885 /* BRLabelView.swift */,
 				4EBCC91125BE9A0100882906 /* SelectDateView.xib */,
 				4EBCC91325BE9A2C00882906 /* SelectDateView.swift */,
 				C322589B2558E4D3007BB719 /* Upload.swift */,
@@ -369,6 +375,7 @@
 				4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */,
 				C3C95DF325889D6F00BBE180 /* 100×200.bmp in Resources */,
 				C3C95DF425889D6F00BBE180 /* rj4030ai_102mm.bin in Resources */,
+				4E6E771125D36F4E00BBA885 /* BRLabelView.xib in Resources */,
 				4E5DB92B2555748300A53584 /* ScannerView.xib in Resources */,
 				C3C95DF525889D6F00BBE180 /* Main2.storyboard in Resources */,
 				4E776DE725580EEA009344EB /* left.png in Resources */,
@@ -445,7 +452,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EEC4D5C25556C69003AF923 /* ViewController.swift in Sources */,
-				C300140825CBB59800E114C6 /* WebViewController.swift in Sources */,
 				4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */,
 				C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */,
 				C38C13DB25BA8FB000653CE9 /* AcceptViewController.swift in Sources */,
@@ -454,6 +460,7 @@
 				4E776DDD2557B853009344EB /* MyCollectionViewCell.swift in Sources */,
 				C3C95DF125889D6F00BBE180 /* BRSelectDeviceTableViewController.swift in Sources */,
 				C3C95DF625889D6F00BBE180 /* PrintSampleViewController.swift in Sources */,
+				4E6E771425D36F6500BBA885 /* BRLabelView.swift in Sources */,
 				4E776DE02557C96C009344EB /* DispViewController.swift in Sources */,
 				C35E2FBF255A6F71009C9057 /* Common.swift in Sources */,
 				4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */,
@@ -466,6 +473,7 @@
 				C3CD18B525C27E050088DE56 /* EnvironmentSwitch.swift in Sources */,
 				4E776DDA2557B6C4009344EB /* PhotoViewController.swift in Sources */,
 				C322589F2559215A007BB719 /* UnsentViewController.swift in Sources */,
+				4E6E772725D4F37800BBA885 /* InfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

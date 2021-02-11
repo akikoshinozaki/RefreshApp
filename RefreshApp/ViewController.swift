@@ -11,6 +11,7 @@ import AVFoundation
 import SafariServices
 
 var tagNO:String = ""
+var dateTag:Int = 0
 
 class ViewController: UIViewController, ScannerViewDelegate {
 
@@ -229,7 +230,7 @@ class ViewController: UIViewController, ScannerViewDelegate {
         let accept = storyboard.instantiateViewController(withIdentifier: "recept")
         self.navigationController?.pushViewController(accept, animated: true)
     }
-    
+    /* webViewテストに使用
     @IBAction func webCamera(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main2", bundle: nil)
         let accept = storyboard.instantiateViewController(withIdentifier: "web")
@@ -242,7 +243,7 @@ class ViewController: UIViewController, ScannerViewDelegate {
             let vc = SFSafariViewController(url: url)
             self.present(vc, animated: true, completion: nil)
         }
-    }
+    }*/
     
     
 }
