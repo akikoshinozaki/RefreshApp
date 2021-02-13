@@ -84,7 +84,7 @@ struct PrinterSetting {
     var paper:BRLMQLPrintSettingsLabelSize = .rollW62RB
 }
 
-class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDateViewDelegate, BRSelectDeviceTableViewControllerDelegate {
+class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDeviceTableViewControllerDelegate {
     
     @IBOutlet weak var scanBtn: UIButton!
     
@@ -105,29 +105,23 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
     var conAlert:UIAlertController!
     @IBOutlet weak var tagField: UITextField!
     @IBOutlet weak var tagLabel:UILabel!
-    @IBOutlet weak var yoteiBtn:UIButton!
-    @IBOutlet weak var seizouBtn:UIButton!
     
-    @IBOutlet var fields: [UITextField]!
     @IBOutlet var btns: [UIButton]!
-    //@IBOutlet var jsonView: UITextView!
-    
-    @IBOutlet var dspLbls: [UILabel]!
     @IBOutlet weak var kanriLabel: UILabel!
-    
-    @IBOutlet weak var enrollBtn: UIButton!
-    @IBOutlet weak var deleteBtn: UIButton!
+//    @IBOutlet weak var labelView: UIView!
+    @IBOutlet weak var labelImgView: UIImageView!
     @IBOutlet weak var printBtn: UIButton!
+    @IBOutlet weak var detailBtn: UIButton!
+    @IBOutlet weak var cameraBtn: UIButton!
     
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
-    //受け取るパラメーター
-//    var printData:PrintData!
-//    var enrolled:Bool = false
+    
+    var lbl:BRLabelView! //印刷用のView
     
     deinit {
-        //print("deinit")
+        print("deinit")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidConnect, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidDisconnect, object: nil)
         dspInit()
@@ -141,8 +135,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         // Do any additional setup after loading the view.
         tagLabel.text = tagNO
         
-        
-        //printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
+        printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidConnect), name: NSNotification.Name.BRDeviceDidConnect , object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidDisconnect), name: NSNotification.Name.BRDeviceDidDisconnect, object: nil)
         
@@ -155,18 +148,16 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         paperBtn.addTarget(self, action: #selector(chagePaper), for: .touchUpInside)
         setting = PrinterSetting(paperName: paperSizeArray[0].0, paper: paperSizeArray[0].1)
         
-        
-        scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
         tagField.delegate = self
-        for field in fields {
-            field.delegate = self
-        }
+        scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
+        printBtn.addTarget(self, action: #selector(display), for: .touchUpInside)
+        detailBtn.addTarget(self, action: #selector(dispDetail), for: .touchUpInside)
+        cameraBtn.addTarget(self, action: #selector(takePhoto), for: .touchUpInside)
         
         for btn in btns {
             btn.layer.cornerRadius = 8
         }
-        
-        //self.dspInit()
+        self.dspInit()
 
     }
     
@@ -176,27 +167,11 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         YOTEI_HI = nil
         seizouHI = nil
         enrolled = false
-        //表示クリア
-        for lbl in dspLbls {
-            lbl.text = ""
-        }
         kanriLabel.text = ""
-        for (i,f) in fields.enumerated() {
-            f.text = ""
-            f.tag = 300 + i
-            f.delegate = self
-        }
-        yoteiBtn.setTitle("日付を選択", for: .normal)
-        seizouBtn.setTitle("日付を選択", for: .normal)
-        
-        for f in fields {
-            f.isUserInteractionEnabled = true
-        }
-        seizouBtn.isUserInteractionEnabled = true
-        enrollBtn.isHidden = true
-        deleteBtn.isHidden = true
-        printBtn.isHidden = true
-        
+//        for sb in labelView.subviews {
+//            sb.removeFromSuperview()
+//        }
+        labelImgView.image = nil
     }
     
     override func viewDidLayoutSubviews() {
@@ -342,196 +317,41 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         }else {
             tagNO = ""
             setTag()
+            dspInit()
         }
     }
     
     
-    //MARK: - 日付ピッカー
-    @IBAction func selectDate(_ sender: UIButton) {
-        //print(sender.title(for: .normal) as! String)
-        var selectedDate:Date = Date()
-        if sender.tag == 400 { //工場管理日
-            selectedDate = YOTEI_HI ?? Date()
-        }else if sender.tag == 401 { //製造年月日
-            selectedDate = seizouHI ?? Date()
-        }
-        
-        dateTag = 0
-        if #available(iOS 14.0, *) {
-            // iOS14以降の場合
-            dateTag = sender.tag
-            let pickerView = SelectDateView(frame: self.view.frame)
-            pickerView.center = self.view.center
-            pickerView.delegate = self
-            pickerView.selectedDate = selectedDate
-            self.view.addSubview(pickerView)
-                        
-        } else {
-            // iOS14以前の場合
-        let picker = DatePickerPopover(title: "日時選択")
-            .setSelectedDate(selectedDate)
-            .setLocale(identifier: "ja_JP")
-            .setSelectedDate(Date())
-            //.setMinimumDate(Date())
-            .setValueChange(action: { _, selectedDate in
-                //print("current date \(selectedDate)")
-            })
-            .setDoneButton(action: { popover, selectedDate in
-                print("selectedDate \(selectedDate)")
-                let formatter = DateFormatter()
-                formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
-                //選択された日付をボタンタイトルへセット
-                if sender.tag == 400 {
-                    self.YOTEI_HI = selectedDate
-                }else if sender.tag == 401 {
-                    self.seizouHI = selectedDate
-                }
-                sender.setTitle(formatter.string(from: selectedDate), for: .normal)
-                print(formatter.string(from: selectedDate))
-            } )
-            .setCancelButton(action: { _, _ in print("キャンセル")})
-        picker.appear(originView: sender, baseViewController: self)
-        }
+    @objc func display(){
+        kanriLabel.text = ""
+//        for sb in labelView.subviews {
+//            sb.removeFromSuperview()
+//        }
+        labelImgView.image = nil
 
-    }
-    
-    func setDate(date: Date) {
-        //print(date)
-        let formatter = DateFormatter()
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
-        if dateTag == 400 { //工場管理日
-            self.YOTEI_HI = date
-            self.yoteiBtn.setTitle(formatter.string(from: date), for: .normal)
-        }else if dateTag == 401 { //製造年月日
-            self.seizouHI = date
-            self.seizouBtn.setTitle(formatter.string(from: date), for: .normal)
-        }
-    }
-        
-    @IBAction func clearDate(_ sender: UIButton){
-        YOTEI_HI = nil
-        self.yoteiBtn.setTitle("日付を選択", for: .normal)
-    }
-    
-    
-    //MARK: - IBMへ登録
-    @IBAction func entryData(_ sender: UIButton){
-
-        /*sender.tag
-         901:登録 902:削除
-         */
-        
-        if tagNO == "" {
-            SimpleAlert.make(title: "TAG No.が未入力です", message: "")
+        if !enrolled || _json==nil {
+            SimpleAlert.make(title: "対象のデータがありません", message: "")
             return
         }
-        var type:String = ""
-        var param:[String:Any] =
-            ["TAG_NO":tagNO]
-        
-        var alertTitle:String = ""
-        switch sender.tag {
-        case 901:
-            type = "ENTRY"
-            if YOTEI_HI == nil {
-                SimpleAlert.make(title: "日付が未入力です", message: "")
-                return
-            }
-            alertTitle = "登録してよろしいですか"
-            param["YOTEI_HI"] = YOTEI_HI.toString(format: "yyyyMMdd")
-            if fields[0].text != "" {
-                param["GRADE"] = fields[0].text!
-            }
-            if fields[1].text != "" {
-                param["WATA"] = fields[1].text!
-            }
-            if seizouHI != nil {
-                param["SEIZOU"] = YOTEI_HI.toString(format: "yyyyMMdd")
-            }
-            
-        case 902:
-            type = "DELETE"
-            alertTitle = "削除してよろしいですか"
-
-        default:
-            return
-        }
-
-        //print(param)
-        let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-            Void in
-            self.request(type: type, param: param)
-        }))
-        
-        alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-        
-    }
-
-    func display(json:NSDictionary){
-        if printData == nil {
-            return
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
-
+        var kanri = ""
         var yotei_hi = ""
-        if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
-            //登録済み → 再印刷or削除
-            printBtn.isHidden = false
-            deleteBtn.isHidden = false
-            enrolled = true
+        if let yotei = _json["YOTEI_HI"] as? String, yotei != ""{
             yotei_hi = yotei.date.short
-            yoteiBtn.setTitle(formatter.string(from: yotei.date), for: .normal)
-            kanriLabel.text = yotei+"-"+printData.renban+"-"+printData.tagNO
-        }else {
-            //未登録 → 登録&印刷
-            enrolled = false
-            enrollBtn.isHidden = false
-            printBtn.isHidden = false
+            kanri = yotei
         }
-        
         printData = PrintData(date: yotei_hi,
-                                   renban: json["RENBAN"] as? String ?? "",
-                                   customer: json["CUSTOMER_NM"] as? String ?? "",
-                                   tagNO: json["TAG_NO"] as? String ?? "",
-                                   itemCD: json["SYOHIN_CD"] as? String ?? "",
-                                   itemNM: json["SYOHIN_NM"] as? String ?? "",
-                                   nouki: json["NOUKI"] as? String ?? "",
-                                   kigen: json["KIGEN"] as? String ?? "")
+                                   renban: _json["RENBAN"] as? String ?? "",
+                                   customer: _json["CUSTOMER_NM"] as? String ?? "",
+                                   tagNO: _json["TAG_NO"] as? String ?? "",
+                                   itemCD: _json["SYOHIN_CD"] as? String ?? "",
+                                   itemNM: _json["SYOHIN_NM"] as? String ?? "",
+                                   nouki: _json["NOUKI"] as? String ?? "",
+                                   kigen: _json["KIGEN"] as? String ?? "")
         
-        dspLbls[0].text = printData.tagNO
-        dspLbls[1].text = printData.itemCD+": "+printData.itemNM
-        dspLbls[2].text = json["PATERN"] as? String ?? ""
-        dspLbls[3].text = json["CLASS"] as? String ?? ""
-        dspLbls[4].text = json["KEI_NO"] as? String ?? ""
-        if printData.customer != "" {
-            dspLbls[5].text = printData.customer+" 様"
-        }
-        dspLbls[6].text = printData.nouki
-        dspLbls[7].text = printData.kigen
-        dspLbls[8].text = json["YUUYO"] as? String ?? ""
+        kanri += "-"+printData.renban+"-"+printData.tagNO
+        kanriLabel.text = kanri
         
-        if enrolled {
-            fields[0].text = json["GRADE"] as? String ?? ""
-            if let wata = json["WATA"] as? String, wata != "00000" {
-                fields[1].text = wata
-            }
-            
-            if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
-                seizouBtn.setTitle(formatter.string(from: seizou.date), for: .normal)
-            }
-            
-        }
-        
-        for f in fields {
-            f.isUserInteractionEnabled = !enrolled
-        }
-        seizouBtn.isUserInteractionEnabled = !enrolled
-        
-        let lbl = BRLabelView(frame: self.view.frame)
+        lbl = BRLabelView(frame:self.view.frame)
         // シールのPrintView
         let QR = "RF="+tagNO
         
@@ -556,12 +376,13 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         
         lbl.qrView.image = UIImage.makeQR(code: QR)
 
-        self.view.addSubview(lbl)
+        //labelView.addSubview(lbl.printView)
         
-        
+        self.printLabel()
         /*
         if isConnectPrinter {
             self.printLabel()
+            
         }else {
             SimpleAlert.make(title: "プリンターに接続してください", message: "")
         }*/
@@ -577,7 +398,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         }
         
         IBM().IBMRequest(type: type, parameter: param, completionClosure: {(_,json,err) in
-            var kanri = ""
+            
             _json = nil
             printData = nil
             
@@ -598,49 +419,20 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
 
                     
                 }else {
-                    var yotei_hi = ""
-                    if let yotei = json!["YOTEI_HI"] as? String, yotei != ""{
-                        yotei_hi = yotei.date.short
-                        kanri = yotei
-                    }
-                    
-                    printData = PrintData(date: yotei_hi,
-                                               renban: json!["RENBAN"] as? String ?? "",
-                                               customer: json!["CUSTOMER_NM"] as? String ?? "",
-                                               tagNO: json!["TAG_NO"] as? String ?? "",
-                                               itemCD: json!["SYOHIN_CD"] as? String ?? "",
-                                               itemNM: json!["SYOHIN_NM"] as? String ?? "",
-                                               nouki: json!["NOUKI"] as? String ?? "",
-                                               kigen: json!["KIGEN"] as? String ?? "")
-                    kanri += "-"+printData.renban+"-"+printData.tagNO
                     
                     DispatchQueue.main.async {
+                        //INQURY
+                        self.conAlert.dismiss(animated: true, completion: nil)
                         
-                        if type == "DELETE" {
-                            self.conAlert.title = "削除完了"
-                            self.conAlert.message = "前ページに戻ります"
-                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                                Void in
-                                self.navigationController?.popViewController(animated: true)
-                                printData = nil
-                            }))
-                            
-                        }else  if type == "ENTRY" {
-                            self.conAlert.title = "登録成功"
-                            self.conAlert.message = "正常に登録できました"
-                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                                Void in
-                                self.dspInit()
-                                self.kanriLabel.text = kanri
-                                
-                            }))
-                            
-                        }else { //INQURY
-                            self.conAlert.dismiss(animated: true, completion: nil)
-//                            self.jsonView.text = "\(json!)"
-                            self.display(json:json!)
-                        }
-                         
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                            self.dispDetail()
+//                            let storyboard = UIStoryboard.init(name: "Main2", bundle: nil)
+//                            let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
+//                            infoVC.delegate = self
+//                            infoVC.isModalInPresentation = true
+//                            self.present(infoVC, animated: true, completion: nil)
+                        })
+                        
                     }
                 }
                 
@@ -661,6 +453,18 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         
     }
     
+    @objc func dispDetail(){
+        if _json == nil {
+            SimpleAlert.make(title: "表示する対象がありません", message: "")
+            return
+        }
+        
+        let storyboard = UIStoryboard.init(name: "Main2", bundle: nil)
+        let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
+        infoVC.delegate = self
+        infoVC.isModalInPresentation = true
+        self.present(infoVC, animated: true, completion: nil)
+    }
     
     //MARK: PrinterSetting
     @objc func chagePaper(){
@@ -679,8 +483,11 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         self.present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func printLabel() {
-        //printView.layer.borderColor = UIColor.clear.cgColor
+    @objc func printLabel() {
+        if lbl == nil {
+            SimpleAlert.make(title: "対象のオブジェクトがありません", message: "")
+            return
+        }
         let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
         
         let generateResult = BRLMPrinterDriverGenerator.open(channel)
@@ -694,15 +501,19 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
             printerDriver.closeChannel()
         }
         
-        /*
+        
         //QL_820NWB
-        guard let img = printView.toImage().cgImage,
+        guard let img = lbl.printView.toImage().cgImage,
               let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
         else {
             print("Error - Image file is not found.")
             SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
             return
-        }*/
+        }
+        
+        labelImgView.image = UIImage(cgImage: img)
+        
+        /*
         printSettings.labelSize = setting.paper
         //printSettings.labelSize = .rollW62RB
         //printSettings.labelSize = .rollW62
@@ -718,7 +529,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         else {
             print("Success - Print Image")
             DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
-                let alert = UIAlertController(title: "完了", message: "前ページに戻ります", preferredStyle: .alert)
+                let alert = UIAlertController(title: "完了", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                     Void in
 //                    self.navigationController?.popViewController(animated: true)
@@ -728,8 +539,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
                 self.present(alert, animated: true, completion: nil)
             })
             
-        }
-        //printView.layer.borderColor = UIColor.gray.cgColor
+        }*/
     }
     
     //MARK: PrinterConnectNotification
@@ -750,6 +560,44 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, SelectDate
         }
         isConnectPrinter = false
         connectChk()
+    }
+        //MARK: - カメラ起動
+    //写真を撮る
+    @objc func takePhoto() {
+        if tagNO == "" {
+            SimpleAlert.make(title: "TAG Noが見つかりません", message: "")
+            return
+        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let camera = storyboard.instantiateViewController(withIdentifier: "camera")
+        
+        camera.modalPresentationStyle = .fullScreen
+
+        self.present(camera, animated: true, completion: nil)
+
+    }
+
+    @IBAction func showPhoto(_ sender: UIButton) {
+        //一覧表示
+        if imageArr.count == 0 {
+            SimpleAlert.make(title: "表示する写真がありません", message: "")
+            return
+        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let photo = storyboard.instantiateViewController(withIdentifier: "photo")
+        
+//        let camera = CameraViewController(nibName: nil, bundle: nil)
+//        camera.modalPresentationStyle = .fullScreen
+//        self.present(photo, animated: true, completion: nil)
+        self.navigationController?.pushViewController(photo, animated: true)
+        
+        
+    }
+    
+    @IBAction func unsetnList(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let list = storyboard.instantiateViewController(withIdentifier: "list")
+        self.navigationController?.pushViewController(list, animated: true)
     }
     
 }
@@ -785,51 +633,9 @@ extension ReceptionViewController:UITextFieldDelegate {
             tagNO = textField.text!
             setTag()
             
-        case 300: //羽毛グレード
-            //英数文字のみ
-
-            if textField.text!.range(of: "[^a-zA-Z0-9]", options: .regularExpression) != nil {
-                SimpleAlert.make(title: "英数文字で入力してください", message: "")
-                return
-            }else if textField.text!.count > 2 {
-                SimpleAlert.make(title: "2文字で入力してください", message: "")
-                return
-            }else {
-                textField.text = textField.text!.uppercased()
-            }
-            
-        
-        case 301: //わた量
-            
-            if let wata = Double(textField.text!) {
-                let wata10 = wata*10
-                
-                let fraction = wata10.truncatingRemainder(dividingBy: 1)
-                
-                print(wata10)
-                //print(wata10.count)
-                print(fraction)
-                
-                if fraction != 0.0 {
-                    SimpleAlert.make(title: "小数点以下は１桁までです", message: "")
-                    return
-                }
-                if wata10 > 99999 {
-                    SimpleAlert.make(title: "桁数が大きすぎます", message: "")
-                    return
-                }
-                
-            }else {
-                SimpleAlert.make(title: "数字でのみ入力できます", message: "")
-                return
-            }
-            
-            
-            
         default:
             return
         }
-        
 
     }
     
@@ -837,6 +643,23 @@ extension ReceptionViewController:UITextFieldDelegate {
         textField.endEditing(true)
     }
     
+}
+
+extension ReceptionViewController:InfoViewControllerDelegate {
+
     
-    
+    func setPrintInfo(json: NSDictionary!, type: String) {
+        print(json)
+        print(type)
+        if json != nil {
+            if type == "print" {
+                _json = json
+                self.display()
+            }else {
+                self.dspInit()
+                self.clearTag(self)
+            }
+        }
+    }
+
 }

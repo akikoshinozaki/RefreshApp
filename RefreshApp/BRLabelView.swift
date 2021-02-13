@@ -10,6 +10,7 @@ import UIKit
 
 class BRLabelView: UIView {
 
+    @IBOutlet weak var printView: UIView!
     @IBOutlet weak var label1: UILabel! //予定日-連番
     @IBOutlet weak var label2: UILabel! //顧客名
     @IBOutlet weak var label3: UILabel! //TAG No.

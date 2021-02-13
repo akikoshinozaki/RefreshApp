@@ -360,7 +360,8 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
         
     }
     @IBAction func printLabel() {
-        printView.layer.borderColor = UIColor.clear.cgColor
+
+        //printView.layer.borderColor = UIColor.clear.cgColor
         let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
         
         let generateResult = BRLMPrinterDriverGenerator.open(channel)
@@ -407,7 +408,7 @@ class AcceptViewController: UIViewController, BRSelectDeviceTableViewControllerD
             })
             
         }
-        printView.layer.borderColor = UIColor.gray.cgColor
+        //printView.layer.borderColor = UIColor.gray.cgColor
     }
     
     func showAlert(title:String, message:String){

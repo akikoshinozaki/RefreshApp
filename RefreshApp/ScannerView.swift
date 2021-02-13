@@ -122,6 +122,7 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
     }
     
     func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        print("------ scan --------")
         // 複数のメタデータを検出
         for metadata in metadataObjects as! [AVMetadataMachineReadableCodeObject] {
             
@@ -134,7 +135,7 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
                     delegate?.getData(data: data)
                     self.close()
                 }else {
-                    print("nil")
+                    session.startRunning()
                     cautionLabel.isHidden = false
                     cautionLabel.text = "このコードは読み取れません"
                 }
@@ -147,10 +148,12 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
                     delegate?.getData(data: data)
                     self.close()
                 }else {
+                    session.startRunning()
                     cautionLabel.isHidden = false
                     cautionLabel.text = "このコードは読み取れません"
                 }
             }else {
+                session.startRunning()
                 cautionLabel.isHidden = false
                 cautionLabel.text = "このコードは読み取れません"
             }

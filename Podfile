@@ -9,5 +9,6 @@ target 'RefreshApp' do
   pod 'ReachabilitySwift'
   pod 'LUKeychainAccess'
   pod 'SwiftyPickerPopover'
+  pod 'IQKeyboardManager'
 
 end
