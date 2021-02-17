@@ -60,12 +60,13 @@ class PhotoViewController: UIViewController {
     @objc func back() {
         //self.navigationController?.popViewController(animated: true)
         if uploadFault {
-            tagNO = ""
+            //tagNO = ""
             imageArr = []
             uploadFault = false
         }
         
-        self.navigationController?.popToRootViewController(animated: true)
+        //self.navigationController?.popToRootViewController(animated: true)
+        self.navigationController?.popViewController(animated: true)
         
     }
     var postAlert: UIAlertController!
@@ -93,9 +94,10 @@ class PhotoViewController: UIViewController {
             postAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                 Void in
                 Upload().deleteFM(tag: tagNO)
-                tagNO = ""
+                //tagNO = ""
                 imageArr = []
                 self.back()
+                
             }))
         }else {
             postAlert.title = "送信できませんでした"

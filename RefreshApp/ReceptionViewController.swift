@@ -80,8 +80,8 @@ struct PrintData {
 struct PrinterSetting {
     var printer:String = "QL-820NWB"
     var model:BRLMPrinterModel = .QL_820NWB
-    var paperName:String = "ロール紙62mm赤黒"
-    var paper:BRLMQLPrintSettingsLabelSize = .rollW62RB
+    var paperName:String = "ロール紙62mm"
+    var paper:BRLMQLPrintSettingsLabelSize = .rollW62
 }
 
 class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDeviceTableViewControllerDelegate {
@@ -97,9 +97,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     var deviceListByMfi : [BRPtouchDeviceInfo]?
     var isConnectPrinter = false
     var setting:PrinterSetting!
-     @IBOutlet weak var paperBtn: UIButton!
-     @IBOutlet weak var printerConnectBtn:UIButton!
-     let paperSizeArray:[(String,BRLMQLPrintSettingsLabelSize)] = [("ロール紙62mm赤黒",.rollW62RB),("ロール紙62mm",.rollW62)]
+    @IBOutlet weak var paperBtn: UIButton!
+    //@IBOutlet weak var printerConnectBtn:UIButton!
+    var printerConnectBtn:UIBarButtonItem!
+    let paperSizeArray:[(String,BRLMQLPrintSettingsLabelSize)] = [("ロール紙62mm",.rollW62),("ロール紙62mm赤黒",.rollW62RB)]
 
     var scanner:ScannerView!
     var conAlert:UIAlertController!
@@ -113,6 +114,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @IBOutlet weak var printBtn: UIButton!
     @IBOutlet weak var detailBtn: UIButton!
     @IBOutlet weak var cameraBtn: UIButton!
+    @IBOutlet weak var photoCollection: UICollectionView!
+    var cellEditing: Bool = false
+    //@IBOutlet var edtBtn:UIButton!
     
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
@@ -135,15 +139,19 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         // Do any additional setup after loading the view.
         tagLabel.text = tagNO
         
-        printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
+        //printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
+        self.navigationItem.hidesBackButton = true
+        printerConnectBtn = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(printerControl(_:)))
+        let backBtn = UIBarButtonItem(title: "＜戻る", style: .plain, target: self, action: #selector(back))
+        self.navigationItem.rightBarButtonItem = printerConnectBtn
+        self.navigationItem.leftBarButtonItem = backBtn
+                                            
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidConnect), name: NSNotification.Name.BRDeviceDidConnect , object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(printerDidDisconnect), name: NSNotification.Name.BRDeviceDidDisconnect, object: nil)
         
 //        printView.layer.borderColor = UIColor.gray.cgColor
 //        printView.layer.borderWidth = 1
         
-        printerConnectBtn.layer.borderWidth = 2
-        printerConnectBtn.layer.borderColor = UIColor.systemBlue.cgColor
         paperBtn.setTitle(paperSizeArray[0].0, for: .normal)
         paperBtn.addTarget(self, action: #selector(chagePaper), for: .touchUpInside)
         setting = PrinterSetting(paperName: paperSizeArray[0].0, paper: paperSizeArray[0].1)
@@ -153,24 +161,27 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         printBtn.addTarget(self, action: #selector(display), for: .touchUpInside)
         detailBtn.addTarget(self, action: #selector(dispDetail), for: .touchUpInside)
         cameraBtn.addTarget(self, action: #selector(takePhoto), for: .touchUpInside)
+        //edtBtn.addTarget(self, action: #selector(editCollection(_:)), for: .touchUpInside)
         
         for btn in btns {
             btn.layer.cornerRadius = 8
         }
+        
+        photoCollection.delegate = self
+        photoCollection.dataSource = self
         self.dspInit()
 
     }
     
     func dspInit(){
         //変数クリア
+        _json = nil
         printData = nil
         YOTEI_HI = nil
         seizouHI = nil
         enrolled = false
         kanriLabel.text = ""
-//        for sb in labelView.subviews {
-//            sb.removeFromSuperview()
-//        }
+
         labelImgView.image = nil
     }
     
@@ -180,11 +191,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        print(#function)
-        //print(prtSerial)
         super.viewWillAppear(animated)
-        
+        self.photoCollection.reloadData()
         connectChk()
+        
     }
 
     
@@ -210,11 +220,13 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         if connect{
             printerConnectLabel.text = "\(prtName)(\(prtSerial)) is Connected"
             printerConnectLabel.backgroundColor = .systemBlue
-            printerConnectBtn.setTitle("プリンター切断", for: .normal)
+            //printerConnectBtn.setTitle("プリンター切断", for: .normal)
+            printerConnectBtn.title = "プリンター切断"
         }else {
             printerConnectLabel.text = "プリンター未接続"
             printerConnectLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-            printerConnectBtn.setTitle("プリンター接続", for: .normal)
+            //printerConnectBtn.setTitle("プリンター接続", for: .normal)
+            printerConnectBtn.title = "プリンター接続"
         }
     }
     
@@ -233,7 +245,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }
         
     }
-        
+    
+
     func setSelected(deviceInfo: BRPtouchDeviceInfo) {
         //print(#function)
         selectedDeviceInfo = deviceInfo
@@ -246,19 +259,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     }
     
     //MARK: - ScannerDelegate
-//    @objc func imgChk() {
-//        //スキャナー起動・各種ボタン無効に
-//
-//        if imageArr.count > 0 {
-//            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//
-//            self.present(alert, animated: true, completion: nil)
-//        }else {
-//            self.scan()
-//        }
-//
-//    }
     
     @objc func scan() {
         tagField.text = ""
@@ -324,9 +324,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     
     @objc func display(){
         kanriLabel.text = ""
-//        for sb in labelView.subviews {
-//            sb.removeFromSuperview()
-//        }
         labelImgView.image = nil
 
         if !enrolled || _json==nil {
@@ -376,9 +373,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
         lbl.qrView.image = UIImage.makeQR(code: QR)
 
-        //labelView.addSubview(lbl.printView)
         
+//        self._printLabel()
         self.printLabel()
+        
         /*
         if isConnectPrinter {
             self.printLabel()
@@ -386,24 +384,26 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }else {
             SimpleAlert.make(title: "プリンターに接続してください", message: "")
         }*/
-
+        
     }
+    
     
     func request(type:String, param:[String:Any]) {
         self.dspInit()
-        print(param)
+        //print(param)
+        
         DispatchQueue.main.async {
             self.conAlert = UIAlertController(title: "データ取得中", message: "しばらくお待ちください", preferredStyle: .alert)
             self.present(self.conAlert, animated: true, completion: nil)
         }
         
         IBM().IBMRequest(type: type, parameter: param, completionClosure: {(_,json,err) in
-            
+            print("IBMRequest")
             _json = nil
             printData = nil
             
             if err == nil, json != nil {
-                print(json!)
+                //print(json!)
                 _json = json
                 //print(json!["CUSTOMER_NM"] as? String ?? "")
                 if json!["RTNCD"] as! String != "000" {
@@ -422,17 +422,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                     
                     DispatchQueue.main.async {
                         //INQURY
-                        self.conAlert.dismiss(animated: true, completion: nil)
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now()+0.5, execute: {
+                        self.conAlert.dismiss(animated: true, completion: {
                             self.dispDetail()
-//                            let storyboard = UIStoryboard.init(name: "Main2", bundle: nil)
-//                            let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
-//                            infoVC.delegate = self
-//                            infoVC.isModalInPresentation = true
-//                            self.present(infoVC, animated: true, completion: nil)
                         })
-                        
+
                     }
                 }
                 
@@ -483,11 +476,35 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         self.present(alert, animated: true, completion: nil)
     }
     
+    @objc func _printLabel(){
+        if lbl == nil {
+            SimpleAlert.make(title: "対象のオブジェクトがありません", message: "")
+            return
+        }
+        
+        guard let img = lbl.printView.toImage().cgImage,
+              let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
+        else {
+            print("Error - Image file is not found.")
+            SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
+            return
+        }
+        
+        labelImgView.image = UIImage(cgImage: img)
+        
+    }
+    
     @objc func printLabel() {
         if lbl == nil {
             SimpleAlert.make(title: "対象のオブジェクトがありません", message: "")
             return
         }
+        
+        if !isConnectPrinter {
+            SimpleAlert.make(title: "プリンターに接続してください", message: "")
+            return
+        }
+        
         let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
         
         let generateResult = BRLMPrinterDriverGenerator.open(channel)
@@ -501,7 +518,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             printerDriver.closeChannel()
         }
         
-        
         //QL_820NWB
         guard let img = lbl.printView.toImage().cgImage,
               let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
@@ -513,7 +529,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
         labelImgView.image = UIImage(cgImage: img)
         
-        /*
+        
         printSettings.labelSize = setting.paper
         //printSettings.labelSize = .rollW62RB
         //printSettings.labelSize = .rollW62
@@ -530,16 +546,12 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             print("Success - Print Image")
             DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
                 let alert = UIAlertController(title: "完了", message: "", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                    Void in
-//                    self.navigationController?.popViewController(animated: true)
-//                    self.printData = nil
-                }))
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
             })
             
-        }*/
+        }
     }
     
     //MARK: PrinterConnectNotification
@@ -577,8 +589,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
     }
 
-    @IBAction func showPhoto(_ sender: UIButton) {
-        //一覧表示
+    
+    @IBAction func showImages(_ sender: UIButton) {
         if imageArr.count == 0 {
             SimpleAlert.make(title: "表示する写真がありません", message: "")
             return
@@ -586,12 +598,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let photo = storyboard.instantiateViewController(withIdentifier: "photo")
         
-//        let camera = CameraViewController(nibName: nil, bundle: nil)
-//        camera.modalPresentationStyle = .fullScreen
-//        self.present(photo, animated: true, completion: nil)
         self.navigationController?.pushViewController(photo, animated: true)
-        
-        
+
     }
     
     @IBAction func unsetnList(_ sender: UIButton) {
@@ -600,6 +608,87 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         self.navigationController?.pushViewController(list, animated: true)
     }
     
+    @objc func back(){
+        if imageArr.count > 0 {
+            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+
+        }else {
+            tagNO = ""
+            setTag()
+            dspInit()
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+        
+    }
+    
+}
+extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 180.0, height: 135.0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return imageArr.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCollectionViewCell", for: indexPath) as! MyCollectionViewCell
+        cell.imageView.image = imageArr[indexPath.item]
+        cell.deleteBtn.isHidden = true
+        /*
+        cell.deleteBtn.isHidden = !cellEditing
+        cell.deleteBtn.tag = 300+indexPath.row
+        cell.deleteBtn.addTarget(self, action: #selector(deleteCell(_:)), for: .touchUpInside)
+        */
+        return cell
+    }
+    
+    /*
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if !cellEditing {//編集中は拡大しない
+            //タップしたら拡大表示
+            num = indexPath.row
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let disp = storyboard.instantiateViewController(withIdentifier: "disp")
+            disp.modalPresentationStyle = .fullScreen
+            
+            self.present(disp, animated: true, completion: nil)
+        }
+    }
+    @objc func editCollection(_ sender:UIButton){
+        cellEditing = !cellEditing
+        if cellEditing {
+            edtBtn.setTitle("完了", for: .normal)
+        }else {
+            edtBtn.setTitle("編集", for: .normal)
+        }
+        photoCollection.reloadData()
+    }
+    @objc func deleteCell(_ sender:UIButton){
+        let alert = UIAlertController(title: "写真を削除しますか？", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "削除", style: .destructive, handler: {
+            Void in
+            let i = sender.tag-300
+            //削除したときの処理
+            imageArr.remove(at: i)
+            DispatchQueue.main.async {
+                self.photoCollection.reloadData()
+                if imageArr.isEmpty{
+                    //self.back()
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+        
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    */
 }
 
 extension ReceptionViewController:UITextFieldDelegate {
@@ -647,19 +736,17 @@ extension ReceptionViewController:UITextFieldDelegate {
 
 extension ReceptionViewController:InfoViewControllerDelegate {
 
-    
     func setPrintInfo(json: NSDictionary!, type: String) {
         print(json)
         print(type)
-        if json != nil {
-            if type == "print" {
-                _json = json
-                self.display()
-            }else {
-                self.dspInit()
-                self.clearTag(self)
-            }
+        _json = json
+        if type == "print" {
+            self.display()
+        }else {
+            self.dspInit()
+            self.clearTag(self)
         }
+        
     }
 
 }

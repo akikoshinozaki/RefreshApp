@@ -22,6 +22,7 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
     let session = AVCaptureSession()
     var videoLayer: AVCaptureVideoPreviewLayer?
     var cautionLabel:UILabel! = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 50))
+    var scanFlag:Bool = false
 
     @IBOutlet weak var baseView: UIView!
     @IBOutlet weak var preview: UIView!
@@ -94,6 +95,7 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
         cautionLabel.isHidden = true
 
         session.startRunning()
+        scanFlag = false
     }
 
     //コードから生成したときに通る初期化処理
@@ -132,7 +134,10 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
                     AudioServicesPlaySystemSound(1000)
                     cautionLabel.isHidden = true
                     self.session.stopRunning()
-                    delegate?.getData(data: data)
+                    if scanFlag == false{
+                        scanFlag = true
+                        delegate?.getData(data: data)
+                    }
                     self.close()
                 }else {
                     session.startRunning()
@@ -145,7 +150,10 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
                     AudioServicesPlaySystemSound(1000)
                     cautionLabel.isHidden = true
                     self.session.stopRunning()
-                    delegate?.getData(data: data)
+                    if scanFlag == false{
+                        scanFlag = true
+                        delegate?.getData(data: data)
+                    }
                     self.close()
                 }else {
                     session.startRunning()

@@ -262,7 +262,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             dspLbls[7].text = printData.kigen
         }
         if let yuuyo = json["YUUYO"] as? String, yuuyo != "          0" {
-            dspLbls[8].text = yuuyo
+            dspLbls[8].text = yuuyo.trimmingCharacters(in: .whitespaces)
         }
 
         if enrolled {
@@ -271,7 +271,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }
             
             if let wata = json["WATA"] as? String, wata != "00000" {
-                fields[1].text = wata
+                if let dwata = Int(wata) {
+                    fields[1].text = "\(Double(dwata)/10)"
+                }else {
+                    fields[1].text = wata
+                }
+
             }
             
             if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
