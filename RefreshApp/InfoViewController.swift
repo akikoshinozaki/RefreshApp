@@ -45,15 +45,20 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        enrollBtn.isHidden = true
         dspInit()
         self.display(json: _json!)
+        
+        for btn in btns {
+            btn.layer.cornerRadius = 8
+        }
         
         closeBtn.addTarget(self, action: #selector(closeView), for: .touchUpInside)
     }
     
     func dspInit(){
         //変数クリア
+        seizouHI = nil
+        YOTEI_HI = nil
         //表示クリア
         for lbl in dspLbls {
             lbl.text = ""
@@ -67,17 +72,92 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         yoteiBtn.setTitle("日付を選択", for: .normal)
         seizouBtn.setTitle("日付を選択", for: .normal)
         
-        for f in fields {
-            f.isUserInteractionEnabled = true
-        }
-        seizouBtn.isUserInteractionEnabled = true
-        enrollBtn.isHidden = true
+//        for f in fields {
+//            f.isUserInteractionEnabled = true
+//        }
+        yoteiBtn.isUserInteractionEnabled = true
+//        seizouBtn.isUserInteractionEnabled = true
+//        enrollBtn.isHidden = true
         deleteBtn.isHidden = true
         printBtn.isHidden = true
         enrollLabel.isHidden = true
         
     }
 
+    func display(json:NSDictionary){
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
+
+        var yotei_hi = ""
+        if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
+            //登録済み → 再印刷or削除
+            printBtn.isHidden = false
+            deleteBtn.isHidden = false
+            enrolled = true
+            yotei_hi = yotei.date.short
+            YOTEI_HI = yotei.date
+            yoteiBtn.setTitle(formatter.string(from: yotei.date), for: .normal)
+            enrollBtn.setTitle("更新", for:.normal)
+        }else {
+            //未登録 → 登録&印刷
+            enrolled = false
+            //enrollBtn.isHidden = false
+            enrollBtn.setTitle("登録", for:.normal)
+        }
+        enrollLabel.isHidden = !enrolled
+        
+        printData = PrintData(date: yotei_hi,
+                                   renban: json["RENBAN"] as? String ?? "",
+                                   customer: json["CUSTOMER_NM"] as? String ?? "",
+                                   tagNO: json["TAG_NO"] as? String ?? "",
+                                   itemCD: json["SYOHIN_CD"] as? String ?? "",
+                                   itemNM: json["SYOHIN_NM"] as? String ?? "",
+                                   nouki: json["NOUKI"] as? String ?? "",
+                                   kigen: json["KIGEN"] as? String ?? "")
+
+        dspLbls[0].text = printData.tagNO
+        dspLbls[1].text = printData.itemCD+": "+printData.itemNM
+        dspLbls[2].text = json["PATERN"] as? String ?? ""
+        dspLbls[3].text = json["CLASS"] as? String ?? ""
+        dspLbls[4].text = json["KEI_NO"] as? String ?? ""
+        if printData.customer != "" {
+            dspLbls[5].text = printData.customer+" 様"
+        }
+        dspLbls[6].text = printData.nouki
+        
+        if printData.kigen != "00000000" {
+            dspLbls[7].text = printData.kigen
+        }
+        if let yuuyo = json["YUUYO"] as? String, yuuyo != "          0" {
+            dspLbls[8].text = yuuyo.trimmingCharacters(in: .whitespaces)
+        }
+        
+        if let grade = json["GRADE"] as? String, grade != "  " {
+            fields[0].text = grade
+        }
+//        if var wata = json["WATA"] as? String {
+        if var wata = json["WATA"] as? String, wata != "     0.0" {
+            wata = wata.trimmingCharacters(in: .whitespaces)
+            if let dwata = Double(wata) {
+                fields[1].text = "\(dwata)"
+            }else {
+                fields[1].text = wata
+            }
+        }
+        
+        if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
+            seizouHI = seizou.date
+            seizouBtn.setTitle(formatter.string(from: seizouHI), for: .normal)
+        }
+        
+//        for f in fields {
+//            f.isUserInteractionEnabled = !enrolled
+//        }
+//        seizouBtn.isUserInteractionEnabled = !enrolled
+        yoteiBtn.isUserInteractionEnabled = !enrolled
+
+    }
 
     //MARK: - 日付ピッカー
     @IBAction func selectDate(_ sender: UIButton) {
@@ -142,15 +222,22 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     }
         
     @IBAction func clearDate(_ sender: UIButton){
-        YOTEI_HI = nil
-        self.yoteiBtn.setTitle("日付を選択", for: .normal)
+        if sender.tag == 801 {
+            if enrolled {return} //登録済みの場合は変更できない
+            YOTEI_HI = nil
+            self.yoteiBtn.setTitle("日付を選択", for: .normal)
+        }else if sender.tag == 802 {
+            seizouHI = nil
+            self.seizouBtn.setTitle("日付を選択", for: .normal)
+            
+        }
     }
     
     //MARK: - IBMへ登録
     @IBAction func entryData(_ sender: UIButton){
 
         /*sender.tag
-         901:登録 902:削除
+         901:登録/更新 902:削除
          */
         
         if tagNO == "" {
@@ -164,21 +251,27 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         var alertTitle:String = ""
         switch sender.tag {
         case 901:
-            type = "ENTRY"
-            if YOTEI_HI == nil {
-                SimpleAlert.make(title: "日付が未入力です", message: "")
-                return
+            if enrolled { //更新
+                type = "UPDATE"
+                alertTitle = "更新してよろしいですか"
+            }else { //登録
+                type = "ENTRY"
+                if YOTEI_HI == nil {
+                    SimpleAlert.make(title: "日付が未入力です", message: "")
+                    return
+                }
+                alertTitle = "登録してよろしいですか"
             }
-            alertTitle = "登録してよろしいですか"
-            param["YOTEI_HI"] = YOTEI_HI.toString(format: "yyyyMMdd")
-            if fields[0].text != "" {
+            //if fields[0].text != "" {
                 param["GRADE"] = fields[0].text!
-            }
+            //}
             if fields[1].text != "" {
                 param["WATA"] = fields[1].text!
+            }else {
+                param["WATA"] = "0.0"
             }
             if seizouHI != nil {
-                param["SEIZOU"] = YOTEI_HI.toString(format: "yyyyMMdd")
+                param["SEIZOU"] = seizouHI.toString(format: "yyyyMMdd")
             }
             
         case 902:
@@ -218,78 +311,6 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
-
-    func display(json:NSDictionary){
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
-
-        var yotei_hi = ""
-        if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
-            //登録済み → 再印刷or削除
-            printBtn.isHidden = false
-            deleteBtn.isHidden = false
-            enrolled = true
-            yotei_hi = yotei.date.short
-            yoteiBtn.setTitle(formatter.string(from: yotei.date), for: .normal)
-        }else {
-            //未登録 → 登録&印刷
-            enrolled = false
-            enrollBtn.isHidden = false
-        }
-        enrollLabel.isHidden = !enrolled
-        
-        printData = PrintData(date: yotei_hi,
-                                   renban: json["RENBAN"] as? String ?? "",
-                                   customer: json["CUSTOMER_NM"] as? String ?? "",
-                                   tagNO: json["TAG_NO"] as? String ?? "",
-                                   itemCD: json["SYOHIN_CD"] as? String ?? "",
-                                   itemNM: json["SYOHIN_NM"] as? String ?? "",
-                                   nouki: json["NOUKI"] as? String ?? "",
-                                   kigen: json["KIGEN"] as? String ?? "")
-
-        dspLbls[0].text = printData.tagNO
-        dspLbls[1].text = printData.itemCD+": "+printData.itemNM
-        dspLbls[2].text = json["PATERN"] as? String ?? ""
-        dspLbls[3].text = json["CLASS"] as? String ?? ""
-        dspLbls[4].text = json["KEI_NO"] as? String ?? ""
-        if printData.customer != "" {
-            dspLbls[5].text = printData.customer+" 様"
-        }
-        dspLbls[6].text = printData.nouki
-        
-        if printData.kigen != "00000000" {
-            dspLbls[7].text = printData.kigen
-        }
-        if let yuuyo = json["YUUYO"] as? String, yuuyo != "          0" {
-            dspLbls[8].text = yuuyo.trimmingCharacters(in: .whitespaces)
-        }
-
-        if enrolled {
-            if let grade = json["GRADE"] as? String, grade != "  " {
-                fields[0].text = grade
-            }
-            
-            if let wata = json["WATA"] as? String, wata != "00000" {
-                if let dwata = Int(wata) {
-                    fields[1].text = "\(Double(dwata)/10)"
-                }else {
-                    fields[1].text = wata
-                }
-
-            }
-            
-            if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
-                seizouBtn.setTitle(formatter.string(from: seizou.date), for: .normal)
-            }
-        }
-        
-        for f in fields {
-            f.isUserInteractionEnabled = !enrolled
-        }
-        seizouBtn.isUserInteractionEnabled = !enrolled
-
-    }
     
     func request(type:String, param:[String:Any]) {
         self.dspInit()
@@ -331,7 +352,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                                 })
                             }))
                             
-                        }else  if type == "ENTRY" {
+                        }else if type == "ENTRY" {
                             enrolled = true
                             self.conAlert.title = "登録成功"
                             self.conAlert.message = "正常に登録できました"
@@ -341,6 +362,16 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                                 _json = json
                                 self.labelPrint(self)
                                 
+                            }))
+
+                        }else if type == "UPDATE" {
+                            enrolled = true
+                            self.conAlert.title = "更新成功"
+                            self.conAlert.message = "正常に更新できました"
+                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                                Void in
+                                _json = json
+                                self.closeView()
                             }))
 
                         }

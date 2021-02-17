@@ -52,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         var id = "dev"
         #if DEV
         hostURL = m2URL //開発
+        xsrvURL = m2xsrvURL
         //id = "dev"
         devMode = true
         #else
@@ -59,9 +60,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         //開発モードのチェック
         if devMode {
             hostURL = m2URL //開発
+            xsrvURL = m2xsrvURL
             //id = "dev"
         }else {
             hostURL = m8URL //本番
+            xsrvURL = m8xsrvURL
             id = "vc"
         }
         #endif
@@ -75,6 +78,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         print(#function)
+        print(hostURL)
+        print(xsrvURL)
+        
         isHostConnected = false
         /* iPadNameとidfvを取得して保存 */
         #if targetEnvironment(simulator)//シュミレーターの場合

@@ -87,6 +87,7 @@ struct PrinterSetting {
 class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDeviceTableViewControllerDelegate {
     
     @IBOutlet weak var scanBtn: UIButton!
+    @IBOutlet weak var envLabel: UILabel!
     
 // Printer
     var selectedDeviceInfo : BRPtouchDeviceInfo?
@@ -133,11 +134,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let selectDeviceTableViewController = BRSelectDeviceTableViewController()
-//        selectDeviceTableViewController.delegate = self
         
         // Do any additional setup after loading the view.
-        tagLabel.text = tagNO
+        //tagLabel.text = tagNO
         
         //printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
         self.navigationItem.hidesBackButton = true
@@ -169,6 +168,20 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
         photoCollection.delegate = self
         photoCollection.dataSource = self
+
+        #if DEV
+        envLabel.isHidden = false
+        if hostURL == m8URL {
+            envLabel.text = "本番"
+        }else {
+            envLabel.text = "開発"
+        }
+
+        #else
+        envLabel.isHidden = true
+        #endif
+        
+        
         self.dspInit()
 
     }
@@ -181,7 +194,12 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         seizouHI = nil
         enrolled = false
         kanriLabel.text = ""
-
+        if tagNO == "" {
+            tagLabel.text = "TagNo.未入力"
+            tagLabel.textColor = .gray
+            tagField.text = ""
+        }
+        
         labelImgView.image = nil
     }
     
@@ -500,6 +518,18 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             return
         }
         
+        //QL_820NWB
+        guard let img = lbl.printView.toImage().cgImage,
+              let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
+        else {
+            print("Error - Image file is not found.")
+            SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
+            return
+        }
+        
+        labelImgView.image = UIImage(cgImage: img)
+        
+        
         if !isConnectPrinter {
             SimpleAlert.make(title: "プリンターに接続してください", message: "")
             return
@@ -518,16 +548,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             printerDriver.closeChannel()
         }
         
-        //QL_820NWB
-        guard let img = lbl.printView.toImage().cgImage,
-              let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
-        else {
-            print("Error - Image file is not found.")
-            SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
-            return
-        }
-        
-        labelImgView.image = UIImage(cgImage: img)
         
         
         printSettings.labelSize = setting.paper

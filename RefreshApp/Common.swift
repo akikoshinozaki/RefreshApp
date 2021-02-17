@@ -70,3 +70,6 @@ let defaults = UserDefaults.standard
 let m2URL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?" //開発
 let m8URL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?" //本番
 var hostURL = m8URL
+let m2xsrvURL = "https://oktss03.xsrv.jp/refreshPhoto/dev/refresh.php"
+let m8xsrvURL = "https://oktss03.xsrv.jp/refreshPhoto/refresh.php"
+var xsrvURL = m8xsrvURL

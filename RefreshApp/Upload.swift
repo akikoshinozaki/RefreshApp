@@ -49,8 +49,7 @@ class Upload: NSObject {
 
     
     func uploadData(){
-//        let url = URL(string: "https://oktss03.xsrv.jp/refreshPhoto/refresh.php")!
-        let url = URL(string: "https://oktss03.xsrv.jp/refreshPhoto/dev/refresh.php")! //開発
+        let url = URL(string: xsrvURL)!
         var request = URLRequest(url:url)
         let boundary = "---------------------------168072824752491622650073"
         request.httpMethod = "POST"
