@@ -397,21 +397,56 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         })
         
     }
-    
+    var grd:String = ""
+    var g_ritsu:Int!
+    var jita_k:Int!
     func showPicker(_ textField:UITextField) {
         print(textField.tag)
         //textField.text = "tapped!"
-        let array = grd_lst.map({$0.nm})
-        let picker = StringPickerPopover(title: "選択してください", choices: array)
-            .setDoneButton(action: {
-                type, i, item in
-                print(type)
-                print(i)
-                print(item)
-                
-            })
-            .setCancelButton(action: { _,_,_ in print("キャンセル") })
-        picker.appear(originView: textField, baseViewController: self)
+        
+
+        switch textField.tag {
+        case 301:
+            //自社・他社
+            let array = ["1:自社","2:他社"]
+            let picker = StringPickerPopover(title: "選択してください", choices: array)
+                .setDoneButton(action: {
+                    (_, idx, item) in
+                    self.jita_k = idx+1
+                    textField.text = item
+                })
+                .setCancelButton(action: { _,_,_ in print("キャンセル") })
+            picker.appear(originView: textField, baseViewController: self)
+        case 302:
+            //グレード
+            let array = grd_lst.map({$0.nm})
+            grd = ""
+            let picker = StringPickerPopover(title: "選択してください", choices: array)
+                .setDoneButton(action: {
+                    (_, idx, item) in
+                    self.grd = grd_lst[idx].cd
+                    textField.text = item
+                    
+                })
+                .setCancelButton(action: { _,_,_ in print("キャンセル") })
+            picker.appear(originView: textField, baseViewController: self)
+        case 303:
+            //原料比率
+            let arr:[Int] = ([Int])(70...95)
+            let array:[String] = arr.map({String($0)+" %"})
+            let picker = StringPickerPopover(title: "選択してください", choices: array)
+                .setDoneButton(action: {
+                    (_, idx, item) in
+                    self.g_ritsu = arr[idx]
+                    textField.text = item
+                    
+                })
+                .setCancelButton(action: { _,_,_ in print("キャンセル") })
+            picker.appear(originView: textField, baseViewController: self)
+        default:
+            return
+        }
+
     }
 }
 
