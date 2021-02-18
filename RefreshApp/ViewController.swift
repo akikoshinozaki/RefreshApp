@@ -37,14 +37,14 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         versionLabel.text = "Ver. "+bundleVersion
-
+        label1.text = hostURL
+        
         //本番のデプロイのみ隠しボタン設置
         #if DEV
         #else
         hiddenBtn.addTarget(self, action: #selector(tapHidBtn(_:)), for: .touchUpInside)
         #endif
 
-        label1.text = hostURL
         if devMode {
             devControl.addTarget(self, action: #selector(valueChange(_:)), for: .valueChanged)
         }
@@ -84,6 +84,7 @@ class ViewController: UIViewController {
             envLabel.text = "本番環境です"
             envLabel.backgroundColor = #colorLiteral(red: 0.5981173515, green: 1, blue: 0.6414633393, alpha: 1)
         }
+        label1.text = hostURL
     }
     
     override func viewDidLayoutSubviews() {

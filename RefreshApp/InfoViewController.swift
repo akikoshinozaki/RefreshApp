@@ -64,9 +64,9 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             lbl.text = ""
         }
         
-        for (i,f) in fields.enumerated() {
+        for f in fields {
             f.text = ""
-            f.tag = 300 + i
+            //f.tag = 300 + i
             f.delegate = self
         }
         yoteiBtn.setTitle("日付を選択", for: .normal)
@@ -124,9 +124,11 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         if printData.customer != "" {
             dspLbls[5].text = printData.customer+" 様"
         }
-        dspLbls[6].text = printData.nouki
-        
-        if printData.kigen != "00000000" {
+
+        if printData.nouki != "0/00/00" {
+            dspLbls[6].text = printData.nouki
+        }
+        if printData.kigen != "0/00/00" {
             dspLbls[7].text = printData.kigen
         }
         if let yuuyo = json["YUUYO"] as? String, yuuyo != "          0" {
@@ -395,8 +397,24 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         })
         
     }
-
+    
+    func showPicker(_ textField:UITextField) {
+        print(textField.tag)
+        //textField.text = "tapped!"
+        let array = grd_lst.map({$0.nm})
+        let picker = StringPickerPopover(title: "選択してください", choices: array)
+            .setDoneButton(action: {
+                type, i, item in
+                print(type)
+                print(i)
+                print(item)
+                
+            })
+            .setCancelButton(action: { _,_,_ in print("キャンセル") })
+        picker.appear(originView: textField, baseViewController: self)
+    }
 }
+
 extension InfoViewController:UITextFieldDelegate {
 /*
     func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -409,9 +427,21 @@ extension InfoViewController:UITextFieldDelegate {
         print(textField.text!)
     }*/
     
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        switch textField.tag {
+        case 301...303:
+            self.showPicker(textField)
+            
+            return false
+        default:
+            return true
+        }
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         print(textField.tag)
         if textField.text! == "" {return}
+        
         
         switch textField.tag {
         case 300: //羽毛グレード
@@ -428,7 +458,7 @@ extension InfoViewController:UITextFieldDelegate {
             }
             
         
-        case 301: //わた量
+        case 401: //わた量
             
             if let wata = Double(textField.text!) {
                 let wata10 = wata*10

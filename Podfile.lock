@@ -1,24 +1,28 @@
 PODS:
+  - IQKeyboardManager (6.5.6)
   - LUKeychainAccess (3.0.0)
   - ReachabilitySwift (5.0.0)
   - SwiftyPickerPopover (6.6.6)
 
 DEPENDENCIES:
+  - IQKeyboardManager
   - LUKeychainAccess
   - ReachabilitySwift
   - SwiftyPickerPopover
 
 SPEC REPOS:
   trunk:
+    - IQKeyboardManager
     - LUKeychainAccess
     - ReachabilitySwift
     - SwiftyPickerPopover
 
 SPEC CHECKSUMS:
+  IQKeyboardManager: 2a6e97afdafc7becf0cb17a9a8d795e3a980717f
   LUKeychainAccess: 78cf0ab05ee1565f164e0c10151d10ac329975c4
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   SwiftyPickerPopover: a402960a6687c911ffcb4e9fb282a1bc61186ab4
 
-PODFILE CHECKSUM: 6173ad56c76b5583df4f0495fc59b93299be2c46
+PODFILE CHECKSUM: 30a7254a6b1dfcc6cabcb7b013a3b71abedfb078
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.9.1

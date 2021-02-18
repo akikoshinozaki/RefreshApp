@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     var window: UIWindow?
     let hostName = "maru8ibm.maruhachi.co.jp"
 
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         print(hostURL)
         // Override point for customization after application launch.
@@ -106,6 +107,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     func complete(_: Any) {
         //ホスト接続成功
         isHostConnected = true
+        
+        //if defaults.string(forKey: "lastDataDownload") != Date().string {
+            //リスト取得
+            IBM().IBMRequest(type: "GRD_LST", parameter: [:], completionClosure: {(_,json,err) in
+                if err == nil, json != nil {
+                    if json!["RTNCD"] as! String != "000" {
+                        var msg = ""
+                        for m in json!["RTNMSG"] as? [String] ?? [] {
+                            msg += m+"\n"
+                        }
+                        DispatchQueue.main.async {
+//                            self.conAlert.title = "エラー"
+//                            self.conAlert.message = msg
+//                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        }
+                    }else {
+                        //取得成功
+                        let list = json!["GRDLST"] as? [NSDictionary] ?? []
+                        grd_lst = []
+                        for li in list {
+                            let cd = li["GRDCD"] as? String ?? ""
+                            let nm = li["GRDNM"] as? String ?? ""
+                            grd_lst.append((cd:cd, nm:nm))
+                        }
+                        //print(grd_lst)
+                        defaults.setValue(Date().string, forKey: "lastDataDownload")
+                    }
+                    
+                }else {
+                    print(err!)
+                    if errMsg == "" {
+                        errMsg = "データ取得に失敗しました"
+                    }
+                    DispatchQueue.main.async {
+//                        self.conAlert.title = "エラー"
+//                        self.conAlert.message = errMsg
+//                        self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    }
+                    
+                }
+                
+            })
+            
+        //}
+        
     }
     
     func failed(status: ConnectionStatus) {

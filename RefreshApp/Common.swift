@@ -61,6 +61,7 @@ var appVersion = ""
 var isHostConnected:Bool = false
 
 let defaults = UserDefaults.standard
+var grd_lst:[(cd:String, nm:String)] = []
 
 //#if DEV
 //let hostURL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?" //開発
