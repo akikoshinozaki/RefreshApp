@@ -91,24 +91,23 @@ class ViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
-    @IBAction func unsetnList(_ sender: UIButton) {
+    @IBAction func unsentList(_ sender: UIButton) {
         let storyboard: UIStoryboard = self.storyboard!
         let list = storyboard.instantiateViewController(withIdentifier: "list")
         self.navigationController?.pushViewController(list, animated: true)
     }
     
-    
-    func showAlert(title:String, message:String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
+
     @IBAction func refreshReception(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main2", bundle: nil)
-        let accept = storyboard.instantiateViewController(withIdentifier: "recept")
-        self.navigationController?.pushViewController(accept, animated: true)
+        let recept = storyboard.instantiateViewController(withIdentifier: "recept")
+        self.navigationController?.pushViewController(recept, animated: true)
     }
    
+    @IBAction func refreshInquiry(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let inq = storyboard.instantiateViewController(withIdentifier: "inquiry")
+        self.navigationController?.pushViewController(inq, animated: true)
+    }
 }
 

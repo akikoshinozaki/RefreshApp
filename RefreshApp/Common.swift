@@ -68,6 +68,7 @@ var grd_lst:[(cd:String, nm:String)] = []
 //#else
 //let hostURL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?"
 //#endif
+let testURL = "https://maru8ibm.maruhachi.co.jp:3409/HTP2/WAH001CL.PGM?" //開発
 let m2URL = "https://maru8ibm.maruhachi.co.jp:4343/HTP2/WAH001CL.PGM?" //開発
 let m8URL = "https://maru8ibm.maruhachi.co.jp/HTP2/WAH001CL.PGM?" //本番
 var hostURL = m8URL

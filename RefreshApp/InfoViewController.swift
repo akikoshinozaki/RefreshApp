@@ -38,6 +38,10 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
+    var grd:String = ""
+    var g_ritsu:Int!
+    var jita_k:Int!
+    
     
     var conAlert:UIAlertController!
     
@@ -46,7 +50,9 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 
         // Do any additional setup after loading the view.
         dspInit()
-        self.display(json: _json!)
+        if _json != nil {
+            self.display(json: _json!)
+        }
         
         for btn in btns {
             btn.layer.cornerRadius = 8
@@ -59,6 +65,10 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         //変数クリア
         seizouHI = nil
         YOTEI_HI = nil
+        jita_k = nil
+        g_ritsu = nil
+        grd = ""
+        
         //表示クリア
         for lbl in dspLbls {
             lbl.text = ""
@@ -66,18 +76,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         
         for f in fields {
             f.text = ""
-            //f.tag = 300 + i
             f.delegate = self
         }
         yoteiBtn.setTitle("日付を選択", for: .normal)
         seizouBtn.setTitle("日付を選択", for: .normal)
         
-//        for f in fields {
-//            f.isUserInteractionEnabled = true
-//        }
         yoteiBtn.isUserInteractionEnabled = true
-//        seizouBtn.isUserInteractionEnabled = true
-//        enrollBtn.isHidden = true
         deleteBtn.isHidden = true
         printBtn.isHidden = true
         enrollLabel.isHidden = true
@@ -131,20 +135,35 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         if printData.kigen != "0/00/00" {
             dspLbls[7].text = printData.kigen
         }
-        if let yuuyo = json["YUUYO"] as? String, yuuyo != "          0" {
+        if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
             dspLbls[8].text = yuuyo.trimmingCharacters(in: .whitespaces)
         }
-        
-        if let grade = json["GRADE"] as? String, grade != "  " {
-            fields[0].text = grade
+        //自社・他社区分
+        if let jita = json["JITA_K"] as? String, jita != " " {
+            jita_k = Int(jita) ?? 0
+            if jita_k > 0 {
+                fields[0].text = arr1[jita_k-1]
+            }
         }
-//        if var wata = json["WATA"] as? String {
-        if var wata = json["WATA"] as? String, wata != "     0.0" {
+        //羽毛グレード
+        if let grade = json["GRADE"] as? String, grade != "  " {
+            grd = grade
+            if let obj = grd_lst.first(where: {$0.cd==grd}) {
+                fields[1].text = obj.nm
+            }
+        }
+        //原料比率
+        if let ritsu = Double(json["RITSU"] as? String ?? "0.0"), ritsu != 0.0 {
+            g_ritsu = Int(ritsu)
+            fields[2].text = "\(g_ritsu!)"
+        }
+                
+        if var wata = json["WATA"] as? String, wata != "0.0" {
             wata = wata.trimmingCharacters(in: .whitespaces)
             if let dwata = Double(wata) {
-                fields[1].text = "\(dwata)"
+                fields[3].text = "\(dwata)"
             }else {
-                fields[1].text = wata
+                fields[3].text = wata
             }
         }
         
@@ -153,10 +172,6 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             seizouBtn.setTitle(formatter.string(from: seizouHI), for: .normal)
         }
         
-//        for f in fields {
-//            f.isUserInteractionEnabled = !enrolled
-//        }
-//        seizouBtn.isUserInteractionEnabled = !enrolled
         yoteiBtn.isUserInteractionEnabled = !enrolled
 
     }
@@ -263,12 +278,23 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                     return
                 }
                 alertTitle = "登録してよろしいですか"
+                param["YOTEI_HI"] = YOTEI_HI.toString(format: "yyyyMMdd")
             }
-            //if fields[0].text != "" {
-                param["GRADE"] = fields[0].text!
-            //}
+            
+            if fields[0].text != "" {
+                //自社・他社区分
+                param["JITA_K"] = String(jita_k)
+            }
             if fields[1].text != "" {
-                param["WATA"] = fields[1].text!
+                //グレード
+                param["GRADE"] = grd
+            }
+            if fields[2].text != "" {
+                //比率
+                param["RITSU"] = String(g_ritsu)
+            }
+            if fields[3].text != "" {
+                param["WATA"] = fields[3].text!
             }else {
                 param["WATA"] = "0.0"
             }
@@ -382,7 +408,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 }
                 
             }else {
-                print(err!)
+                //print(err!.localizedDescription)
                 if errMsg == "" {
                     errMsg = "データ取得に失敗しました"
                 }
@@ -397,55 +423,66 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         })
         
     }
-    var grd:String = ""
-    var g_ritsu:Int!
-    var jita_k:Int!
+    let arr1 = ["1:自社","2:他社"]
+    
     func showPicker(_ textField:UITextField) {
-        print(textField.tag)
-        //textField.text = "tapped!"
+        //print(textField.tag)
         
-
-        switch textField.tag {
-        case 301:
+        var array:[String] = []
+        let intArr:[Int] = ([Int])(70...95)
+        var popTitle = ""
+        var row:Int = 0
+        if textField.tag == 301 {
             //自社・他社
-            let array = ["1:自社","2:他社"]
-            let picker = StringPickerPopover(title: "選択してください", choices: array)
-                .setDoneButton(action: {
-                    (_, idx, item) in
-                    self.jita_k = idx+1
-                    textField.text = item
-                })
-                .setCancelButton(action: { _,_,_ in print("キャンセル") })
-            picker.appear(originView: textField, baseViewController: self)
-        case 302:
+            array = arr1
+            popTitle = "自社・他社区分"
+            if jita_k != nil {
+                row = jita_k-1
+            }
+        }else if textField.tag == 302 {
             //グレード
-            let array = grd_lst.map({$0.nm})
-            grd = ""
-            let picker = StringPickerPopover(title: "選択してください", choices: array)
-                .setDoneButton(action: {
-                    (_, idx, item) in
-                    self.grd = grd_lst[idx].cd
-                    textField.text = item
-                    
-                })
-                .setCancelButton(action: { _,_,_ in print("キャンセル") })
-            picker.appear(originView: textField, baseViewController: self)
-        case 303:
+            array = grd_lst.map({$0.nm})
+            popTitle = "原料グレード"
+            print(grd)
+            if grd != "" {
+                row = grd_lst.firstIndex(where: {$0.cd==grd}) ?? 0
+            }
+        }else if textField.tag == 303 {
             //原料比率
-            let arr:[Int] = ([Int])(70...95)
-            let array:[String] = arr.map({String($0)+" %"})
-            let picker = StringPickerPopover(title: "選択してください", choices: array)
-                .setDoneButton(action: {
-                    (_, idx, item) in
-                    self.g_ritsu = arr[idx]
-                    textField.text = item
-                    
-                })
-                .setCancelButton(action: { _,_,_ in print("キャンセル") })
-            picker.appear(originView: textField, baseViewController: self)
-        default:
-            return
+            array = intArr.map({String($0)})
+            popTitle = "原料比率"
+            row = intArr.firstIndex(where: {$0==g_ritsu}) ?? 0
         }
+        let font = UIFont(name: "HelveticaNeue",size: 17.0)!
+        let picker = StringPickerPopover(title: popTitle, choices: array)
+            .setFont(font)
+            .setDoneButton(action: {
+                (_, idx, item) in
+                
+                textField.text = item
+                if textField.tag == 301 {
+                    self.jita_k = idx+1
+                }else if textField.tag == 302 {
+                    self.grd = grd_lst[idx].cd
+                    print(grd_lst[idx])
+                    let rField = self.view.viewWithTag(303) as! UITextField
+                    if self.grd == "99"{
+                        //???の時
+                        self.view.viewWithTag(302)
+                        rField.text = "---"
+                        self.g_ritsu = 0
+                        rField.isUserInteractionEnabled = false
+                    }else {
+                        rField.isUserInteractionEnabled = true
+                    }
+
+                }else if textField.tag == 303 {
+                    self.g_ritsu = intArr[idx]
+                }
+            })
+            .setSelectedRow(row)
+            .setCancelButton(action: { _,_,_ in print("キャンセル") })
+        picker.appear(originView: textField, baseViewController: self)
 
     }
 }

@@ -39,6 +39,7 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
         }
         
         let url = URL(string: hostURL)!
+        print(url)
         
         let config = URLSessionConfiguration.default
         //config.timeoutIntervalForRequest = 5.0

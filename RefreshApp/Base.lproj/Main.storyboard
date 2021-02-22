@@ -27,7 +27,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="first" id="BYZ-38-t0r" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -196,7 +196,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-25" y="-1171"/>
+            <point key="canvasLocation" x="-23" y="-1209"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="1OJ-dc-cpG">
@@ -253,7 +253,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="unsetnList:" destination="PX7-fI-tfb" eventType="touchUpInside" id="3HB-kc-F8h"/>
+                                    <action selector="unsentList:" destination="PX7-fI-tfb" eventType="touchUpInside" id="mXg-cd-Ic7"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -706,7 +706,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="unsetnList:" destination="9I5-Et-Lft" eventType="touchUpInside" id="8XI-0d-U33"/>
+                                    <action selector="unsentList:" destination="9I5-Et-Lft" eventType="touchUpInside" id="BLF-le-KQ0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q4T-Jq-hjv">
@@ -718,6 +718,14 @@
                                 <state key="normal" image="reception.png"/>
                                 <connections>
                                     <action selector="refreshReception:" destination="9I5-Et-Lft" eventType="touchUpInside" id="j0s-xU-QQT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K3Z-BG-Bag">
+                                <rect key="frame" x="194" y="529" width="141" height="82"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="問い合わせ"/>
+                                <connections>
+                                    <action selector="refreshInquiry:" destination="9I5-Et-Lft" eventType="touchUpInside" id="uCH-Ei-UZg"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -761,7 +769,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tMt-OH-KOc" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-47" y="-336"/>
+            <point key="canvasLocation" x="-47.65625" y="-336.328125"/>
         </scene>
     </scenes>
     <resources>

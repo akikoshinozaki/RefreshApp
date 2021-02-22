@@ -16,6 +16,12 @@ protocol ScannerViewDelegate{
     func getData(data:String)
 }
 
+extension ScannerViewDelegate {
+    func removeView(){
+        print(#function)
+    }
+}
+
 class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
 
     var delegate:ScannerViewDelegate?

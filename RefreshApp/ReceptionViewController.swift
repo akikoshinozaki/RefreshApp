@@ -181,7 +181,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         envLabel.isHidden = true
         #endif
         
-        
         self.dspInit()
 
     }
@@ -195,9 +194,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         enrolled = false
         kanriLabel.text = ""
         if tagNO == "" {
+            tagField.text = ""
             tagLabel.text = "TagNo.未入力"
             tagLabel.textColor = .gray
-            tagField.text = ""
         }
         
         labelImgView.image = nil
@@ -279,6 +278,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     //MARK: - ScannerDelegate
     
     @objc func scan() {
+        self.view.endEditing(true)
         tagField.text = ""
         scanner = ScannerView(frame: self.view.frame)
         
@@ -294,10 +294,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         scanner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         scanner.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         scanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-    }
-    
-    func removeView() {
-        //スキャナーが消えたときの処理・各種ボタン有効に
     }
     
     func getData(data: String) {
@@ -325,7 +321,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }
     }
     
-    @IBAction func clearTag(_ sender: Any) {
+    @IBAction func clear(_ sender: Any) {
         if imageArr.count > 0 {
             let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -334,7 +330,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             return
         }else {
             tagNO = ""
-            setTag()
             dspInit()
         }
     }
@@ -378,15 +373,15 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         let nouki = Array(printData.nouki)
         if nouki.count==8 {
             print(nouki.prefix(4))
-            lbl.label6.text = nouki[0...3]+"-"+nouki[4...5]+"-"+nouki[6...7]
+            lbl.label6.text = nouki[0...3]+"/"+nouki[4...5]+"/"+nouki[6...7]
         }else {
             lbl.label6.text = printData.nouki
         }
         let kigen = Array(printData.kigen)
         if kigen.count==8 {
-            lbl.label6.text = kigen[0...3]+"-"+kigen[4...5]+"-"+kigen[6...7]
+            lbl.label7.text = kigen[0...3]+"/"+kigen[4...5]+"/"+kigen[6...7]
         }else {
-            lbl.label6.text = printData.kigen
+            lbl.label7.text = printData.kigen
         }
         
         lbl.qrView.image = UIImage.makeQR(code: QR)
@@ -565,7 +560,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         else {
             print("Success - Print Image")
             DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
-                let alert = UIAlertController(title: "完了", message: "", preferredStyle: .alert)
+                let alert = UIAlertController(title: "印刷完了", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 
                 self.present(alert, animated: true, completion: nil)
@@ -622,11 +617,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
     }
     
-    @IBAction func unsetnList(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let list = storyboard.instantiateViewController(withIdentifier: "list")
-        self.navigationController?.pushViewController(list, animated: true)
-    }
     
     @objc func back(){
         if imageArr.count > 0 {
@@ -637,7 +627,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
         }else {
             tagNO = ""
-            setTag()
             dspInit()
             self.navigationController?.popViewController(animated: true)
         }
@@ -712,19 +701,7 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
 }
 
 extension ReceptionViewController:UITextFieldDelegate {
-    /*
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if imageArr.count > 0 {
-            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 
-            self.present(alert, animated: true, completion: nil)
-            return false
-        }else {
-            return true
-        }
-    }*/
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         print(textField.tag)
         if textField.text! == "" {return}
@@ -762,9 +739,9 @@ extension ReceptionViewController:InfoViewControllerDelegate {
         _json = json
         if type == "print" {
             self.display()
-        }else {
+        }else if type == "delete" {
             self.dspInit()
-            self.clearTag(self)
+            self.clear(self)
         }
         
     }
