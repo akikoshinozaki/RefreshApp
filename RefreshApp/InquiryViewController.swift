@@ -85,6 +85,11 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
             //登録済み → 再印刷or削除
             infoView.isHidden = false
+            infoView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            infoView.layer.shadowColor = UIColor.black.cgColor
+            infoView.layer.shadowOpacity = 0.6
+            infoView.layer.shadowRadius = 4
+            
             yotei_hi = yotei.date.short
             yoteiLabel.text = formatter.string(from: yotei.date)
             kanri = yotei
