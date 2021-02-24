@@ -54,7 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #if DEV
         hostURL = m2URL //開発
         xsrvURL = m2xsrvURL
-        //id = "dev"
         devMode = true
         #else
         devMode =  defaults.bool(forKey: "devMode")
@@ -62,7 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         if devMode {
             hostURL = m2URL //開発
             xsrvURL = m2xsrvURL
-            //id = "dev"
         }else {
             hostURL = m8URL //本番
             xsrvURL = m8xsrvURL
@@ -71,7 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #endif
         print(id)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: id)
+//        let vc = storyboard.instantiateViewController(identifier: id) //受付入力リリース後
+        let vc = storyboard.instantiateViewController(identifier: "first")
         window?.rootViewController = UINavigationController(rootViewController: vc)
         
         return true
@@ -121,6 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
 //                            self.conAlert.title = "エラー"
 //                            self.conAlert.message = msg
 //                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            SimpleAlert.make(title: "エラー" , message: msg)
                         }
                     }else {
                         //取得成功
