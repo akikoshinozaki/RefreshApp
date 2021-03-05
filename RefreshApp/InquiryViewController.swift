@@ -9,6 +9,14 @@
 import UIKit
 import AVFoundation
 
+struct KEIYAKU {
+    var tag:String = ""
+    var syohinCD:String = ""
+    var syohinNM:String = ""
+    var jyotai:String = ""
+    var azukari:String = ""
+}
+
 class InquiryViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var envLabel: UILabel!
@@ -26,10 +34,15 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     
     @IBOutlet var tagField: UITextField!
     @IBOutlet var dspLbls: [UILabel]!
-
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var detailView1: UIView!
+    
     var scanner:ScannerView!
     var conAlert:UIAlertController!
     let arr1 = ["1:自社","2:他社"]
+    var keiMeisai:[KEIYAKU] = []
+    var imgArr:[UIImage] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +71,11 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         #endif
 
         dspInit()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
 
     }
     
@@ -74,9 +92,13 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         infoView.isHidden = true
     }
 
+    @IBOutlet weak var keiyakuLabel: UILabel!
+    var keiyakuNO = ""
     func display(json:NSDictionary){
-
+        keiMeisai = []
         kanriLabel.text = ""
+        keiyakuNO = ""
+        
         var kanri = ""
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
@@ -112,7 +134,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         dspLbls[1].text = printData.itemCD+": "+printData.itemNM
         dspLbls[2].text = json["PATERN"] as? String ?? ""
         dspLbls[3].text = json["CLASS"] as? String ?? ""
-        dspLbls[4].text = json["KEI_NO"] as? String ?? ""
+        keiyakuNO = json["KEI_NO"] as? String ?? ""
+        dspLbls[4].text = keiyakuNO
         if printData.customer != "" {
             dspLbls[5].text = printData.customer+" 様"
         }
@@ -159,6 +182,23 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         }
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
+        
+        //明細
+        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>1 {
+            //seizouLabel.text = formatter.string(from: seizou.date)
+            for dic in arr {
+                print(dic)
+                let obj = KEIYAKU(tag: dic["TAG_NO"] as? String ?? "",
+                                  syohinCD: dic["SYOHIN_CD"] as? String ?? "",
+                                  syohinNM: dic["SYOHIN_NM"] as? String ?? "",
+                                  jyotai: dic["JYOTAI"] as? String ?? "",
+                                  azukari: dic["AZU_HI"] as? String ?? ""
+                )
+                keiMeisai.append(obj)
+            }
+        }
+        keiyakuLabel.text = keiyakuNO
+        self.tableView.reloadData()
     }
     
     //MARK: - ScannerDelegate
@@ -197,14 +237,22 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     func setTag(){
         if tagNO != "" {
             self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
+            self.getImages(tagNo: tagNO	)
         }
     }
 
     
     @objc func back(){
-        tagNO = ""
-        dspInit()
-        self.navigationController?.popViewController(animated: true)
+        let alert = UIAlertController(title: "データをクリアして戻ります", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+            Void in
+            tagNO = ""
+            //dspInit()
+            self.navigationController?.popViewController(animated: true)
+        }))
+        alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        
 
     }
     
@@ -223,7 +271,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         }
         
         IBM().IBMRequest(type: type, parameter: param, completionClosure: {(_,json,err) in
-            print("IBMRequest")
+            //print("IBMRequest")
             _json = nil
             printData = nil
             
@@ -270,7 +318,96 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         
     }
     
+    //アップロード済みの画像取得
+    func getImages(tagNo:String) {
+
+        var json:NSDictionary!
+        let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
+        let url = URL(string: path)!
+        let param = "tagNo=\(tagNo)"
+        let config = URLSessionConfiguration.default
+        //config.timeoutIntervalForRequest = 5.0
+        let session = URLSession(configuration: config)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = param.data(using: .utf8)
+        // 通信のタスクを生成.
+        let task = session.dataTask(with:request, completionHandler: {
+            (data, response, err) in
+            if (err == nil){
+                if(data != nil){
+                    //戻ってきたデータを解析
+                    do{
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
+                        print(json!)
+                        let arr = json["images"] as? [String] ?? []
+                        DispatchQueue.main.async {
+                            self.imgDL(arr:arr, tag:tagNo)
+                        }
+
+                    }catch{
+                        print("json error")
+                        errMsg += "E3001:json error"
+                    }
+                }else{
+                    print("レスポンスがない")
+                    errMsg += "E3001:No Response"
+                }
+                
+            } else {
+                print("error : \(err!)")
+                if (err! as NSError).code == -1001 {
+                    print("timeout")
+                }
+                
+                errMsg += "E3003:\(err!.localizedDescription)"
+            }
+
+        })
+        
+        // タスクの実行.
+        task.resume()
+        
+    }
+    
+    
+    func imgDL(arr:[String], tag:String) {
+
+        imgArr = []
+        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
+        self.present(imgAlert, animated: true, completion: nil)
+        
+        for file in arr {
+            //画像をダウンロードして配列に保存
+            let str = "https://ipad:m8mawata@oktss03.xsrv.jp/refreshPhoto/\(file)"
+            let encodeStr = str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            let url = URL(string: encodeStr)!
+
+            print(url)
+            do{
+                let imageData = try Data(contentsOf: url)
+                let img = UIImage(data:imageData)
+
+                imgArr.append(img!)
+                
+            }catch {
+                //エラー
+                print("imageファイルにアクセスできない")
+            }
+        }
+        
+        //print(imgArr.count)
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
+        
+        imgAlert.dismiss(animated: true, completion: nil)
+        
+    }
+    
 }
+
 extension InquiryViewController:UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -298,6 +435,46 @@ extension InquiryViewController:UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.endEditing(true)
+    }
+    
+}
+
+extension InquiryViewController:UITableViewDelegate,UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return keiMeisai.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //let cell = tableView.dequeueReusableHeaderFooterView(withIdentifier: "InqTableViewCell") as! InqTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InqTableViewCell", for: indexPath) as! InqTableViewCell
+        
+        let obj = keiMeisai[indexPath.row]
+        
+        cell.label1.text = obj.tag //TAG No.
+        cell.label2.text = obj.syohinCD //商品CD
+        cell.label3.text = obj.syohinNM //商品名
+        cell.label4.text = obj.jyotai //状態
+        cell.label5.text = obj.azukari //預り日
+        
+        return cell
+    }
+    
+    
+    
+    
+}
+
+extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return imgArr.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCollectionViewCell", for: indexPath) as! MyCollectionViewCell
+        cell.imageView.image = imgArr[indexPath.item]
+
+        return cell
     }
     
 }

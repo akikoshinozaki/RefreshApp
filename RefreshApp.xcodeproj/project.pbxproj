@@ -42,6 +42,8 @@
 		C35E2FBB255A1669009C9057 /* unsent.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FBA255A1669009C9057 /* unsent.png */; };
 		C35E2FBD255A191E009C9057 /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FBC255A191D009C9057 /* barcode.png */; };
 		C35E2FBF255A6F71009C9057 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E2FBE255A6F71009C9057 /* Common.swift */; };
+		C3675D1725F1E21300EF415D /* barcode2.png in Resources */ = {isa = PBXBuildFile; fileRef = C3675D1625F1E21300EF415D /* barcode2.png */; };
+		C3675D1A25F1EE4E00EF415D /* InqTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */; };
 		C388924D25E3750900EFD720 /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C388924C25E3750900EFD720 /* InquiryViewController.swift */; };
 		C38C13CD25BA88B800653CE9 /* HostConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13CC25BA88B800653CE9 /* HostConnect.swift */; };
 		C38C13D425BA8BBE00653CE9 /* IBM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13D325BA8BBE00653CE9 /* IBM.swift */; };
@@ -125,6 +127,8 @@
 		C35E2FBA255A1669009C9057 /* unsent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unsent.png; sourceTree = "<group>"; };
 		C35E2FBC255A191D009C9057 /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
 		C35E2FBE255A6F71009C9057 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		C3675D1625F1E21300EF415D /* barcode2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode2.png; sourceTree = "<group>"; };
+		C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InqTableViewCell.swift; sourceTree = "<group>"; };
 		C388924C25E3750900EFD720 /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
 		C38C13CC25BA88B800653CE9 /* HostConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostConnect.swift; sourceTree = "<group>"; };
 		C38C13D325BA8BBE00653CE9 /* IBM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IBM.swift; sourceTree = "<group>"; };
@@ -203,6 +207,7 @@
 				4E776DE22557D010009344EB /* Camera2ViewController.swift */,
 				4EEC4D5D25556C69003AF923 /* Main.storyboard */,
 				C3C95DEF25889D6F00BBE180 /* Main2.storyboard */,
+				C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */,
 				C388924C25E3750900EFD720 /* InquiryViewController.swift */,
 				C322589E2559215A007BB719 /* UnsentViewController.swift */,
 				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
@@ -242,6 +247,7 @@
 				C35E2FB2255A15F2009C9057 /* qrScan.png */,
 				C35E2FB4255A1627009C9057 /* camera.png */,
 				C35E2FBC255A191D009C9057 /* barcode.png */,
+				C3675D1625F1E21300EF415D /* barcode2.png */,
 				C35E2FB8255A165C009C9057 /* upload.png */,
 				C35E2FBA255A1669009C9057 /* unsent.png */,
 			);
@@ -406,6 +412,7 @@
 				4E776DE725580EEA009344EB /* left.png in Resources */,
 				4EEC4D6425556C6C003AF923 /* Assets.xcassets in Resources */,
 				4EEC4D5F25556C69003AF923 /* Main.storyboard in Resources */,
+				C3675D1725F1E21300EF415D /* barcode2.png in Resources */,
 				C35E2FB5255A1627009C9057 /* camera.png in Resources */,
 				4E5DB93125557CD300A53584 /* shutter.png in Resources */,
 				C35E2FB9255A165C009C9057 /* upload.png in Resources */,
@@ -485,6 +492,7 @@
 				4E776DE32557D010009344EB /* Camera2ViewController.swift in Sources */,
 				C388924D25E3750900EFD720 /* InquiryViewController.swift in Sources */,
 				4E776DDD2557B853009344EB /* MyCollectionViewCell.swift in Sources */,
+				C3675D1A25F1EE4E00EF415D /* InqTableViewCell.swift in Sources */,
 				C3C95DF125889D6F00BBE180 /* BRSelectDeviceTableViewController.swift in Sources */,
 				C3C95DF625889D6F00BBE180 /* PrintSampleViewController.swift in Sources */,
 				4E6E771425D36F6500BBA885 /* BRLabelView.swift in Sources */,
@@ -668,7 +676,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.14;
+				CURRENT_PROJECT_VERSION = 1.15;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -684,7 +692,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -701,7 +709,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.14;
+				CURRENT_PROJECT_VERSION = 1.15;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -717,7 +725,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -796,7 +804,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.14;
+				CURRENT_PROJECT_VERSION = 1.15;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -812,7 +820,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -886,7 +894,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.14;
+				CURRENT_PROJECT_VERSION = 1.15;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -902,7 +910,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
