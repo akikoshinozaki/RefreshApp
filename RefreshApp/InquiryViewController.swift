@@ -24,6 +24,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var yoteiLabel:UILabel!
+     /*
     @IBOutlet weak var seizouLabel:UILabel!
     @IBOutlet weak var grade1:UILabel!
     @IBOutlet weak var grade2:UILabel!
@@ -31,18 +32,21 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var juryo1:UILabel!
     @IBOutlet weak var juryo2:UILabel!
     @IBOutlet weak var yusen:UILabel!
-    
+    */
     @IBOutlet var tagField: UITextField!
     @IBOutlet var dspLbls: [UILabel]!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var infoCollection: UICollectionView!
+    @IBOutlet weak var imgCollection: UICollectionView!
     @IBOutlet weak var detailView1: UIView!
     
     var scanner:ScannerView!
     var conAlert:UIAlertController!
     let arr1 = ["1:自社","2:他社"]
     var keiMeisai:[KEIYAKU] = []
-    var imgArr:[UIImage] = []
+    var json_:NSDictionary!
+    var detail:DetailView!
+    var detail2:DetailView2!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +78,12 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         
         tableView.delegate = self
         tableView.dataSource = self
-        collectionView.delegate = self
-        collectionView.dataSource = self
-
+        imgCollection.delegate = self
+        imgCollection.dataSource = self
+        infoCollection.delegate = self
+        infoCollection.dataSource = self
+        infoCollection.isPagingEnabled = true
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -89,7 +96,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
             lbl.text = ""
         }
         kanriLabel.text = ""
-        infoView.isHidden = true
+        //infoView.isHidden = true
     }
 
     @IBOutlet weak var keiyakuLabel: UILabel!
@@ -129,76 +136,103 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
                                    itemNM: json["SYOHIN_NM"] as? String ?? "",
                                    nouki: json["NOUKI"] as? String ?? "",
                                    kigen: json["KIGEN"] as? String ?? "")
+        
+        //let detail:DetailView = DetailView(frame: self.infoView.frame)
+        if detail == nil {return}
+        if detail2 == nil {return}
+        print("detail not nil")
 
-        dspLbls[0].text = printData.tagNO
-        dspLbls[1].text = printData.itemCD+": "+printData.itemNM
-        dspLbls[2].text = json["PATERN"] as? String ?? ""
-        dspLbls[3].text = json["CLASS"] as? String ?? ""
+        //１ページ目
+        for lbl in detail.labels{ //初期化
+            lbl.text = ""
+        }
+
+        detail.yusenLabel.isHidden = true
+        detail.tagLabel.text = printData.tagNO
+        detail.syohinLabel.text = printData.itemCD+": "+printData.itemNM
+        detail.pattenLabel.text = json["PATERN"] as? String ?? ""
+        detail.classLabel.text = json["CLASS"] as? String ?? ""
         keiyakuNO = json["KEI_NO"] as? String ?? ""
-        dspLbls[4].text = keiyakuNO
+        detail.keiyakuLabel.text = keiyakuNO
+
         if printData.customer != "" {
-            dspLbls[5].text = printData.customer+" 様"
+            detail.customerLabel.text = printData.customer+" 様"
         }
 
-        if printData.nouki != "0/00/00" {
-            dspLbls[6].text = printData.nouki
-        }
-        if printData.kigen != "0/00/00" {
-            dspLbls[7].text = printData.kigen
-        }
-        if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
-            dspLbls[8].text = yuuyo.trimmingCharacters(in: .whitespaces)
-        }
         //自社・他社区分
         if let jita = json["JITA_K"] as? String, jita != " " {
             let jita_k = Int(jita) ?? 0
             if jita_k > 0 {
-                grade1.text = arr1[jita_k-1]
+                detail.grade1Label.text = arr1[jita_k-1]
             }
         }
         //羽毛グレード
         if let grade = json["GRADE"] as? String, grade != "  " {
             if let obj = grd_lst.first(where: {$0.cd==grade}) {
-                grade2.text = obj.nm
+                detail.grade2Label.text = obj.nm
             }
         }
         //原料比率
         if let ritsu = Double(json["RITSU"] as? String ?? "0.0"), ritsu != 0.0 {
-            grade3.text = "\(Int(ritsu))"
+            detail.grade3Label.text = "\(Int(ritsu))"
         }
                 
         if var wata = json["WATA"] as? String, wata != "0.0" {
             wata = wata.trimmingCharacters(in: .whitespaces)
             if let dwata = Double(wata) {
-                juryo1.text = "\(dwata)"
+                detail.juryo1Label.text = "\(dwata)"
             }else {
-                juryo1.text = wata
+                detail.juryo1Label.text = wata
             }
         }
         
         if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
-            seizouLabel.text = formatter.string(from: seizou.date)
+            detail.seizouLabel.text = formatter.string(from: seizou.date)
 
         }
+        //２ページ目
+        for lbl in detail2.labels{ //初期化
+            lbl.text = ""
+        }
+
+        if printData.nouki != "0/00/00" {
+            detail2.noukiLabel.text = printData.nouki
+        }
+        if printData.kigen != "0/00/00" {
+            detail2.kigenLabel.text = printData.kigen
+        }
+        if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
+            detail2.yuuyoLabel.text = yuuyo.trimmingCharacters(in: .whitespaces)
+        }
+        
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
         
         //明細
-        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>1 {
+        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>0 {
             //seizouLabel.text = formatter.string(from: seizou.date)
             for dic in arr {
                 print(dic)
+                var azukari = ""
+                if let azu = dic["AZU_HI"] as? String, azu.count == 6  { //預かり日yy/mm/ddに変換
+                    let str = Array(azu)
+                    azukari = str[0...1]+"/"+str[2...3]+"/"+str[4...5]
+                    
+                }
                 let obj = KEIYAKU(tag: dic["TAG_NO"] as? String ?? "",
                                   syohinCD: dic["SYOHIN_CD"] as? String ?? "",
                                   syohinNM: dic["SYOHIN_NM"] as? String ?? "",
                                   jyotai: dic["JYOTAI"] as? String ?? "",
-                                  azukari: dic["AZU_HI"] as? String ?? ""
+                                  azukari: azukari
                 )
+
                 keiMeisai.append(obj)
             }
         }
         keiyakuLabel.text = keiyakuNO
         self.tableView.reloadData()
+        //infoCollectionを１ページ目にセット
+        self.infoCollection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
     
     //MARK: - ScannerDelegate
@@ -374,7 +408,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     
     func imgDL(arr:[String], tag:String) {
 
-        imgArr = []
+        imageArr = []
         let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
         self.present(imgAlert, animated: true, completion: nil)
         
@@ -389,7 +423,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
                 let imageData = try Data(contentsOf: url)
                 let img = UIImage(data:imageData)
 
-                imgArr.append(img!)
+                imageArr.append(img!)
                 
             }catch {
                 //エラー
@@ -399,11 +433,24 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         
         //print(imgArr.count)
         DispatchQueue.main.async {
-            self.collectionView.reloadData()
+            self.imgCollection.reloadData()
         }
         
         imgAlert.dismiss(animated: true, completion: nil)
         
+    }
+    
+    @objc func pageChange(_ sender:UIButton){
+        //print(sender.tag)
+        var indexPath:IndexPath!
+        if sender.tag == 901 {
+            indexPath = IndexPath(item: 1, section: 0)
+        }else{
+            indexPath = IndexPath(item: 0, section: 0)
+        }
+        infoCollection.isPagingEnabled = false
+        infoCollection.scrollToItem(at: indexPath, at: .left, animated: true)
+        infoCollection.isPagingEnabled = true
     }
     
 }
@@ -459,22 +506,54 @@ extension InquiryViewController:UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     
-    
-    
-    
 }
 
 extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return imgArr.count
+        if collectionView.tag == 888 { //imageCollectionView
+            return imageArr.count
+        }else {//infoCollectionView
+            return 2
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCollectionViewCell", for: indexPath) as! MyCollectionViewCell
-        cell.imageView.image = imgArr[indexPath.item]
+        if collectionView.tag == 888 { //imageCollectionView
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCollectionViewCell", for: indexPath) as! MyCollectionViewCell
+            cell.imageView.image = imageArr[indexPath.item]
+            
+            return cell
+        }else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+            let colSize = collectionView.frame.size
+            if indexPath.row == 0 { //1ページ目
+                detail = DetailView(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height))
+                detail.nextBtn.tag = 901
+                detail.nextBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
+                cell.contentView.addSubview(detail)
 
-        return cell
+            } else {
+                //2ページ目
+                detail2 = DetailView2(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height))
+                detail2.backBtn.tag = 902
+                detail2.backBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
+                cell.contentView.addSubview(detail2)
+            }
+            return cell
+            
+        }
+        
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView.tag == 888 {//imageCollectionView
+            num = indexPath.row
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let disp = storyboard.instantiateViewController(withIdentifier: "disp")
+            disp.modalPresentationStyle = .fullScreen
+            
+            self.present(disp, animated: true, completion: nil)
+        }
+    }
+        
 }
