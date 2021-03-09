@@ -18,17 +18,19 @@ class DetailView: UIView {
     @IBOutlet var classLabel: UILabel!
     @IBOutlet var keiyakuLabel: UILabel!
     @IBOutlet var customerLabel: UILabel!
-    @IBOutlet var grade1Label: UILabel!
-    @IBOutlet var grade2Label: UILabel!
-    @IBOutlet var grade3Label: UILabel!
-    @IBOutlet var juryo1Label: UILabel!
-    @IBOutlet var juryo2Label: UILabel!
-    @IBOutlet var juryo3Label: UILabel!
-    @IBOutlet var juryo4Label: UILabel!
-    @IBOutlet var juryo5Label: UILabel!
-    @IBOutlet var tashiUmoLabel: UILabel!
+    
+    @IBOutlet var gradeLabel: UILabel!
+    @IBOutlet var jitak1Label: UILabel!
+    @IBOutlet var ritsu1Label: UILabel!
+    @IBOutlet var jitak2Label: UILabel!
+    @IBOutlet var gritsu2Label: UILabel!
+    @IBOutlet var juryoLabel: UILabel!
+    @IBOutlet var zogenLabel: UILabel!
     
     @IBOutlet var seizouLabel: UILabel!
+    @IBOutlet var noukiLabel: UILabel!
+    @IBOutlet var kigenLabel: UILabel!
+    @IBOutlet var yuuyoLabel: UILabel!
 
     @IBOutlet var labels: [UILabel]!
     @IBOutlet weak var nextBtn: UIButton!

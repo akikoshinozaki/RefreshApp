@@ -10,9 +10,13 @@ import UIKit
 
 class DetailView2: UIView {
     
-    @IBOutlet var noukiLabel: UILabel!
-    @IBOutlet var kigenLabel: UILabel!
-    @IBOutlet var yuuyoLabel: UILabel!
+
+    //@IBOutlet var juryo1Label: UILabel!
+    @IBOutlet var juryo2Label: UILabel!
+    @IBOutlet var juryo3Label: UILabel!
+    @IBOutlet var juryo4Label: UILabel!
+    @IBOutlet var juryo5Label: UILabel!
+
     @IBOutlet var kensaLabel: UILabel!
     @IBOutlet var ukeLabel: UILabel!
     @IBOutlet var barashinLabel: UILabel!
@@ -20,6 +24,8 @@ class DetailView2: UIView {
     @IBOutlet var tounyuLabel: UILabel!
     @IBOutlet var saisyuLabel: UILabel!
     @IBOutlet var syukkaLabel: UILabel!
+    
+
     
     @IBOutlet var labels: [UILabel]!
     @IBOutlet weak var backBtn: UIButton!

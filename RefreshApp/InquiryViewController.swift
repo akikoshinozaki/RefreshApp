@@ -23,6 +23,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var kanriLabel: UILabel!
     
     @IBOutlet weak var infoView: UIView!
+    @IBOutlet weak var photoView: UIView!
+    @IBOutlet weak var keiyakuView: UIView!
     @IBOutlet weak var yoteiLabel:UILabel!
      /*
     @IBOutlet weak var seizouLabel:UILabel!
@@ -39,6 +41,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var infoCollection: UICollectionView!
     @IBOutlet weak var imgCollection: UICollectionView!
     @IBOutlet weak var detailView1: UIView!
+    @IBOutlet weak var keiyakuLabel: UILabel!
+    var keiyakuNO = ""
     
     var scanner:ScannerView!
     var conAlert:UIAlertController!
@@ -96,11 +100,12 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
             lbl.text = ""
         }
         kanriLabel.text = ""
-        //infoView.isHidden = true
+        infoView.isHidden = true
+        photoView.isHidden = true
+        keiyakuView.isHidden = true
     }
 
-    @IBOutlet weak var keiyakuLabel: UILabel!
-    var keiyakuNO = ""
+    
     func display(json:NSDictionary){
         keiMeisai = []
         kanriLabel.text = ""
@@ -114,6 +119,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
             //登録済み → 再印刷or削除
             infoView.isHidden = false
+            keiyakuView.isHidden = false
             infoView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
             infoView.layer.shadowColor = UIColor.black.cgColor
             infoView.layer.shadowOpacity = 0.6
@@ -147,7 +153,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
             lbl.text = ""
         }
 
-        detail.yusenLabel.isHidden = true
+        
         detail.tagLabel.text = printData.tagNO
         detail.syohinLabel.text = printData.itemCD+": "+printData.itemNM
         detail.pattenLabel.text = json["PATERN"] as? String ?? ""
@@ -158,52 +164,88 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         if printData.customer != "" {
             detail.customerLabel.text = printData.customer+" 様"
         }
-
-        //自社・他社区分
-        if let jita = json["JITA_K"] as? String, jita != " " {
-            let jita_k = Int(jita) ?? 0
-            if jita_k > 0 {
-                detail.grade1Label.text = arr1[jita_k-1]
-            }
+        //優先
+        detail.yusenLabel.isHidden = true
+        if let yusen = json["YUSEN"] as? String, yusen != " " {
+            detail.yusenLabel.isHidden = false
         }
         //羽毛グレード
         if let grade = json["GRADE"] as? String, grade != "  " {
             if let obj = grd_lst.first(where: {$0.cd==grade}) {
-                detail.grade2Label.text = obj.nm
+                detail.gradeLabel.text = obj.nm
             }
         }
-        //原料比率
-        if let ritsu = Double(json["RITSU"] as? String ?? "0.0"), ritsu != 0.0 {
-            detail.grade3Label.text = "\(Int(ritsu))"
+        //自社・他社区分1
+        if let jita = json["JITAK1"] as? String, jita != " " {
+            let jita_k = Int(jita) ?? 0
+            if jita_k > 0 {
+                detail.jitak1Label.text = arr1[jita_k-1]
+            }
         }
-                
+        //原料比率1
+        if let ritsu = Double(json["RITSU1"] as? String ?? "0.0"), ritsu != 0.0 {
+            detail.ritsu1Label.text = "\(Int(ritsu))"
+        }
+        
+        //自社・他社区分2
+        if let jita = json["JITAK2"] as? String, jita != " " {
+            let jita_k = Int(jita) ?? 0
+            if jita_k > 0 {
+                detail.jitak2Label.text = arr1[jita_k-1]
+            }
+        }
+        //原料比率2
+        if let ritsu = Double(json["RITSU2"] as? String ?? "0.0"), ritsu != 0.0 {
+            detail.ritsu1Label.text = "\(Int(ritsu))"
+        }
+        
+        //仕上り重量
         if var wata = json["WATA"] as? String, wata != "0.0" {
             wata = wata.trimmingCharacters(in: .whitespaces)
             if let dwata = Double(wata) {
-                detail.juryo1Label.text = "\(dwata)"
+                detail.juryoLabel.text = "\(dwata)"
             }else {
-                detail.juryo1Label.text = wata
+                detail.juryoLabel.text = wata
             }
         }
         
+        //足し羽毛
+        if let zogen = json["ZOGEN"] as? String, zogen != "0.0"{
+            detail.zogenLabel.text = zogen
+
+        }
+
+        //製造日
         if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
             detail.seizouLabel.text = formatter.string(from: seizou.date)
 
         }
+        //納期・期限
+        if printData.nouki != "0/00/00" {
+            detail.noukiLabel.text = printData.nouki
+        }
+        if printData.kigen != "0/00/00" {
+            detail.kigenLabel.text = printData.kigen
+        }
+        if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
+            detail.yuuyoLabel.text = yuuyo.trimmingCharacters(in: .whitespaces)
+        }
+        
         //２ページ目
         for lbl in detail2.labels{ //初期化
             lbl.text = ""
         }
-
-        if printData.nouki != "0/00/00" {
-            detail2.noukiLabel.text = printData.nouki
-        }
-        if printData.kigen != "0/00/00" {
-            detail2.kigenLabel.text = printData.kigen
-        }
-        if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
-            detail2.yuuyoLabel.text = yuuyo.trimmingCharacters(in: .whitespaces)
-        }
+        //預り重量
+        //洗浄後重量
+        //洗浄前重量
+        //投入重量
+        //受付検査
+        //受付
+        //ばらし
+        //洗浄
+        //投入
+        //最終検査
+        //出荷
         
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
@@ -281,12 +323,12 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
             Void in
             tagNO = ""
+            imageArr = []
             //dspInit()
             self.navigationController?.popViewController(animated: true)
         }))
         alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
-        
 
     }
     
@@ -433,7 +475,10 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         
         //print(imgArr.count)
         DispatchQueue.main.async {
-            self.imgCollection.reloadData()
+            if imageArr.count > 0 {
+                self.photoView.isHidden = false
+                self.imgCollection.reloadData()
+            }
         }
         
         imgAlert.dismiss(animated: true, completion: nil)
