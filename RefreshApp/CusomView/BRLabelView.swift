@@ -19,14 +19,16 @@ class BRLabelView: UIView {
     @IBOutlet weak var label6: UILabel! //納期
     @IBOutlet weak var label7: UILabel! //出荷期限
     @IBOutlet weak var qrView: UIImageView!
+    @IBOutlet weak var yusenLabel: UILabel!
     
-    /*
+    
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
         // Drawing code
+        yusenLabel.isHidden = true
     }
-    */
+    
     
     //コードから生成したときに通る初期化処理
     override init(frame: CGRect) {

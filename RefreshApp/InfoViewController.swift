@@ -30,6 +30,16 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet weak var yoteiBtn:UIButton!
     @IBOutlet weak var seizouBtn:UIButton!
     
+    @IBOutlet weak var tagLabel: UILabel!
+    @IBOutlet weak var keiyakuLabel: UILabel!
+    @IBOutlet weak var customerLabel: UILabel!
+    @IBOutlet weak var syohinLabel: UILabel!
+    @IBOutlet weak var patternLabel: UILabel!
+    @IBOutlet weak var classLabel: UILabel!
+    @IBOutlet weak var nohinLabel: UILabel!
+    @IBOutlet weak var kigenLabel: UILabel!
+    @IBOutlet weak var yuuyoLabel: UILabel!
+    
     @IBOutlet weak var grdField: UITextField!
     @IBOutlet weak var jita1Field: UITextField!
     @IBOutlet weak var ritsu1Field: UITextField!
@@ -42,6 +52,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet var btns: [UIButton]!
     @IBOutlet var dspLbls: [UILabel]!
     @IBOutlet weak var enrollLabel: UILabel!
+    @IBOutlet weak var yusenSwitch: UISwitch!
     
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
@@ -136,23 +147,23 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                                    nouki: json["NOUKI"] as? String ?? "",
                                    kigen: json["KIGEN"] as? String ?? "")
 
-        dspLbls[0].text = printData.tagNO
-        dspLbls[2].text = printData.itemCD+": "+printData.itemNM
-        dspLbls[3].text = json["PATERN"] as? String ?? ""
-        dspLbls[4].text = json["CLASS"] as? String ?? ""
-        dspLbls[1].text = json["KEI_NO"] as? String ?? ""
+        tagLabel.text = printData.tagNO
+        syohinLabel.text = printData.itemCD+": "+printData.itemNM
+        patternLabel.text = json["PATERN"] as? String ?? ""
+        classLabel.text = json["CLASS"] as? String ?? ""
+        keiyakuLabel.text = json["KEI_NO"] as? String ?? ""
         if printData.customer != "" {
-            dspLbls[5].text = printData.customer+" 様"
+            customerLabel.text = printData.customer+" 様"
         }
 
         if printData.nouki != "0/00/00" {
-            dspLbls[6].text = printData.nouki
+            nohinLabel.text = printData.nouki
         }
         if printData.kigen != "0/00/00" {
-            dspLbls[7].text = printData.kigen
+            kigenLabel.text = printData.kigen
         }
         if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
-            dspLbls[8].text = yuuyo.trimmingCharacters(in: .whitespaces)
+            yuuyoLabel.text = yuuyo.trimmingCharacters(in: .whitespaces)
         }
         //羽毛グレード
         if let grade = json["GRADE"] as? String, grade != "  " {
@@ -208,8 +219,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             seizouHI = seizou.date
             seizouBtn.setTitle(formatter.string(from: seizouHI), for: .normal)
         }
-        
-        yoteiBtn.isUserInteractionEnabled = !enrolled
+        //優先
+        yusenSwitch.isOn = json["YUSEN"] as? String == "1"
 
     }
 
@@ -299,8 +310,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             return
         }
         var type:String = ""
-        var param:[String:Any] =
-            ["TAG_NO":tagNO]
+        var param:[String:Any] = ["TAG_NO":tagNO]
         
         var alertTitle:String = ""
         switch sender.tag {
@@ -318,25 +328,46 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 param["YOTEI_HI"] = YOTEI_HI.toString(format: "yyyyMMdd")
             }
             
-            if fields[0].text != "" {
-                //自社・他社区分
-                param["JITAK1"] = String(jitak1)
-            }
-            if fields[1].text != "" {
+            if grdField.text != "" {
                 //グレード
                 param["GRADE"] = grd
             }
-            if fields[2].text != "" {
+            if jita1Field.text != "" {
+                //自社・他社区分
+                param["JITAK1"] = String(jitak1)
+            }
+            if ritsu1Field.text != "" {
                 //比率
                 param["RITSU1"] = String(ritsu1)
             }
-            if fields[3].text != "" {
-                param["WATA"] = fields[3].text!
+            if jita2Field.text != "" {
+                //自社・他社区分
+                param["JITAK2"] = String(jitak2)
+            }
+            if ritsu2Field.text != "" {
+                //比率
+                param["RITSU2"] = String(ritsu2)
+            }
+            if juryoField.text != "" {
+                param["WATA"] = juryoField.text!
             }else {
-                param["WATA"] = "0.0"
+                if type == "UPDATE" {
+                    param["WATA"] = "0.0"
+                }
+            }
+            if zogenField.text != "" {
+                param["ZOGEN"] = zogenField.text!
+            }else {
+                if type == "UPDATE" {
+                    param["ZOGEN"] = "0.0"
+                }
             }
             if seizouHI != nil {
                 param["SEIZOU"] = seizouHI.toString(format: "yyyyMMdd")
+            }
+            
+            if yusenSwitch.isOn {
+                param["YUSEN"] = "1"
             }
             
         case 902:
@@ -466,7 +497,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         //print(textField.tag)
         
         var array:[String] = []
-        let intArr:[Int] = ([Int])(70...95)
+        var intArr:[Int] = ([Int])(70...95)
+        intArr = intArr.sorted(by: {$0>$1})
         var popTitle = ""
         var row:Int = 0
         
@@ -502,7 +534,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }else {
                 ritsu = ritsu2
             }
-            row = intArr.firstIndex(where: {$0==ritsu}) ?? 0
+            let d = intArr.firstIndex(where: {$0==90})
+            row = intArr.firstIndex(where: {$0==ritsu}) ?? d as! Int
         default:
             return
         }

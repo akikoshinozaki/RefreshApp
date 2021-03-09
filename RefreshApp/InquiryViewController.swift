@@ -451,8 +451,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     func imgDL(arr:[String], tag:String) {
 
         imageArr = []
-        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
-        self.present(imgAlert, animated: true, completion: nil)
+//        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
+        //self.present(imgAlert, animated: true, completion: nil)
         
         for file in arr {
             //画像をダウンロードして配列に保存
@@ -481,7 +481,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
             }
         }
         
-        imgAlert.dismiss(animated: true, completion: nil)
+//        imgAlert.dismiss(animated: true, completion: nil)
         
     }
     

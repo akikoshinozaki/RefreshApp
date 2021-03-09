@@ -117,6 +117,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @IBOutlet weak var cameraBtn: UIButton!
     @IBOutlet weak var photoCollection: UICollectionView!
     var cellEditing: Bool = false
+    var yusen:Bool = false
     //@IBOutlet var edtBtn:UIButton!
     
     //IBMへ送るパラメーター
@@ -349,6 +350,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             yotei_hi = yotei.date.short
             kanri = yotei
         }
+        //優先
+        yusen = _json["YUSEN"] as? String == "1"
+
         printData = PrintData(date: yotei_hi,
                                    renban: _json["RENBAN"] as? String ?? "",
                                    customer: _json["CUSTOMER_NM"] as? String ?? "",
@@ -364,7 +368,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         lbl = BRLabelView(frame:self.view.frame)
         // シールのPrintView
         let QR = "RF="+tagNO
-        
+        lbl.yusenLabel.isHidden = !yusen
         lbl.label1.text = printData.date+"-"+printData.renban
         lbl.label2.text = printData.customer+" 様"
         lbl.label3.text = printData.tagNO
@@ -387,7 +391,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         lbl.qrView.image = UIImage.makeQR(code: QR)
 
         
-//        self._printLabel()
+        //self._printLabel()
         self.printLabel()
         
         /*
