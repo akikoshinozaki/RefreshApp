@@ -20,6 +20,9 @@ class BRLabelView: UIView {
     @IBOutlet weak var label7: UILabel! //出荷期限
     @IBOutlet weak var qrView: UIImageView!
     @IBOutlet weak var yusenLabel: UILabel!
+    @IBOutlet weak var label8: UILabel! //仕上り重量
+    @IBOutlet weak var label9: UILabel! //足し羽毛
+    
     
     
     // Only override draw() if you perform custom drawing.

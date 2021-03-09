@@ -169,12 +169,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         if let yusen = json["YUSEN"] as? String, yusen != " " {
             detail.yusenLabel.isHidden = false
         }
-        //羽毛グレード
-        if let grade = json["GRADE"] as? String, grade != "  " {
-            if let obj = grd_lst.first(where: {$0.cd==grade}) {
-                detail.gradeLabel.text = obj.nm
-            }
-        }
+        //1枚目
         //自社・他社区分1
         if let jita = json["JITAK1"] as? String, jita != " " {
             let jita_k = Int(jita) ?? 0
@@ -182,16 +177,28 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
                 detail.jitak1Label.text = arr1[jita_k-1]
             }
         }
+        //羽毛グレード1
+        if let grd1 = json["GRADE1"] as? String, grd1 != "  " {
+            if let obj = grd_lst.first(where: {$0.cd==grd1}) {
+                detail.grade1Label.text = obj.nm
+            }
+        }
         //原料比率1
         if let ritsu = Double(json["RITSU1"] as? String ?? "0.0"), ritsu != 0.0 {
             detail.ritsu1Label.text = "\(Int(ritsu))"
         }
-        
+        //2枚目
         //自社・他社区分2
         if let jita = json["JITAK2"] as? String, jita != " " {
             let jita_k = Int(jita) ?? 0
             if jita_k > 0 {
                 detail.jitak2Label.text = arr1[jita_k-1]
+            }
+        }
+        //羽毛グレード2
+        if let grd2 = json["GRADE2"] as? String, grd2 != "  " {
+            if let obj = grd_lst.first(where: {$0.cd==grd2}) {
+                detail.grade2Label.text = obj.nm
             }
         }
         //原料比率2
@@ -547,6 +554,13 @@ extension InquiryViewController:UITableViewDelegate,UITableViewDataSource {
         cell.label3.text = obj.syohinNM //商品名
         cell.label4.text = obj.jyotai //状態
         cell.label5.text = obj.azukari //預り日
+        
+        if obj.tag == tagNO {
+            //照会したリフレッシュ分は色付け
+            cell.contentView.backgroundColor = #colorLiteral(red: 1, green: 0.8418682218, blue: 0.8868809342, alpha: 1)
+        }else {
+            cell.contentView.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        }
         
         return cell
     }

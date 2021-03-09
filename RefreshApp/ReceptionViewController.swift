@@ -75,6 +75,8 @@ struct PrintData {
     var nouki:String = ""
     var kigen:String = ""
     var seizou:String = ""
+    var juryo:String = ""
+    var zogen:String = ""
 }
 
 struct PrinterSetting {
@@ -360,7 +362,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                                    itemCD: _json["SYOHIN_CD"] as? String ?? "",
                                    itemNM: _json["SYOHIN_NM"] as? String ?? "",
                                    nouki: _json["NOUKI"] as? String ?? "",
-                                   kigen: _json["KIGEN"] as? String ?? "")
+                                   kigen: _json["KIGEN"] as? String ?? "",
+                                   juryo: _json["WATA"] as? String ?? "---",
+                                   zogen: _json["ZOGEN"] as? String ?? "---")
         
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
@@ -377,21 +381,43 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         let nouki = Array(printData.nouki)
         if nouki.count==8 {
             print(nouki.prefix(4))
-            lbl.label6.text = nouki[0...3]+"/"+nouki[4...5]+"/"+nouki[6...7]
+            //lbl.label6.text = nouki[0...3]+"/"+nouki[4...5]+"/"+nouki[6...7]
+            lbl.label6.text = nouki[4...5]+"月"+nouki[6...7]+"日"
         }else {
-            lbl.label6.text = printData.nouki
-        }
-        let kigen = Array(printData.kigen)
-        if kigen.count==8 {
-            lbl.label7.text = kigen[0...3]+"/"+kigen[4...5]+"/"+kigen[6...7]
-        }else {
-            lbl.label7.text = printData.kigen
+            if printData.nouki.contains("/") {
+                let n = printData.nouki.components(separatedBy: "/")
+                if n.count>2 {
+                    print(n)
+                    lbl.label6.text = n[1]+"月"+n[2]+"日"
+                }else {
+                    lbl.label6.text = printData.nouki
+                }
+            }
         }
         
+        let kigen = Array(printData.kigen)
+        if kigen.count==8 {
+            //lbl.label7.text = kigen[0...3]+"/"+kigen[4...5]+"/"+kigen[6...7]
+            lbl.label7.text = kigen[4...5]+"月"+kigen[6...7]+"日"
+        }else {
+            if printData.kigen.contains("/") {
+                let n = printData.kigen.components(separatedBy: "/")
+                if n.count>2 {
+                    print(n)
+                    lbl.label7.text = n[1]+"月"+n[2]+"日"
+                }else {
+                    lbl.label7.text = printData.nouki
+                }
+            }
+        }
+        
+        lbl.label8.text = printData.juryo
+        lbl.label9.text = printData.zogen
+                
         lbl.qrView.image = UIImage.makeQR(code: QR)
 
         
-        //self._printLabel()
+        self._printLabel()
         self.printLabel()
         
         /*

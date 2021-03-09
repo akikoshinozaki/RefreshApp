@@ -40,7 +40,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet weak var kigenLabel: UILabel!
     @IBOutlet weak var yuuyoLabel: UILabel!
     
-    @IBOutlet weak var grdField: UITextField!
+    @IBOutlet weak var grd1Field: UITextField!
+    @IBOutlet weak var grd2Field: UITextField!
     @IBOutlet weak var jita1Field: UITextField!
     @IBOutlet weak var ritsu1Field: UITextField!
     @IBOutlet weak var jita2Field: UITextField!
@@ -57,12 +58,13 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
-    var grd:String = ""
-    var ritsu1:Int!
     var jitak1:Int!
-    var ritsu2:Int!
+    var grd1:String = ""
+    var ritsu1:Int!
     var jitak2:Int!
-    var juryo:Int!
+    var grd2:String = ""
+    var ritsu2:Int!
+    var juryo:Double!
     var zogen:Int!
 
     
@@ -89,10 +91,11 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         seizouHI = nil
         YOTEI_HI = nil
         jitak1 = nil
+        grd1 = ""
         ritsu1 = nil
         jitak2 = nil
         ritsu2 = nil
-        grd = ""
+        grd2 = ""
         juryo = nil
         zogen = nil
         
@@ -165,13 +168,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
             yuuyoLabel.text = yuuyo.trimmingCharacters(in: .whitespaces)
         }
-        //羽毛グレード
-        if let grade = json["GRADE"] as? String, grade != "  " {
-            grd = grade
-            if let obj = grd_lst.first(where: {$0.cd==grd}) {
-                grdField.text = obj.nm
-            }
-        }
+        
         //自社・他社区分1
         if let jita1 = json["JITAK1"] as? String, jita1 != " " {
             jitak1 = Int(jita1) ?? 0
@@ -179,6 +176,14 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 jita1Field.text = arr1[jitak1-1]
             }
         }
+        //羽毛グレード1
+        if let grd = json["GRADE1"] as? String, grd != "  " {
+            grd1 = grd
+            if let obj = grd_lst.first(where: {$0.cd==grd}) {
+                grd1Field.text = obj.nm
+            }
+        }
+        
         //原料比率1
         if let rit1 = Double(json["RITSU1"] as? String ?? "0.0"), rit1 != 0.0 {
             ritsu1 = Int(rit1)
@@ -189,6 +194,13 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             jitak2 = Int(jita2) ?? 0
             if jitak2 > 0 {
                 jita2Field.text = arr1[jitak2-1]
+            }
+        }
+        //羽毛グレード2
+        if let grd = json["GRADE2"] as? String, grd != "  " {
+            grd2 = grd
+            if let obj = grd_lst.first(where: {$0.cd==grd}) {
+                grd2Field.text = obj.nm
             }
         }
         //原料比率2
@@ -209,7 +221,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         if var zgn = json["ZOGEN"] as? String, zgn != "0.0" {
             zgn = zgn.trimmingCharacters(in: .whitespaces)
             if let dzgn = Double(zgn) {
-                zogenField.text = "\(dzgn)"
+                zogenField.text = "\(Int(dzgn))"
             }else {
                 zogenField.text = "\(zgn)"
             }
@@ -328,13 +340,13 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 param["YOTEI_HI"] = YOTEI_HI.toString(format: "yyyyMMdd")
             }
             
-            if grdField.text != "" {
-                //グレード
-                param["GRADE"] = grd
-            }
             if jita1Field.text != "" {
                 //自社・他社区分
                 param["JITAK1"] = String(jitak1)
+            }
+            if grd1Field.text != "" {
+                //グレード
+                param["GRADE1"] = grd1
             }
             if ritsu1Field.text != "" {
                 //比率
@@ -344,22 +356,34 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 //自社・他社区分
                 param["JITAK2"] = String(jitak2)
             }
+            if grd2Field.text != "" {
+                //グレード
+                param["GRADE2"] = grd2
+            }
             if ritsu2Field.text != "" {
                 //比率
                 param["RITSU2"] = String(ritsu2)
             }
             if juryoField.text != "" {
-                param["WATA"] = juryoField.text!
+                if juryoField.text == "不明" {
+                    param["WATA"] = "0"
+                }else {
+                    param["WATA"] = juryoField.text!
+                }
             }else {
                 if type == "UPDATE" {
-                    param["WATA"] = "0.0"
+                    param["WATA"] = "0"
                 }
             }
             if zogenField.text != "" {
-                param["ZOGEN"] = zogenField.text!
+                if zogenField.text == "なし" {
+                    param["ZOGEN"] = "0"
+                }else {
+                    param["ZOGEN"] = zogenField.text!
+                }
             }else {
                 if type == "UPDATE" {
-                    param["ZOGEN"] = "0.0"
+                    param["ZOGEN"] = "0"
                 }
             }
             if seizouHI != nil {
@@ -378,7 +402,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             return
         }
 
-        //print(param)
+        print(param)
         let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
             Void in
@@ -503,15 +527,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         var row:Int = 0
         
         switch textField.tag {
-        case 300: //羽毛グレード
-            //グレード
-            array = grd_lst.map({$0.nm})
-            popTitle = "原料グレード"
-            print(grd)
-            if grd != "" {
-                row = grd_lst.firstIndex(where: {$0.cd==grd}) ?? 0
-            }
-        case 301, 303: //自社・他社区分
+        case 301, 304: //自社・他社区分
             //自社・他社
             array = arr1
             popTitle = "自社・他社区分"
@@ -524,7 +540,20 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if jitak != nil {
                 row = jitak-1
             }
-        case 302, 304: //原料比率
+        case 302, 305: //羽毛グレード
+            //グレード
+            array = grd_lst.map({$0.nm})
+            popTitle = "原料グレード"
+            var grd = ""
+            if textField.tag == 302 {
+                grd = grd1
+            }else {
+                grd = grd2
+            }
+            if grd != "" {
+                row = grd_lst.firstIndex(where: {$0.cd==grd}) ?? 0
+            }
+        case 303, 306: //原料比率
             //原料比率
             array = intArr.map({String($0)})
             popTitle = "原料比率"
@@ -536,6 +565,21 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }
             let d = intArr.firstIndex(where: {$0==90})
             row = intArr.firstIndex(where: {$0==ritsu}) ?? d as! Int
+            
+        case 401://仕上り重量
+            let arr:[Int] = ([Int])(7...21)
+            array = arr.map({String(format: "%.1f",Double($0)*0.1)})
+            array.insert("不明", at: 0)
+            popTitle = "仕上り重量"
+            row = array.firstIndex(where: {$0==textField.text!}) ?? 0
+        case 402://足し羽毛
+            let arr:[Int] = ([Int])(-5...5)
+            array = arr.map({String($0*100)})
+            let zero = arr.firstIndex(where: {$0==0})
+            array[zero!]="なし"
+            popTitle = "羽毛増減"
+            let d = array.firstIndex(where: {$0=="100"})
+            row = array.firstIndex(where: {$0==textField.text!}) ?? d as! Int
         default:
             return
         }
@@ -548,30 +592,37 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 
                 textField.text = item
                 
-                if textField.tag == 300 {
-                    self.grd = grd_lst[idx].cd
-                    print(grd_lst[idx])
+                if textField.tag == 302 {
+                    self.grd1 = grd_lst[idx].cd
 
-                    if self.grd == "99"{
+                    if self.grd1 == "99"{
                         //グレード???の時比率は入力できなくする
-                        self.grdField.text = "---"
+                        self.grd1Field.text = "---"
                         self.ritsu1 = 0
-                        self.ritsu2 = 0
                         self.ritsu1Field.text = ""
-                        self.ritsu2Field.text = ""
                         self.ritsu1Field.isUserInteractionEnabled = false
-                        self.ritsu2Field.isUserInteractionEnabled = false
                     }else {
                         self.ritsu1Field.isUserInteractionEnabled = true
+                    }
+                }else if textField.tag == 305 {
+                    self.grd2 = grd_lst[idx].cd
+
+                    if self.grd2 == "99"{
+                        //グレード???の時比率は入力できなくする
+                        self.grd2Field.text = "---"
+                        self.ritsu2 = 0
+                        self.ritsu2Field.text = ""
+                        self.ritsu2Field.isUserInteractionEnabled = false
+                    }else {
                         self.ritsu2Field.isUserInteractionEnabled = true
                     }
                 }else if textField.tag == 301 {
                     self.jitak1 = idx+1
-                }else if textField.tag == 302 {
-                    self.ritsu1 = intArr[idx]
                 }else if textField.tag == 303 {
-                    self.jitak2 = idx+1
+                    self.ritsu1 = intArr[idx]
                 }else if textField.tag == 304 {
+                    self.jitak2 = idx+1
+                }else if textField.tag == 306 {
                     self.ritsu2 = intArr[idx]
                 }
             })
@@ -596,9 +647,8 @@ extension InfoViewController:UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         switch textField.tag {
-        case 300...304:
+        case 300...402:
             self.showPicker(textField)
-            
             return false
         default:
             return true
@@ -650,7 +700,6 @@ extension InfoViewController:UITextFieldDelegate {
                 SimpleAlert.make(title: "数字でのみ入力できます", message: "")
                 return
             }
-            
             
             
         default:
