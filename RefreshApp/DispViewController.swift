@@ -28,18 +28,13 @@ class DispViewController: UIViewController {
             //複数写真がある時
             forwardButton.isHidden = false
             nextButton.isHidden = false
-            //pageCounter.isHidden = false
             
             pageCounter.numberOfPages = imageArr.count
             pageCounter.currentPage = num
         }else {
             forwardButton.isHidden = true
             nextButton.isHidden = true
-            //pageCounter.isHidden = true
         }
-        closeBtn.layer.cornerRadius = 8
-        closeBtn.layer.borderColor = UIColor.systemBlue.cgColor
-        closeBtn.layer.borderWidth = 2
     }
     
     @IBAction func closeView(_ sender: Any) {

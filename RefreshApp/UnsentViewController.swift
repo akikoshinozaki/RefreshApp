@@ -16,29 +16,34 @@ class UnsentViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //var path = ""
     @IBOutlet weak var tableView: UITableView!
     
+    
+    deinit {
+        //print("deinit")
+        imageArr = []
+        tagNO = ""
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         //self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationItem.title = "未送信データ"
-        list = getFileInfoListInDir(basePath)
-        print(list)
+        //list = getFileInfoListInDir(basePath)
+        //print(list)
         tableView.delegate = self
         tableView.dataSource = self
-        
     }
-    
+    	
     override func viewDidAppear(_ animated: Bool) {
         print("unsent" + #function)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        list = getFileInfoListInDir(basePath)
+        tableView.reloadData()
     }
-
-    /*
     override func viewDidLayoutSubviews() {
         print("unsent" + #function)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-    }*/
+    }
     
     func getFileInfoListInDir(_ dirName: String) -> [String] {
         var files: [String] = []

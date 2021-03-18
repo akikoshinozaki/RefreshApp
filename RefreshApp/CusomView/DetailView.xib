@@ -13,9 +13,9 @@
             <connections>
                 <outlet property="classLabel" destination="9UK-wL-AHn" id="M0O-zc-BEd"/>
                 <outlet property="customerLabel" destination="Hl2-Cb-DeF" id="yn5-wq-loU"/>
+                <outlet property="gawaLnkBtn" destination="2Z0-Jh-aW8" id="XTz-ZM-2G5"/>
                 <outlet property="grade1Label" destination="KoI-QI-dyh" id="lBD-jC-BrG"/>
                 <outlet property="grade2Label" destination="1rr-xw-0Kr" id="Od9-Ik-fRt"/>
-                <outlet property="gritsu2Label" destination="HmS-jC-1nh" id="QcW-C5-AkQ"/>
                 <outlet property="jitak1Label" destination="cz1-hj-Qvz" id="Idl-6b-CjN"/>
                 <outlet property="jitak2Label" destination="paO-TL-pbl" id="kXd-6P-HZM"/>
                 <outlet property="juryoLabel" destination="5VA-FX-uHo" id="BQ5-CK-27u"/>
@@ -25,6 +25,7 @@
                 <outlet property="noukiLabel" destination="1Nj-gb-3TG" id="Kxe-qy-xch"/>
                 <outlet property="pattenLabel" destination="5qC-kN-0J3" id="qxs-fJ-AiA"/>
                 <outlet property="ritsu1Label" destination="nst-BP-ggX" id="EGk-H5-Ag4"/>
+                <outlet property="ritsu2Label" destination="HmS-jC-1nh" id="XFu-Hc-hjx"/>
                 <outlet property="seizouLabel" destination="CAq-1k-my1" id="0bj-cb-jFa"/>
                 <outlet property="syohinLabel" destination="GdY-E4-d2L" id="Frl-D2-Xwt"/>
                 <outlet property="tagLabel" destination="3Ky-0e-j3o" id="Ecj-as-sRS"/>
@@ -89,6 +90,10 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Z0-Jh-aW8">
+                            <rect key="frame" x="139" y="35" width="251" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="パターン :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yC-ee-WSM">
                             <rect key="frame" x="5" y="70" width="120" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

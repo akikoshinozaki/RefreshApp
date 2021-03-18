@@ -17,7 +17,8 @@ struct KEIYAKU {
     var azukari:String = ""
 }
 
-class InquiryViewController: UIViewController, ScannerViewDelegate {
+class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDelegate {
+
     @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var envLabel: UILabel!
     @IBOutlet weak var kanriLabel: UILabel!
@@ -36,6 +37,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var yusen:UILabel!
     */
     @IBOutlet var tagField: UITextField!
+    @IBOutlet weak var keiyakuField: UITextField!
     @IBOutlet var dspLbls: [UILabel]!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var infoCollection: UICollectionView!
@@ -43,6 +45,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     @IBOutlet weak var detailView1: UIView!
     @IBOutlet weak var keiyakuLabel: UILabel!
     var keiyakuNO = ""
+    var syoCD = ""
     
     var scanner:ScannerView!
     var conAlert:UIAlertController!
@@ -51,6 +54,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     var json_:NSDictionary!
     var detail:DetailView!
     var detail2:DetailView2!
+    var tagImg:[UIImage] = []
+    var gawaImg:[UIImage] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,6 +64,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
 
         scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
         tagField.delegate = self
+        keiyakuField.delegate = self
         
         self.navigationItem.hidesBackButton = true
         let backBtn = UIBarButtonItem(title: "＜戻る", style: .plain, target: self, action: #selector(back))
@@ -92,7 +98,19 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     
     override func viewDidLayoutSubviews() {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        var n:CGFloat = 2.0
+//        var n:CGFloat = 3.0
+//        if UIDevice.current.orientation == .portrait {
+//            n = 2.0
+//        }
+        let layout = UICollectionViewFlowLayout()
+        let wid = imgCollection.frame.size.width/n-10
+        layout.itemSize = CGSize(width: wid, height: wid*0.7)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 5)
+        layout.sectionInsetReference = .fromSafeArea
+        imgCollection.collectionViewLayout = layout
     }
+    
     
     func dspInit(){
         //表示クリア
@@ -103,6 +121,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         infoView.isHidden = true
         photoView.isHidden = true
         keiyakuView.isHidden = true
+        
+        gawaImg = []
     }
 
     
@@ -203,7 +223,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         }
         //原料比率2
         if let ritsu = Double(json["RITSU2"] as? String ?? "0.0"), ritsu != 0.0 {
-            detail.ritsu1Label.text = "\(Int(ritsu))"
+            detail.ritsu2Label.text = "\(Int(ritsu))"
         }
         
         //仕上り重量
@@ -217,9 +237,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         }
         
         //足し羽毛
-        if let zogen = json["ZOGEN"] as? String, zogen != "0.0"{
+        if let zogen = json["ZOGEN"] as? String, zogen != "0"{
             detail.zogenLabel.text = zogen
-
         }
 
         //製造日
@@ -238,6 +257,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
             detail.yuuyoLabel.text = yuuyo.trimmingCharacters(in: .whitespaces)
         }
         
+        detail.gawaLnkBtn.addTarget(self, action: #selector(gawaLink(_:)), for: .touchUpInside)
         //２ページ目
         for lbl in detail2.labels{ //初期化
             lbl.text = ""
@@ -284,6 +304,62 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
         self.infoCollection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
     
+    func display2(json:NSDictionary){
+        print(json)
+        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>0 {
+            
+            if arr.count == 1 {
+                if let tag = arr[0]["TAG_NO"] as? String {
+                    tagNO = tag
+                    self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
+                    self.getImages(parm: "tagNo", val: tagNO)
+                }else {
+                    SimpleAlert.make(title: "データ取得に失敗", message: "")
+                }
+                
+                return
+            }
+            
+            self.keiMeisai = []
+            for dic in arr {
+                print(dic)
+                var azukari = ""
+                if let azu = dic["AZU_HI"] as? String, azu.count == 6  { //預かり日yy/mm/ddに変換
+                    let str = Array(azu)
+                    azukari = str[0...1]+"/"+str[2...3]+"/"+str[4...5]
+                    
+                }
+                let obj = KEIYAKU(tag: dic["TAG_NO"] as? String ?? "",
+                                  syohinCD: dic["SYOHIN_CD"] as? String ?? "",
+                                  syohinNM: dic["SYOHIN_NM"] as? String ?? "",
+                                  jyotai: dic["JYOTAI"] as? String ?? "",
+                                  azukari: azukari
+                )
+                
+                self.keiMeisai.append(obj)
+                //print(keiMeisai)
+            }
+            let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+//            let list = storyboard.instantiateViewController(withIdentifier: "refList") as! RefListViewController
+            let list = storyboard.instantiateViewController(withIdentifier: "refList") as! RefListViewController
+            
+            //let gawaVC = storyboard.instantiateViewController(withIdentifier: "gawa") as! GawaImgViewController
+            list.delegate = self
+            list.array = keiMeisai
+            
+            self.present(list, animated: true, completion: nil)
+            
+        
+        }
+
+    }
+    //MARK: -RefListViewDelegate
+    //RefListで選択した時の挙動
+    func getTag(tag: String) {
+        tagNO = tag
+        self.setTag()
+    }
+    
     //MARK: - ScannerDelegate
     
     @objc func scan() {
@@ -320,12 +396,17 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     func setTag(){
         if tagNO != "" {
             self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
-            self.getImages(tagNo: tagNO	)
+            self.getImages(parm: "tagNo", val: tagNO)
         }
     }
-
     
     @objc func back(){
+        if infoView.isHidden {
+            imageArr = []
+            self.navigationController?.popViewController(animated: true)
+            return
+        }
+
         let alert = UIAlertController(title: "データをクリアして戻ります", message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
             Void in
@@ -346,8 +427,6 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     
     func request(type:String, param:[String:Any]) {
         self.dspInit()
-        //print(param)
-        
         DispatchQueue.main.async {
             self.conAlert = UIAlertController(title: "データ取得中", message: "しばらくお待ちください", preferredStyle: .alert)
             self.present(self.conAlert, animated: true, completion: nil)
@@ -372,15 +451,47 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
                         self.conAlert.message = msg
                         self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     }
-
-                }else {
                     
-                    DispatchQueue.main.async {
-                        //INQURY
-                        self.conAlert.dismiss(animated: true, completion: {
-                            self.display(json: json!)
-                        })
+                }else {
+                    if json!["TAG_NO"] == nil { //契約No.でSearchした結果
+                        //明細チェック
+                        if let arr = json!["MEISAI"] as? [NSDictionary], arr.count>0 {
+                            DispatchQueue.main.async {
+                                self.conAlert.dismiss(animated: true, completion: {
+                                    self.display2(json: json!)
+                                })
+                            }
+                        }else {
+                            if errMsg == "" {
+                                errMsg = "データ取得に失敗しました"
+                            }
+                            DispatchQueue.main.async {
+                                self.conAlert.title = "エラー"
+                                self.conAlert.message = errMsg
+                                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            }
+                        }
 
+                    }else { //INQURY
+                        self.syoCD = ""
+                        if var cd = json!["SYOHIN_CD"] as? String, cd != "" {
+                            //商品CD取得できたら、側生地画像取得
+                            print(cd)
+                            self.syoCD = cd
+                            if cd.count<=8 { //ファイル名・8桁に揃える
+                                let zero = String(repeating: "0", count: 8-cd.count)
+                                cd = zero+cd
+                            }
+                            self.getImages(parm: "syoCD", val: cd)
+                        }
+                        
+                        DispatchQueue.main.async {
+                            //INQURY
+                            self.conAlert.dismiss(animated: true, completion: {
+                                self.display(json: json!)
+                            })
+                            
+                        }
                     }
                 }
                 
@@ -402,12 +513,14 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     }
     
     //アップロード済みの画像取得
-    func getImages(tagNo:String) {
+    func getImages(parm:String,val:String) {
 
         var json:NSDictionary!
         let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
         let url = URL(string: path)!
-        let param = "tagNo=\(tagNo)"
+        //let param = "tagNo=\(tagNo)
+        let param = parm+"="+val
+        print(param)
         let config = URLSessionConfiguration.default
         //config.timeoutIntervalForRequest = 5.0
         let session = URLSession(configuration: config)
@@ -425,8 +538,9 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
                         json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
                         print(json!)
                         let arr = json["images"] as? [String] ?? []
+                        print(arr)
                         DispatchQueue.main.async {
-                            self.imgDL(arr:arr, tag:tagNo)
+                            self.imgDL(arr:arr, tag:val, syu:parm)
                         }
 
                     }catch{
@@ -455,40 +569,65 @@ class InquiryViewController: UIViewController, ScannerViewDelegate {
     }
     
     
-    func imgDL(arr:[String], tag:String) {
-
-        imageArr = []
+    func imgDL(arr:[String], tag:String, syu:String) {
+        var iArr:[UIImage] = []
 //        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
         //self.present(imgAlert, animated: true, completion: nil)
-        
-        for file in arr {
-            //画像をダウンロードして配列に保存
-            let str = "https://ipad:m8mawata@oktss03.xsrv.jp/refreshPhoto/\(file)"
-            let encodeStr = str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-            let url = URL(string: encodeStr)!
-
-            print(url)
-            do{
-                let imageData = try Data(contentsOf: url)
-                let img = UIImage(data:imageData)
-
-                imageArr.append(img!)
+        DispatchQueue.global().async {
+            for file in arr {
+                //画像をダウンロードして配列に保存
+                let str = "https://ipad:m8mawata@oktss03.xsrv.jp/refreshPhoto/\(file)"
+                let encodeStr = str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                let url = URL(string: encodeStr)!
                 
-            }catch {
-                //エラー
-                print("imageファイルにアクセスできない")
+                //print(url)
+                do{
+                    let imageData = try Data(contentsOf: url)
+                    let img = UIImage(data:imageData)
+                    
+                    iArr.append(img!)
+                    
+                }catch {
+                    //エラー
+                    print("imageファイルにアクセスできない")
+                }
+            }
+        
+        
+            DispatchQueue.main.async {
+                if syu == "tagNo" {
+                    self.tagImg = iArr
+                    if arr.count > 0 {
+                        self.photoView.isHidden = false
+                        self.imgCollection.reloadData()
+                    }
+                    
+                }else {  //syoCD
+                    self.gawaImg = iArr
+                    if iArr.count > 0 {
+                        self.detail.syohinLabel.textColor = .systemBlue
+                    }else {
+                        self.detail.syohinLabel.textColor = .black
+                    }
+                }
             }
         }
-        
-        //print(imgArr.count)
-        DispatchQueue.main.async {
-            if imageArr.count > 0 {
-                self.photoView.isHidden = false
-                self.imgCollection.reloadData()
-            }
-        }
-        
 //        imgAlert.dismiss(animated: true, completion: nil)
+        
+    }
+    
+    @objc func gawaLink(_ sender: Any) {
+        if gawaImg.count > 0 {
+            let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+            let gawaVC = storyboard.instantiateViewController(withIdentifier: "gawa") as! GawaImgViewController
+            gawaVC.isModalInPresentation = true
+            
+            gawaVC.arr = gawaImg
+            gawaVC.syoCD = self.syoCD
+            self.present(gawaVC, animated: true, completion: nil)
+        }else {
+            
+        }
         
     }
     
@@ -514,18 +653,24 @@ extension InquiryViewController:UITextFieldDelegate {
         if textField.text! == "" {return}
         
         switch textField.tag {
-        case 100://tag Fieldの時
-            if Int(tagField.text!) == nil {
+        case 100, 101://tag Fieldの時
+            if Int(textField.text!) == nil {
                 SimpleAlert.make(title: "数字８桁で入力してください", message: "")
                 return
             }
-            if tagField.text?.count != 8 {
+            if textField.text?.count != 8 {
                 SimpleAlert.make(title: "数字８桁で入力してください", message: "")
                 return
             }
-            tagNO = textField.text!
-            setTag()
-            
+
+            if textField.tag  == 100 {
+                tagNO = textField.text!
+                setTag()
+            } else if textField.tag  == 101 {
+                //契約No.でSearch
+                self.request(type: "SEARCH", param: ["KEI_NO":textField.text!])
+            }
+        
         default:
             return
         }
@@ -565,12 +710,21 @@ extension InquiryViewController:UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let obj = keiMeisai[indexPath.row]
+        print(obj.tag)
+        if obj.tag == tagNO { return }
+        if obj.syohinNM.hasPrefix("ﾚﾝﾀﾙ") { return }
+        tagNO = obj.tag
+        self.setTag()
+    }
+	    
 }
 
 extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView.tag == 888 { //imageCollectionView
-            return imageArr.count
+            return tagImg.count
         }else {//infoCollectionView
             return 2
         }
@@ -579,7 +733,7 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView.tag == 888 { //imageCollectionView
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCollectionViewCell", for: indexPath) as! MyCollectionViewCell
-            cell.imageView.image = imageArr[indexPath.item]
+            cell.imageView.image = tagImg[indexPath.item]
             
             return cell
         }else {
@@ -608,6 +762,7 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
         if collectionView.tag == 888 {//imageCollectionView
             num = indexPath.row
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            imageArr = tagImg //画像を渡す
             let disp = storyboard.instantiateViewController(withIdentifier: "disp")
             disp.modalPresentationStyle = .fullScreen
             

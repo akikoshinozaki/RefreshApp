@@ -38,6 +38,7 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
+        
         closeBtn.addTarget(self, action: #selector(close), for: .touchUpInside)
         // 入力（背面カメラ）
         let videoDevice = AVCaptureDevice.default(for: .video)!
@@ -69,14 +70,18 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
         print(orientation.rawValue)
         switch orientation {
         case .portrait:
+            print("portrait")
             videoLayer?.connection?.videoOrientation = .portrait
         case .landscapeLeft:
+            print("landscapeLeft")
             videoLayer?.connection?.videoOrientation = .landscapeRight
 
         case .landscapeRight:
+            print("landscapeRight")
             videoLayer?.connection?.videoOrientation = .landscapeLeft
 
         default:
+            print("other")
             break
         }
         
@@ -181,8 +186,8 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
             let orientation = UIDevice.current.orientation
             //print(orientation.rawValue)
             switch orientation {
-            case .portrait:
-                videoLayer?.connection?.videoOrientation = .portrait
+            //case .portrait:
+                //videoLayer?.connection?.videoOrientation = .portrait
             case .landscapeLeft:
                 videoLayer?.connection?.videoOrientation = .landscapeRight
 

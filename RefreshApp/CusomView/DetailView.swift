@@ -19,12 +19,12 @@ class DetailView: UIView {
     @IBOutlet var keiyakuLabel: UILabel!
     @IBOutlet var customerLabel: UILabel!
     
-    @IBOutlet var grade1Label: UILabel!
-    @IBOutlet var grade2Label: UILabel!
     @IBOutlet var jitak1Label: UILabel!
+    @IBOutlet var grade1Label: UILabel!
     @IBOutlet var ritsu1Label: UILabel!
     @IBOutlet var jitak2Label: UILabel!
-    @IBOutlet var gritsu2Label: UILabel!
+    @IBOutlet var grade2Label: UILabel!
+    @IBOutlet var ritsu2Label: UILabel!
     @IBOutlet var juryoLabel: UILabel!
     @IBOutlet var zogenLabel: UILabel!
     
@@ -35,6 +35,8 @@ class DetailView: UIView {
 
     @IBOutlet var labels: [UILabel]!
     @IBOutlet weak var nextBtn: UIButton!
+    @IBOutlet weak var gawaLnkBtn: UIButton!
+    
     
     
     /*

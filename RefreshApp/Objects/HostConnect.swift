@@ -33,6 +33,7 @@ class HostConnect: NSObject {
     var networkStatus = ""
     
     func start(hostName:String) {
+//        print(#function)
         stopNotifier()
         
         if IP_Check() {
@@ -81,6 +82,7 @@ class HostConnect: NSObject {
     
 
     @objc func reachabilityChanged(_ note: Notification) {
+//        print(#function)
         let reachability = note.object as! Reachability
         print(reachability.connection)
         connect = .notConnect

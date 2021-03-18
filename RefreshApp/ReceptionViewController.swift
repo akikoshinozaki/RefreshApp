@@ -86,7 +86,7 @@ struct PrinterSetting {
     var paper:BRLMQLPrintSettingsLabelSize = .rollW62
 }
 
-class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDeviceTableViewControllerDelegate {
+class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDeviceTableViewControllerDelegate, RefListViewDelegate {
     
     @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var envLabel: UILabel!
@@ -109,6 +109,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     var conAlert:UIAlertController!
     @IBOutlet weak var tagField: UITextField!
     @IBOutlet weak var tagLabel:UILabel!
+    @IBOutlet weak var keiyakuField: UITextField!
     
     @IBOutlet var btns: [UIButton]!
     @IBOutlet weak var kanriLabel: UILabel!
@@ -120,6 +121,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @IBOutlet weak var photoCollection: UICollectionView!
     var cellEditing: Bool = false
     var yusen:Bool = false
+    var keiNO:String = ""
     //@IBOutlet var edtBtn:UIButton!
     
     //IBMへ送るパラメーター
@@ -159,6 +161,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         setting = PrinterSetting(paperName: paperSizeArray[0].0, paper: paperSizeArray[0].1)
         
         tagField.delegate = self
+        keiyakuField.delegate = self
         scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
         printBtn.addTarget(self, action: #selector(display), for: .touchUpInside)
         detailBtn.addTarget(self, action: #selector(dispDetail), for: .touchUpInside)
@@ -200,6 +203,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             tagField.text = ""
             tagLabel.text = "TagNo.未入力"
             tagLabel.textColor = .gray
+        }
+        if keiNO == "" {
+            keiyakuField.text = ""
         }
         
         labelImgView.image = nil
@@ -333,6 +339,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             return
         }else {
             tagNO = ""
+            keiNO = ""
             dspInit()
         }
     }
@@ -354,7 +361,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }
         //優先
         yusen = _json["YUSEN"] as? String == "1"
-
+        
         printData = PrintData(date: yotei_hi,
                                    renban: _json["RENBAN"] as? String ?? "",
                                    customer: _json["CUSTOMER_NM"] as? String ?? "",
@@ -363,8 +370,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                                    itemNM: _json["SYOHIN_NM"] as? String ?? "",
                                    nouki: _json["NOUKI"] as? String ?? "",
                                    kigen: _json["KIGEN"] as? String ?? "",
-                                   juryo: _json["WATA"] as? String ?? "---",
-                                   zogen: _json["ZOGEN"] as? String ?? "---")
+                                   juryo: _json["WATA"] as? String ?? "0.0",
+                                   zogen: _json["ZOGEN"] as? String ?? "0")
         
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
@@ -410,9 +417,16 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                 }
             }
         }
-        
-        lbl.label8.text = printData.juryo
-        lbl.label9.text = printData.zogen
+        if printData.juryo == "0.0" {
+            lbl.label8.text = "---"
+        }else {
+            lbl.label8.text = printData.juryo
+        }
+        if printData.zogen == "0" {
+            lbl.label9.text = "---"
+        }else {
+            lbl.label9.text = printData.zogen
+        }
                 
         lbl.qrView.image = UIImage.makeQR(code: QR)
 
@@ -429,12 +443,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }*/
         
     }
-    
-    
+       
     func request(type:String, param:[String:Any]) {
         self.dspInit()
-        //print(param)
-        
         DispatchQueue.main.async {
             self.conAlert = UIAlertController(title: "データ取得中", message: "しばらくお待ちください", preferredStyle: .alert)
             self.present(self.conAlert, animated: true, completion: nil)
@@ -462,14 +473,36 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
                     
                 }else {
-                    
-                    DispatchQueue.main.async {
-                        //INQURY
-                        self.conAlert.dismiss(animated: true, completion: {
-                            self.dispDetail()
-                        })
+                    if json!["TAG_NO"] == nil { //契約No.でSearchした結果
+                        //明細チェック
+                        if let arr = json!["MEISAI"] as? [NSDictionary], arr.count>0 {
+                            DispatchQueue.main.async {
+                                self.conAlert.dismiss(animated: true, completion: {
+                                    self.display2(json: json!)
+                                })
+                            }
+                        }else {
+                            if errMsg == "" {
+                                errMsg = "データ取得に失敗しました"
+                            }
+                            DispatchQueue.main.async {
+                                self.conAlert.title = "エラー"
+                                self.conAlert.message = errMsg
+                                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                            }
+                        }
+                        
+                    }else { //INQURY
 
+                        DispatchQueue.main.async {
+                            //INQURY
+                            self.conAlert.dismiss(animated: true, completion: {
+                                self.dispDetail()
+                            })
+                            
+                        }
                     }
+                    
                 }
                 
             }else {
@@ -517,6 +550,58 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }
         alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func display2(json:NSDictionary){
+        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>0 {
+            
+            if arr.count == 1 { //明細が1つだったら、TagNo.で問い合わせ
+                if let tag = arr[0]["TAG_NO"] as? String {
+                    tagNO = tag
+                    self.setTag()
+                }else {
+                    SimpleAlert.make(title: "データ取得に失敗", message: "")
+                }
+                
+                return
+            }
+            
+            var meisai:[KEIYAKU] = []
+            //self.keiMeisai = []
+            for dic in arr {
+                print(dic)
+                var azukari = ""
+                if let azu = dic["AZU_HI"] as? String, azu.count == 6  { //預かり日yy/mm/ddに変換
+                    let str = Array(azu)
+                    azukari = str[0...1]+"/"+str[2...3]+"/"+str[4...5]
+                    
+                }
+                let obj = KEIYAKU(tag: dic["TAG_NO"] as? String ?? "",
+                                  syohinCD: dic["SYOHIN_CD"] as? String ?? "",
+                                  syohinNM: dic["SYOHIN_NM"] as? String ?? "",
+                                  jyotai: dic["JYOTAI"] as? String ?? "",
+                                  azukari: azukari
+                )
+                
+                meisai.append(obj)
+                //print(keiMeisai)
+            }
+            let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+            let list = storyboard.instantiateViewController(withIdentifier: "refList") as! RefListViewController
+
+            list.delegate = self
+            list.array = meisai
+            
+            self.present(list, animated: true, completion: nil)
+
+        }
+
+    }
+    //MARK: -RefListViewDelegate
+    //RefListで選択した時の挙動
+    func getTag(tag: String) {
+        tagNO = tag
+        self.setTag()
     }
     
     @objc func _printLabel(){
@@ -647,7 +732,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
     }
     
-    
     @objc func back(){
         if imageArr.count > 0 {
             let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
@@ -655,10 +739,20 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             
             self.present(alert, animated: true, completion: nil)
 
+        }else if tagNO != "" {
+            let alert = UIAlertController(title: "データをクリアして戻ります", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler:  {
+                Void in
+                tagNO = ""
+                self.dspInit()
+                self.navigationController?.popViewController(animated: true)
+            }))
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }else {
-            tagNO = ""
             dspInit()
             self.navigationController?.popViewController(animated: true)
+
         }
         
         
@@ -734,20 +828,28 @@ extension ReceptionViewController:UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         print(textField.tag)
+        keiNO = ""
         if textField.text! == "" {return}
         
         switch textField.tag {
-        case 100://tag Fieldの時
-            if Int(tagField.text!) == nil {
+        case 100, 101://tag Fieldの時
+            if Int(textField.text!) == nil {
                 SimpleAlert.make(title: "数字８桁で入力してください", message: "")
                 return
             }
-            if tagField.text?.count != 8 {
+            if textField.text?.count != 8 {
                 SimpleAlert.make(title: "数字８桁で入力してください", message: "")
                 return
             }
-            tagNO = textField.text!
-            setTag()
+            
+            if textField.tag == 100 { //tagField
+                tagNO = textField.text!
+                setTag()
+            }else { //keiyakuField
+                //契約No.でSearch
+                keiNO = textField.text!
+                self.request(type: "SEARCH", param: ["KEI_NO":keiNO])
+            }
             
         default:
             return
@@ -764,7 +866,7 @@ extension ReceptionViewController:UITextFieldDelegate {
 extension ReceptionViewController:InfoViewControllerDelegate {
 
     func setPrintInfo(json: NSDictionary!, type: String) {
-        print(json)
+        print(json!)
         print(type)
         _json = json
         if type == "print" {

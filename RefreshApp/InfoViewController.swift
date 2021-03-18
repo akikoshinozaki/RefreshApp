@@ -54,6 +54,20 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet var dspLbls: [UILabel]!
     @IBOutlet weak var enrollLabel: UILabel!
     @IBOutlet weak var yusenSwitch: UISwitch!
+    /*
+    //IBMから受け取るパラメーター
+    var _YOTEI_HI:Date!
+    var _seizouHI:Date!
+    var _jitak1:Int!
+    var _grd1:String = ""
+    var _ritsu1:Int!
+    var _jitak2:Int!
+    var _grd2:String = ""
+    var _ritsu2:Int!
+    var _juryo:Double!
+    var _zogen:Int!
+    var _yusen:String!
+     */
     
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
@@ -208,6 +222,24 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             ritsu2 = Int(rit2)
             ritsu2Field.text = "\(ritsu2!)"
         }
+        
+        if grd1 == "99"{
+            //グレード???の時比率は入力できなくする
+            self.ritsu1 = 0
+            self.ritsu1Field.text = ""
+            self.ritsu1Field.isUserInteractionEnabled = false
+        }else {
+            self.ritsu1Field.isUserInteractionEnabled = true
+        }
+        
+        if grd2 == "99"{
+            //グレード???の時比率は入力できなくする
+            self.ritsu2 = 0
+            self.ritsu2Field.text = ""
+            self.ritsu2Field.isUserInteractionEnabled = false
+        }else {
+            self.ritsu2Field.isUserInteractionEnabled = true
+        }
                 
         if var wata = json["WATA"] as? String, wata != "0.0" {
             wata = wata.trimmingCharacters(in: .whitespaces)
@@ -218,13 +250,10 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }
         }
         
-        if var zgn = json["ZOGEN"] as? String, zgn != "0.0" {
-            zgn = zgn.trimmingCharacters(in: .whitespaces)
-            if let dzgn = Double(zgn) {
-                zogenField.text = "\(Int(dzgn))"
-            }else {
-                zogenField.text = "\(zgn)"
-            }
+        if let zgn = json["ZOGEN"] as? String, zgn != "0" {
+            zogenField.text = zgn
+        }else {
+            zogenField.text = "なし"
         }
         
         if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
@@ -347,11 +376,20 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if grd1Field.text != "" {
                 //グレード
                 param["GRADE1"] = grd1
+            }else {
+//                if type == "UPDATE" {
+//                    param["GRADE1"] = ""
+//                }
             }
             if ritsu1Field.text != "" {
                 //比率
                 param["RITSU1"] = String(ritsu1)
+            }else {
+                if type == "UPDATE" {
+                    param["RITSU1"] = 0
+                }
             }
+            
             if jita2Field.text != "" {
                 //自社・他社区分
                 param["JITAK2"] = String(jitak2)
@@ -359,39 +397,44 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if grd2Field.text != "" {
                 //グレード
                 param["GRADE2"] = grd2
+            }else {
+//                if type == "UPDATE" {
+//                    param["GRADE2"] = ""
+//                }
             }
             if ritsu2Field.text != "" {
                 //比率
                 param["RITSU2"] = String(ritsu2)
+            }else {
+                if type == "UPDATE" {
+                    param["RITSU2"] = 0
+                }
             }
+            
             if juryoField.text != "" {
                 if juryoField.text == "不明" {
                     param["WATA"] = "0"
                 }else {
                     param["WATA"] = juryoField.text!
                 }
-            }else {
-                if type == "UPDATE" {
-                    param["WATA"] = "0"
-                }
             }
+            
             if zogenField.text != "" {
                 if zogenField.text == "なし" {
                     param["ZOGEN"] = "0"
                 }else {
                     param["ZOGEN"] = zogenField.text!
                 }
-            }else {
-                if type == "UPDATE" {
-                    param["ZOGEN"] = "0"
-                }
             }
+            
             if seizouHI != nil {
                 param["SEIZOU"] = seizouHI.toString(format: "yyyyMMdd")
             }
             
             if yusenSwitch.isOn {
                 param["YUSEN"] = "1"
+            }else {
+                param["YUSEN"] = ""
             }
             
         case 902:
@@ -558,13 +601,13 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             array = intArr.map({String($0)})
             popTitle = "原料比率"
             var ritsu:Int!
-            if textField.tag == 302 {
+            if textField.tag == 303 {
                 ritsu = ritsu1
             }else {
                 ritsu = ritsu2
             }
-            let d = intArr.firstIndex(where: {$0==90})
-            row = intArr.firstIndex(where: {$0==ritsu}) ?? d as! Int
+            let d = intArr.firstIndex(where: {$0==90}) //デフォルトは90
+            row = intArr.firstIndex(where: {$0==ritsu}) ?? d!
             
         case 401://仕上り重量
             let arr:[Int] = ([Int])(7...21)
@@ -578,8 +621,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             let zero = arr.firstIndex(where: {$0==0})
             array[zero!]="なし"
             popTitle = "羽毛増減"
-            let d = array.firstIndex(where: {$0=="100"})
-            row = array.firstIndex(where: {$0==textField.text!}) ?? d as! Int
+            let d = array.firstIndex(where: {$0=="100"}) //デフォルトは100?
+            row = array.firstIndex(where: {$0==textField.text!}) ?? d!
         default:
             return
         }
@@ -597,7 +640,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 
                     if self.grd1 == "99"{
                         //グレード???の時比率は入力できなくする
-                        self.grd1Field.text = "---"
+                        //self.grd1Field.text = "---"
                         self.ritsu1 = 0
                         self.ritsu1Field.text = ""
                         self.ritsu1Field.isUserInteractionEnabled = false
@@ -609,7 +652,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 
                     if self.grd2 == "99"{
                         //グレード???の時比率は入力できなくする
-                        self.grd2Field.text = "---"
+                        //self.grd2Field.text = "---"
                         self.ritsu2 = 0
                         self.ritsu2Field.text = ""
                         self.ritsu2Field.isUserInteractionEnabled = false

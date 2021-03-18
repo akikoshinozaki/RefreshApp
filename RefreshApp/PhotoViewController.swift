@@ -127,6 +127,7 @@ extension PhotoViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCollectionViewCell", for: indexPath) as! MyCollectionViewCell
         cell.imageView.image = imageArr[indexPath.item]
+        cell.filterView.isHidden = !cellEditing
         cell.deleteBtn.isHidden = !cellEditing
         cell.deleteBtn.tag = 300+indexPath.row
         cell.deleteBtn.addTarget(self, action: #selector(deleteCell(_:)), for: .touchUpInside)

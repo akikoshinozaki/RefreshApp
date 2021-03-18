@@ -218,17 +218,13 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, UIN
     }
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        print(#function)
           //セッションストップ
-                self.session.stopRunning()
+        self.session.stopRunning()
         if let photoData = photo.fileDataRepresentation() {
             //シャッターボタン非表示
-            
             self.image = UIImage(data: photoData)
-            
             self.usePhoto()
         }
-        
 
     }
 

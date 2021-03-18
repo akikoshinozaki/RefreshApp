@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         }
 //        print("idfv="+idfv)
         
-        var id = "dev"
+        //var id = "dev"
         #if DEV
         hostURL = m2URL //開発
         xsrvURL = m2xsrvURL
@@ -64,12 +64,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         }else {
             hostURL = m8URL //本番
             xsrvURL = m8xsrvURL
-            id = "vc"
+            //id = "vc"
         }
         #endif
-        print(id)
+        //print(id)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc = storyboard.instantiateViewController(identifier: id) //受付入力リリース後
+        //let vc = storyboard.instantiateViewController(identifier: id)
+        
+        //受付入力リリース後
         let vc = storyboard.instantiateViewController(identifier: "first")
         window?.rootViewController = UINavigationController(rootViewController: vc)
         
@@ -78,9 +80,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         print(#function)
-        print(hostURL)
-        print(xsrvURL)
-        
         isHostConnected = false
         /* iPadNameとidfvを取得して保存 */
         #if targetEnvironment(simulator)//シュミレーターの場合
@@ -88,14 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #else
         iPadName = UIDevice.current.name.uppercased()
         #endif
-        
-        //最終更新日チェック
-        if Date().string != defaults.object(forKey: "lastDataDownload") as? String {
-            //データ取得
-        }else {
-            //保存データ呼び出し
-        }
-        
+
         //IBMと通信可能かチェック
         hostConnect.delegate = self
         hostConnect.start(hostName: hostName)
@@ -104,53 +96,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     
     //MARK: HostConnectDelegate
     func complete(_: Any) {
+        print(#function)
         //ホスト接続成功
         isHostConnected = true
         
-        //if defaults.string(forKey: "lastDataDownload") != Date().string {
-            //リスト取得
-            IBM().IBMRequest(type: "GRD_LST", parameter: [:], completionClosure: {(_,json,err) in
-                if err == nil, json != nil {
-                    if json!["RTNCD"] as! String != "000" {
-                        var msg = ""
-                        for m in json!["RTNMSG"] as? [String] ?? [] {
-                            msg += m+"\n"
-                        }
-                        DispatchQueue.main.async {
-//                            self.conAlert.title = "エラー"
-//                            self.conAlert.message = msg
-//                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                            SimpleAlert.make(title: "エラー" , message: msg)
-                        }
-                    }else {
-                        //取得成功
-                        let list = json!["GRDLST"] as? [NSDictionary] ?? []
-                        grd_lst = []
-                        for li in list {
-                            let cd = li["GRDCD"] as? String ?? ""
-                            let nm = li["GRDNM"] as? String ?? ""
-                            grd_lst.append((cd:cd, nm:nm))
-                        }
-                        //print(grd_lst)
-                        defaults.setValue(Date().string, forKey: "lastDataDownload")
-                    }
-                    
-                }else {
-                    print(err!)
-                    if errMsg == "" {
-                        errMsg = "データ取得に失敗しました"
-                    }
-                    DispatchQueue.main.async {
-//                        self.conAlert.title = "エラー"
-//                        self.conAlert.message = errMsg
-//                        self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    }
-                    
-                }
-                
-            })
+        //最終更新日チェック
+        let lastUPD = defaults.object(forKey: "lastDataDownload") as? String ?? ""
+        if Date().string != lastUPD {
+            //データ取得
+            self.getList()
+        }else {
+            //ユーザーデフォルト呼び出し
+            if let list = defaults.object(forKey: "grdList") as? [NSDictionary] {
+                //print(list)
+                self.setGrdList(list: list)
+            }else {
+                //データ取得
+                self.getList()
+            }
             
-        //}
+        }
         
     }
     
@@ -179,6 +144,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
 //        let action2 = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
 
         SimpleAlert.make(title: "サーバーに接続できません", message: errStr)
+        //ユーザーデフォルトがあれば、セット
+        if let list = defaults.object(forKey: "grdList") as? [NSDictionary] {
+            print(list)
+            self.setGrdList(list: list)
+        }
+    }
+    
+    func getList(){
+        //リスト取得
+        print("GRADEリスト取得")
+        IBM().IBMRequest(type: "GRD_LST", parameter: [:], completionClosure: {(_,json,err) in
+            if err == nil, json != nil {
+                if json!["RTNCD"] as! String != "000" {
+                    var msg = ""
+                    for m in json!["RTNMSG"] as? [String] ?? [] {
+                        msg += m+"\n"
+                    }
+                    DispatchQueue.main.async {
+//                        self.conAlert.title = "エラー"
+//                        self.conAlert.message = msg
+//                        self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        SimpleAlert.make(title: "エラー" , message: msg)
+                    }
+                }else {
+                    //取得成功
+                    let list = json!["GRDLST"] as? [NSDictionary] ?? []
+                    self.setGrdList(list: list)
+                    //print(grd_lst)
+                    defaults.set(list, forKey: "grdList")
+                    defaults.setValue(Date().string, forKey: "lastDataDownload")
+                }
+                
+            }else {
+                print(err!)
+                if errMsg == "" {
+                    errMsg = "データ取得に失敗しました"
+                }
+                DispatchQueue.main.async {
+//                    self.conAlert.title = "エラー"
+//                    self.conAlert.message = errMsg
+//                    self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                }
+                
+            }
+            
+        })
+    }
+    
+    func setGrdList(list:[NSDictionary]) {
+        grd_lst = []
+        for li in list {
+            let cd = li["GRDCD"] as? String ?? ""
+            let nm = li["GRDNM"] as? String ?? ""
+            grd_lst.append((cd:cd, nm:nm))
+        }
     }
 
 }

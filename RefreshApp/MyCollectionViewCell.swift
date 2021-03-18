@@ -12,5 +12,6 @@ class MyCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var deleteBtn: UIButton!
+    @IBOutlet weak var filterView: UIView!
     
 }

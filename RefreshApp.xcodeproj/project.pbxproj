@@ -38,7 +38,6 @@
 		C322589A2558DEC1007BB719 /* deletebtn.png in Resources */ = {isa = PBXBuildFile; fileRef = C32258992558DEC1007BB719 /* deletebtn.png */; };
 		C322589C2558E4D3007BB719 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589B2558E4D3007BB719 /* Upload.swift */; };
 		C322589F2559215A007BB719 /* UnsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589E2559215A007BB719 /* UnsentViewController.swift */; };
-		C324BB8325DFA13900C20131 /* _ReceptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C324BB8225DFA13900C20131 /* _ReceptViewController.swift */; };
 		C32B7EBA2574CDB4008FDE4F /* BRLMPrinterKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C32B7EBB2574CDC4008FDE4F /* BRLMPrinterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */; };
 		C34B5BDF25F5FBF300CB41F4 /* inquiry.png in Resources */ = {isa = PBXBuildFile; fileRef = C34B5BDE25F5FBF200CB41F4 /* inquiry.png */; };
@@ -50,11 +49,13 @@
 		C35E2FBF255A6F71009C9057 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E2FBE255A6F71009C9057 /* Common.swift */; };
 		C3675D1725F1E21300EF415D /* barcode2.png in Resources */ = {isa = PBXBuildFile; fileRef = C3675D1625F1E21300EF415D /* barcode2.png */; };
 		C3675D1A25F1EE4E00EF415D /* InqTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */; };
+		C37D7BF825FB0D30000C91BF /* UploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D7BF725FB0D30000C91BF /* UploadViewController.swift */; };
 		C388924D25E3750900EFD720 /* InquiryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C388924C25E3750900EFD720 /* InquiryViewController.swift */; };
 		C38C13CD25BA88B800653CE9 /* HostConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13CC25BA88B800653CE9 /* HostConnect.swift */; };
 		C38C13D425BA8BBE00653CE9 /* IBM.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13D325BA8BBE00653CE9 /* IBM.swift */; };
 		C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C38C13D825BA8E5A00653CE9 /* SimpleAlert.swift */; };
 		C3B6423F25C8F11300A2AB50 /* RefreshAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B6423E25C8F11300A2AB50 /* RefreshAppTests.swift */; };
+		C3BFD9D826009D76007EFDCB /* RefListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3BFD9D726009D76007EFDCB /* RefListViewController.swift */; };
 		C3C95DF125889D6F00BBE180 /* BRSelectDeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C95DEB25889D6F00BBE180 /* BRSelectDeviceTableViewController.swift */; };
 		C3C95DF225889D6F00BBE180 /* rj4030ai_102mm152mm.bin in Resources */ = {isa = PBXBuildFile; fileRef = C3C95DEC25889D6F00BBE180 /* rj4030ai_102mm152mm.bin */; };
 		C3C95DF325889D6F00BBE180 /* 100×200.bmp in Resources */ = {isa = PBXBuildFile; fileRef = C3C95DED25889D6F00BBE180 /* 100×200.bmp */; };
@@ -62,6 +63,7 @@
 		C3C95DF525889D6F00BBE180 /* Main2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3C95DEF25889D6F00BBE180 /* Main2.storyboard */; };
 		C3C95DF625889D6F00BBE180 /* PrintSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C95DF025889D6F00BBE180 /* PrintSampleViewController.swift */; };
 		C3CD18B525C27E050088DE56 /* EnvironmentSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */; };
+		C3DDC4DB25F8620700B2DEAC /* GawaImgViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DDC4DA25F8620700B2DEAC /* GawaImgViewController.swift */; };
 		C3E4C31225BFB63E009AD55C /* reception.png in Resources */ = {isa = PBXBuildFile; fileRef = C3E4C31125BFB63C009AD55C /* reception.png */; };
 		D0B742593C4CD1136AB208F7 /* Pods_RefreshApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13000F623F650A5F2C7ED428 /* Pods_RefreshApp.framework */; };
 /* End PBXBuildFile section */
@@ -128,7 +130,6 @@
 		C32258992558DEC1007BB719 /* deletebtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletebtn.png; sourceTree = "<group>"; };
 		C322589B2558E4D3007BB719 /* Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upload.swift; sourceTree = "<group>"; };
 		C322589E2559215A007BB719 /* UnsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsentViewController.swift; sourceTree = "<group>"; };
-		C324BB8225DFA13900C20131 /* _ReceptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _ReceptViewController.swift; sourceTree = "<group>"; };
 		C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BRLMPrinterKit.framework; sourceTree = "<group>"; };
 		C32B7EBD2574CFCB008FDE4F /* RefreshApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RefreshApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		C34B5BDE25F5FBF200CB41F4 /* inquiry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inquiry.png; sourceTree = "<group>"; };
@@ -140,6 +141,7 @@
 		C35E2FBE255A6F71009C9057 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		C3675D1625F1E21300EF415D /* barcode2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode2.png; sourceTree = "<group>"; };
 		C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InqTableViewCell.swift; sourceTree = "<group>"; };
+		C37D7BF725FB0D30000C91BF /* UploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadViewController.swift; sourceTree = "<group>"; };
 		C388924C25E3750900EFD720 /* InquiryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InquiryViewController.swift; sourceTree = "<group>"; };
 		C38C13CC25BA88B800653CE9 /* HostConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostConnect.swift; sourceTree = "<group>"; };
 		C38C13D325BA8BBE00653CE9 /* IBM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IBM.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 		C3B6423E25C8F11300A2AB50 /* RefreshAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAppTests.swift; sourceTree = "<group>"; };
 		C3B6424025C8F11300A2AB50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3B74FB42574C6A700C78794 /* BRLMPrinterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BRLMPrinterKit.framework; path = "../../Xcode練習/bpsdkiall402/bpsdki402/libs/BRLMPrinterKit.framework"; sourceTree = "<group>"; };
+		C3BFD9D726009D76007EFDCB /* RefListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RefListViewController.swift; path = /Users/administrator/Documents/iOS_App/RefreshApp/RefreshApp/RefListViewController.swift; sourceTree = "<absolute>"; };
 		C3C95DEB25889D6F00BBE180 /* BRSelectDeviceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRSelectDeviceTableViewController.swift; sourceTree = "<group>"; };
 		C3C95DEC25889D6F00BBE180 /* rj4030ai_102mm152mm.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = rj4030ai_102mm152mm.bin; sourceTree = "<group>"; };
 		C3C95DED25889D6F00BBE180 /* 100×200.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = "100×200.bmp"; sourceTree = "<group>"; };
@@ -155,6 +158,7 @@
 		C3C95DEF25889D6F00BBE180 /* Main2.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main2.storyboard; sourceTree = "<group>"; };
 		C3C95DF025889D6F00BBE180 /* PrintSampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintSampleViewController.swift; sourceTree = "<group>"; };
 		C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentSwitch.swift; sourceTree = "<group>"; };
+		C3DDC4DA25F8620700B2DEAC /* GawaImgViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GawaImgViewController.swift; sourceTree = "<group>"; };
 		C3E4C31125BFB63C009AD55C /* reception.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reception.png; sourceTree = "<group>"; };
 		E67E3B21BE9B904FC51D8590 /* Pods-RefreshApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.debug.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.debug.xcconfig"; sourceTree = "<group>"; };
 		E90B360D0AE395D81EBCEF83 /* Pods-RefreshApp.dev-debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.dev-debug.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.dev-debug.xcconfig"; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 				4EEC4D5725556C69003AF923 /* AppDelegate.swift */,
 				4EEC4D5B25556C69003AF923 /* ViewController.swift */,
 				C313E7FF25E38F7C00666210 /* FirstViewController.swift */,
+				C37D7BF725FB0D30000C91BF /* UploadViewController.swift */,
 				4E776DD92557B6C4009344EB /* PhotoViewController.swift */,
 				4E776DDC2557B853009344EB /* MyCollectionViewCell.swift */,
 				4E5DB92D25557C7700A53584 /* CameraViewController.swift */,
@@ -221,9 +226,10 @@
 				C388924C25E3750900EFD720 /* InquiryViewController.swift */,
 				C322589E2559215A007BB719 /* UnsentViewController.swift */,
 				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
-				C324BB8225DFA13900C20131 /* _ReceptViewController.swift */,
 				4E6E772625D4F37800BBA885 /* InfoViewController.swift */,
 				4E776DDF2557C96C009344EB /* DispViewController.swift */,
+				C3DDC4DA25F8620700B2DEAC /* GawaImgViewController.swift */,
+				C3BFD9D726009D76007EFDCB /* RefListViewController.swift */,
 				C3C95DEA25889D6F00BBE180 /* BRPrinter */,
 				C3E6A40925E39DF500AB420F /* CusomView */,
 				4EEC4D6325556C6C003AF923 /* Assets.xcassets */,
@@ -503,18 +509,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EEC4D5C25556C69003AF923 /* ViewController.swift in Sources */,
-				C324BB8325DFA13900C20131 /* _ReceptViewController.swift in Sources */,
 				4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */,
 				C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */,
 				4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */,
+				C3DDC4DB25F8620700B2DEAC /* GawaImgViewController.swift in Sources */,
 				4E776DE32557D010009344EB /* Camera2ViewController.swift in Sources */,
 				C388924D25E3750900EFD720 /* InquiryViewController.swift in Sources */,
+				C37D7BF825FB0D30000C91BF /* UploadViewController.swift in Sources */,
 				4E776DDD2557B853009344EB /* MyCollectionViewCell.swift in Sources */,
 				C3675D1A25F1EE4E00EF415D /* InqTableViewCell.swift in Sources */,
 				C3C95DF125889D6F00BBE180 /* BRSelectDeviceTableViewController.swift in Sources */,
 				C3C95DF625889D6F00BBE180 /* PrintSampleViewController.swift in Sources */,
 				4E6E771425D36F6500BBA885 /* BRLabelView.swift in Sources */,
 				4E776DE02557C96C009344EB /* DispViewController.swift in Sources */,
+				C3BFD9D826009D76007EFDCB /* RefListViewController.swift in Sources */,
 				C35E2FBF255A6F71009C9057 /* Common.swift in Sources */,
 				4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */,
 				4E5DB9282555747100A53584 /* ScannerView.swift in Sources */,
@@ -696,7 +704,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.17;
+				CURRENT_PROJECT_VERSION = 1.20;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -712,7 +720,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.17;
+				MARKETING_VERSION = 1.20;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -729,7 +737,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.17;
+				CURRENT_PROJECT_VERSION = 1.20;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -745,7 +753,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.17;
+				MARKETING_VERSION = 1.20;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -824,7 +832,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.17;
+				CURRENT_PROJECT_VERSION = 1.20;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -840,7 +848,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.17;
+				MARKETING_VERSION = 1.20;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -914,7 +922,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.17;
+				CURRENT_PROJECT_VERSION = 1.20;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -930,7 +938,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.17;
+				MARKETING_VERSION = 1.20;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";

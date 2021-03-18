@@ -10,10 +10,10 @@ import UIKit
 import AVFoundation
 import SafariServices
 
-var tagNO:String = ""
-var dateTag:Int = 0
+//var tagNO:String = ""
+//var dateTag:Int = 0
 
-class ViewController: UIViewController {
+class _ViewController: UIViewController {
 
     @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(#function)
+
         // Do any additional setup after loading the view.
         let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         versionLabel.text = "Ver. "+bundleVersion
