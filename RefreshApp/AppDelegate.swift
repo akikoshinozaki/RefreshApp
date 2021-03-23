@@ -93,15 +93,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         hostConnect.start(hostName: hostName)
     }
 
+    func applicationWillResignActive(_ application: UIApplication) {
+        //アラートが表示されていたら消す
+        if let top = SimpleAlert.topViewController() as? UIAlertController {
+            //print("dismiss")
+            top.dismiss(animated: false, completion: nil)
+        }
+    }
     
     //MARK: HostConnectDelegate
     func complete(_: Any) {
         print(#function)
         //ホスト接続成功
         isHostConnected = true
-        
         //最終更新日チェック
         let lastUPD = defaults.object(forKey: "lastDataDownload") as? String ?? ""
+        print(lastUPD)
         if Date().string != lastUPD {
             //データ取得
             self.getList()
@@ -146,7 +153,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         SimpleAlert.make(title: "サーバーに接続できません", message: errStr)
         //ユーザーデフォルトがあれば、セット
         if let list = defaults.object(forKey: "grdList") as? [NSDictionary] {
-            print(list)
+            //print(list)
             self.setGrdList(list: list)
         }
     }
