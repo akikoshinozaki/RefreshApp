@@ -75,3 +75,5 @@ var hostURL = m8URL
 let m2xsrvURL = "https://oktss03.xsrv.jp/refreshPhoto/dev/refresh.php"
 let m8xsrvURL = "https://oktss03.xsrv.jp/refreshPhoto/refresh.php"
 var xsrvURL = m8xsrvURL
+let _jitaArr:[(cd:String, nm:String)] = [("1","自社"),("2","他社"),("3","再リフォーム")]
+var jitaArray:[(cd:String, nm:String)] = []

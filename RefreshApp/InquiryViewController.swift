@@ -49,7 +49,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
     
     var scanner:ScannerView!
     var conAlert:UIAlertController!
-    let arr1 = ["1:自社","2:他社"]
+
     var keiMeisai:[KEIYAKU] = []
     var json_:NSDictionary!
     var detail:DetailView!
@@ -161,7 +161,13 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
                                    itemCD: json["SYOHIN_CD"] as? String ?? "",
                                    itemNM: json["SYOHIN_NM"] as? String ?? "",
                                    nouki: json["NOUKI"] as? String ?? "",
-                                   kigen: json["KIGEN"] as? String ?? "")
+                                   kigen: json["KIGEN"] as? String ?? "",
+                                   grade1: json["GRADE1"] as? String ?? "",
+                                   ritsu1: json["RITSU1"] as? String ?? "0.0",
+                                   jita1: json["JITAK1"] as? String ?? "",
+                                   grade2: json["GRADE2"] as? String ?? "",
+                                   ritsu2: json["RITSU2"] as? String ?? "0.0",
+                                   jita2: json["JITAK2"] as? String ?? "")
         
         //let detail:DetailView = DetailView(frame: self.infoView.frame)
         if detail == nil {return}
@@ -194,7 +200,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         if let jita = json["JITAK1"] as? String, jita != " " {
             let jita_k = Int(jita) ?? 0
             if jita_k > 0 {
-                detail.jitak1Label.text = arr1[jita_k-1]
+                let obj = jitaArray[jita_k-1]
+                detail.jitak1Label.text = obj.cd+":"+obj.nm
             }
         }
         //羽毛グレード1
@@ -212,7 +219,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         if let jita = json["JITAK2"] as? String, jita != " " {
             let jita_k = Int(jita) ?? 0
             if jita_k > 0 {
-                detail.jitak2Label.text = arr1[jita_k-1]
+                let obj = jitaArray[jita_k-1]
+                detail.jitak1Label.text = obj.cd+":"+obj.nm
             }
         }
         //羽毛グレード2
@@ -242,8 +250,12 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         }
 
         //製造日
+        
         if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
-            detail.seizouLabel.text = formatter.string(from: seizou.date)
+            let date = seizou.date
+            let yy = Calendar.current.component(.year, from: date)
+            let mm = Calendar.current.component(.month, from: date)
+            detail.seizouLabel.text = "\(yy)年\(mm)月"
 
         }
         //納期・期限

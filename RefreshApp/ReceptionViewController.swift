@@ -77,6 +77,12 @@ struct PrintData {
     var seizou:String = ""
     var juryo:String = ""
     var zogen:String = ""
+    var grade1:String = ""
+    var ritsu1:String = ""
+    var jita1:String = ""
+    var grade2:String = ""
+    var ritsu2:String = ""
+    var jita2:String = ""
 }
 
 struct PrinterSetting {
@@ -371,7 +377,14 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                                    nouki: _json["NOUKI"] as? String ?? "",
                                    kigen: _json["KIGEN"] as? String ?? "",
                                    juryo: _json["WATA"] as? String ?? "0.0",
-                                   zogen: _json["ZOGEN"] as? String ?? "0")
+                                   zogen: _json["ZOGEN"] as? String ?? "0",
+                                   grade1: _json["GRADE1"] as? String ?? "",
+                                   ritsu1: _json["RITSU1"] as? String ?? "0.0",
+                                   jita1: _json["JITAK1"] as? String ?? "",
+                                   grade2: _json["GRADE2"] as? String ?? "",
+                                   ritsu2: _json["RITSU2"] as? String ?? "0.0",
+                                   jita2: _json["JITAK2"] as? String ?? ""
+                                   )
         
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
@@ -426,6 +439,58 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             lbl.label9.text = "---"
         }else {
             lbl.label9.text = printData.zogen
+        }
+        //grade1
+        if printData.grade1=="",printData.ritsu1=="", printData.jita1=="" {
+            lbl.label10.text = "---"
+        }else {
+            var grd = ""
+            if let obj = grd_lst.first(where: {$0.cd==printData.grade1}) {
+                grd = obj.nm
+            }
+            var ritsu = ""
+            if let rit = Double(printData.ritsu1), rit != 0.0 {
+                ritsu = "\(Int(rit))"
+            }
+            var jita = ""
+            switch printData.jita1 {
+            case "1":
+                jita = "自"
+            case "2":
+                jita = "他"
+            case "3":
+                jita = "再"
+            default:
+                jita = ""
+            }
+
+            lbl.label10.text = grd + "　\(ritsu)\(jita)"
+        }
+        //grade2
+        if printData.grade2=="",printData.ritsu2=="", printData.jita2=="" {
+            lbl.label11.text = "---"
+        }else {
+            var grd = ""
+            if let obj = grd_lst.first(where: {$0.cd==printData.grade2}) {
+                grd = obj.nm
+            }
+            var ritsu = ""
+            if let rit = Double(printData.ritsu2), rit != 0.0 {
+                ritsu = "\(Int(rit))"
+            }
+            var jita = ""
+            switch printData.jita2 {
+            case "1":
+                jita = "自"
+            case "2":
+                jita = "他"
+            case "3":
+                jita = "再"
+            default:
+                jita = ""
+            }
+
+            lbl.label11.text = grd + "　\(ritsu)\(jita)"
         }
                 
         lbl.qrView.image = UIImage.makeQR(code: QR)
@@ -866,10 +931,11 @@ extension ReceptionViewController:UITextFieldDelegate {
 extension ReceptionViewController:InfoViewControllerDelegate {
 
     func setPrintInfo(json: NSDictionary!, type: String) {
-        print(json!)
+        
         print(type)
-        _json = json
         if type == "print" {
+            //print(json!)
+            _json = json
             self.display()
         }else if type == "delete" {
             self.dspInit()

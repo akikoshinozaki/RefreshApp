@@ -22,6 +22,11 @@ class BRLabelView: UIView {
     @IBOutlet weak var yusenLabel: UILabel!
     @IBOutlet weak var label8: UILabel! //仕上り重量
     @IBOutlet weak var label9: UILabel! //足し羽毛
+    @IBOutlet weak var label10: UILabel! //グレード1
+    @IBOutlet weak var label11: UILabel! //グレード2
+    
+    
+    
     @IBOutlet weak var jView: UIView!
     
     
@@ -31,8 +36,8 @@ class BRLabelView: UIView {
     override func draw(_ rect: CGRect) {
         // Drawing code
         yusenLabel.isHidden = true
-        jView.layer.borderWidth = 1
-        jView.layer.borderColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
+//        jView.layer.borderWidth = 1
+//        jView.layer.borderColor = #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1)
     }
     
     

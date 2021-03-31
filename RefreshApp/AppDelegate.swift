@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             print("アップデート後、初起動")
             defaults.set(appVersion, forKey: "appVersion")
             defaults.removeObject(forKey: "lastDataDownload")
+            defaults.removeObject(forKey: "lastLaunchDate")
             defaults.set(0, forKey: "launchCount")
         }
         
@@ -91,6 +92,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         //IBMと通信可能かチェック
         hostConnect.delegate = self
         hostConnect.start(hostName: hostName)
+        
+        let launchDate = defaults.object(forKey: "lastLaunchDate") as? String ?? ""
+        print(launchDate)
+        if Date().string2 != launchDate {//yyyyMMdd
+            //最終起動日が今日じゃなければセット
+            defaults.setValue(Date().string2, forKey: "lastLaunchDate")
+            defaults.removeObject(forKey: "yoteiHI")
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -114,9 +123,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             self.getList()
         }else {
             //ユーザーデフォルト呼び出し
-            if let list = defaults.object(forKey: "grdList") as? [NSDictionary] {
+            let list = defaults.object(forKey: "grdList") as? [NSDictionary] ?? []
+            let list2 = defaults.object(forKey: "jitaList") as? [NSDictionary] ?? []
+            
+            print(list)
+            print(list2)
+            if list != [], list2 != [] {
                 //print(list)
-                self.setGrdList(list: list)
+                self.setList(list: list, list2:list2)
             }else {
                 //データ取得
                 self.getList()
@@ -152,10 +166,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
 
         SimpleAlert.make(title: "サーバーに接続できません", message: errStr)
         //ユーザーデフォルトがあれば、セット
-        if let list = defaults.object(forKey: "grdList") as? [NSDictionary] {
-            //print(list)
-            self.setGrdList(list: list)
-        }
+        let list = defaults.object(forKey: "grdList") as? [NSDictionary] ?? []
+        let list2 = defaults.object(forKey: "jitaList") as? [NSDictionary] ?? []
+        self.setList(list: list, list2:list2)
+
     }
     
     func getList(){
@@ -169,18 +183,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
                         msg += m+"\n"
                     }
                     DispatchQueue.main.async {
-//                        self.conAlert.title = "エラー"
-//                        self.conAlert.message = msg
-//                        self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        //self.conAlert.title = "エラー"
+                        //self.conAlert.message = msg
+                        //self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                         SimpleAlert.make(title: "エラー" , message: msg)
                     }
                 }else {
                     //取得成功
-                    let list = json!["GRDLST"] as? [NSDictionary] ?? []
-                    self.setGrdList(list: list)
-                    //print(grd_lst)
-                    defaults.set(list, forKey: "grdList")
-                    defaults.setValue(Date().string, forKey: "lastDataDownload")
+                    print(json!)
+
+                    var glist:[NSDictionary] = []
+                    var jlist:[NSDictionary] = []
+                    
+                    if let list = json!["GRDLST"] as? [NSDictionary] {
+                        glist = list
+                        defaults.set(list, forKey: "grdList")
+                    }
+                    if let list = json!["JITALST"] as? [NSDictionary] {
+                        jlist = list
+                        defaults.set(list,forKey: "jitaList")
+                    }
+
+                    print("---------")
+                    if glist != [], jlist != [] {
+                        defaults.setValue(Date().string, forKey: "lastDataDownload")
+                    }
+                    self.setList(list: glist, list2:jlist)
                 }
                 
             }else {
@@ -199,13 +227,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         })
     }
     
-    func setGrdList(list:[NSDictionary]) {
+    func setList(list:[NSDictionary],list2:[NSDictionary]) {
+        print(list)
+        print(list2)
         grd_lst = []
+        jitaArray = []
+        
         for li in list {
             let cd = li["GRDCD"] as? String ?? ""
             let nm = li["GRDNM"] as? String ?? ""
             grd_lst.append((cd:cd, nm:nm))
         }
+        
+        if grd_lst.count == 0 {
+            
+        }
+        
+        for li in list2 {
+            let cd = li["KEY"] as? String ?? ""
+            let nm = li["VALUE"] as? String ?? ""
+            jitaArray.append((cd:cd, nm:nm))
+        }
+        
+        if jitaArray.count == 0 {
+            jitaArray = _jitaArr
+        }
+        print(grd_lst)
+        print(jitaArray)
     }
 
 }

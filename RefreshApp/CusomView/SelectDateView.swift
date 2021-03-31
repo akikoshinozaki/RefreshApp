@@ -33,6 +33,8 @@ class SelectDateView: UIView {
         if selectedDate != nil {
             picker.date = selectedDate!
         }
+        picker.minimumDate = Date()-365*24*3600
+        picker.maximumDate = Date()+2*365*24*3600
     }
     
     //コードから生成したときに通る初期化処理

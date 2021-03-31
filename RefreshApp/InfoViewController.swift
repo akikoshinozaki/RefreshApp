@@ -54,21 +54,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet var dspLbls: [UILabel]!
     @IBOutlet weak var enrollLabel: UILabel!
     @IBOutlet weak var yusenSwitch: UISwitch!
-    /*
-    //IBMから受け取るパラメーター
-    var _YOTEI_HI:Date!
-    var _seizouHI:Date!
-    var _jitak1:Int!
-    var _grd1:String = ""
-    var _ritsu1:Int!
-    var _jitak2:Int!
-    var _grd2:String = ""
-    var _ritsu2:Int!
-    var _juryo:Double!
-    var _zogen:Int!
-    var _yusen:String!
-     */
-    
+
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
@@ -148,6 +134,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             yoteiBtn.setTitle(formatter.string(from: yotei.date), for: .normal)
             enrollBtn.setTitle("更新", for:.normal)
         }else {
+            if let yotei2 =  defaults.object(forKey: "yoteiHI") as? String {
+                print(yotei2)
+                yotei_hi = yotei2.date.short
+                YOTEI_HI = yotei2.date
+                yoteiBtn.setTitle(formatter.string(from: yotei2.date), for: .normal)
+            }
             //未登録 → 登録&印刷
             enrolled = false
             //enrollBtn.isHidden = false
@@ -162,7 +154,13 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                                    itemCD: json["SYOHIN_CD"] as? String ?? "",
                                    itemNM: json["SYOHIN_NM"] as? String ?? "",
                                    nouki: json["NOUKI"] as? String ?? "",
-                                   kigen: json["KIGEN"] as? String ?? "")
+                                   kigen: json["KIGEN"] as? String ?? "",
+                                   grade1: json["GRADE1"] as? String ?? "",
+                                   ritsu1: json["RITSU1"] as? String ?? "0.0",
+                                   jita1: json["JITAK1"] as? String ?? "",
+                                   grade2: json["GRADE2"] as? String ?? "",
+                                   ritsu2: json["RITSU2"] as? String ?? "0.0",
+                                   jita2: json["JITAK2"] as? String ?? "")
 
         tagLabel.text = printData.tagNO
         syohinLabel.text = printData.itemCD+": "+printData.itemNM
@@ -187,7 +185,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         if let jita1 = json["JITAK1"] as? String, jita1 != " " {
             jitak1 = Int(jita1) ?? 0
             if jitak1 > 0 {
-                jita1Field.text = arr1[jitak1-1]
+                let obj = jitaArray[jitak1-1]
+                jita1Field.text = obj.cd+":"+obj.nm
             }
         }
         //羽毛グレード1
@@ -207,7 +206,9 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         if let jita2 = json["JITAK2"] as? String, jita2 != " " {
             jitak2 = Int(jita2) ?? 0
             if jitak2 > 0 {
-                jita2Field.text = arr1[jitak2-1]
+                let obj = jitaArray[jitak2-1]
+                jita2Field.text = obj.cd+":"+obj.nm
+
             }
         }
         //羽毛グレード2
@@ -258,72 +259,140 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         
         if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
             seizouHI = seizou.date
-            seizouBtn.setTitle(formatter.string(from: seizouHI), for: .normal)
+            let yy = Calendar.current.component(.year, from: seizouHI)
+            let mm = Calendar.current.component(.month, from: seizouHI)
+            seizouBtn.setTitle("\(yy)年\(mm)月", for: .normal)
         }
         //優先
         yusenSwitch.isOn = json["YUSEN"] as? String == "1"
 
     }
 
+    var seizoSelected:[Int] = [0,0]
+    var yearArr:[String] = [] //yyyy年
+    var montArr:[String] = [] //MM月
+
+    var kotoshi:Int = Calendar.current.component(.year, from: Date())
+    var arr1:[Int] = []
+    let arr2:[Int] = Array(1...12)
+
     //MARK: - 日付ピッカー
     @IBAction func selectDate(_ sender: UIButton) {
+        let kongetu = Calendar.current.component(.month, from: Date())
+        
+        arr1 = Array(kotoshi-1...kotoshi+1)
+        yearArr = arr1.map({String($0)+"年"})
+        montArr = arr2.map({String($0)+"月"})
+        
+//        print(yearArr)
+//        print(montArr)
+
+        seizoSelected[0] = arr1.firstIndex(of: kotoshi) ?? 0
+        seizoSelected[1] = arr2.firstIndex(of: kongetu) ?? 0
+
         //print(sender.title(for: .normal) as! String)
         var selectedDate:Date = Date()
         if sender.tag == 400 { //工場管理日
             selectedDate = YOTEI_HI ?? Date()
+            
+            if #available(iOS 14.0, *) {
+                // iOS14以降の場合
+                dateTag = sender.tag
+                let pickerView = SelectDateView(frame: self.view.frame)
+                pickerView.center = self.view.center
+                pickerView.delegate = self
+                pickerView.selectedDate = selectedDate
+                self.view.addSubview(pickerView)
+                            
+            } else {
+                // iOS14以前の場合
+                print(selectedDate)
+            let picker = DatePickerPopover(title: "日時選択")
+                .setSelectedDate(selectedDate)
+                .setMinimumDate(Date()-365*24*3600)
+                .setMaximumDate(Date()+2*365*24*3600)
+                .setLocale(identifier: "ja_JP")
+                //.setMinimumDate(Date())
+                .setValueChange(action: { _, selectedDate in
+                    //print("current date \(selectedDate)")
+                })
+                .setDoneButton(action: { popover, selectedDate in
+                    print("selectedDate \(selectedDate)")
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
+                    //選択された日付をボタンタイトルへセット
+                    if sender.tag == 400 {
+                        self.YOTEI_HI = selectedDate
+                        if !enrolled {
+                            print("保存")
+                            print(selectedDate.string2)
+                            defaults.setValue(selectedDate.string2, forKey: "yoteiHI")
+                        }
+//                    }else if sender.tag == 401 {
+//                        self.seizouHI = selectedDate
+                        
+                    }
+                    sender.setTitle(formatter.string(from: selectedDate), for: .normal)
+                    
+                    print(formatter.string(from: selectedDate))
+                } )
+                .setCancelButton(action: { _, _ in print("キャンセル")})
+                picker.appear(originView: sender, baseViewController: self)
+            }
         }else if sender.tag == 401 { //製造年月日
             selectedDate = seizouHI ?? Date()
+            
+            //print(selectedDate)
+     
+            //@objc func selectMonth2(_ sender: UITextField) {
+            let font = UIFont.init(name: "HelveticaNeue", size: 20.0)
+            let picker = ColumnStringPickerPopover(title: "選択してください", choices: [yearArr,montArr], selectedRows: seizoSelected, columnPercents: [0.5,0.5])
+                .setFonts([font,font])
+                .setDoneButton(action: {
+                    (popover, selectedRows, selectedStrings) in
+
+                    print(selectedRows)
+                    print(self.arr1[selectedRows[0]])
+                    print(self.arr2[selectedRows[1]])
+                    
+                    let yy = String(self.arr1[selectedRows[0]])
+                    var mm = String(self.arr2[selectedRows[1]]+1)
+                    if mm.count == 1 {
+                        mm = "0"+mm
+                    }
+                    //翌月の1日を指定して1日引く（月末日を求める）
+                    let date = (yy+mm+"01").date
+                    self.seizouHI = date-24*3600
+                    print(date.string2)
+                    print(self.seizouHI.string2)
+                    
+                    let text = selectedStrings[0]+selectedStrings[1]
+                    sender.setTitle(text, for: .normal)
+                })
+                .setCancelButton(action: { _, _, _ in print("キャンセル")})
+            
+            picker.appear(originView: sender, baseViewController: self)
+        
         }
         
-        dateTag = 0
-        if #available(iOS 14.0, *) {
-            // iOS14以降の場合
-            dateTag = sender.tag
-            let pickerView = SelectDateView(frame: self.view.frame)
-            pickerView.center = self.view.center
-            pickerView.delegate = self
-            pickerView.selectedDate = selectedDate
-            self.view.addSubview(pickerView)
-                        
-        } else {
-            // iOS14以前の場合
-            print(selectedDate)
-        let picker = DatePickerPopover(title: "日時選択")
-            .setSelectedDate(selectedDate)
-            .setLocale(identifier: "ja_JP")
-            //.setMinimumDate(Date())
-            .setValueChange(action: { _, selectedDate in
-                //print("current date \(selectedDate)")
-            })
-            .setDoneButton(action: { popover, selectedDate in
-                print("selectedDate \(selectedDate)")
-                let formatter = DateFormatter()
-                formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
-                //選択された日付をボタンタイトルへセット
-                if sender.tag == 400 {
-                    self.YOTEI_HI = selectedDate
-                }else if sender.tag == 401 {
-                    self.seizouHI = selectedDate
-                }
-                sender.setTitle(formatter.string(from: selectedDate), for: .normal)
-                print(formatter.string(from: selectedDate))
-            } )
-            .setCancelButton(action: { _, _ in print("キャンセル")})
-            picker.appear(originView: sender, baseViewController: self)
-        }
 
     }
     
-    func setDate(date: Date) {
+    func setDate(date: Date) {//日付ピッカーを選択した時のデリゲート
         //print(date)
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
         if dateTag == 400 { //工場管理日
             self.YOTEI_HI = date
             self.yoteiBtn.setTitle(formatter.string(from: date), for: .normal)
-        }else if dateTag == 401 { //製造年月日
-            self.seizouHI = date
-            self.seizouBtn.setTitle(formatter.string(from: date), for: .normal)
+            if !enrolled {
+                print("保存")
+                print(YOTEI_HI.string2)
+                defaults.setValue(YOTEI_HI.string2, forKey: "yoteiHI")
+            }
+//        }else if dateTag == 401 { //製造年月日では使わなくなりました
+//            self.seizouHI = date
+//            self.seizouBtn.setTitle(formatter.string(from: date), for: .normal)
         }
     }
         
@@ -366,7 +435,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                     return
                 }
                 alertTitle = "登録してよろしいですか"
-                param["YOTEI_HI"] = YOTEI_HI.toString(format: "yyyyMMdd")
+                param["YOTEI_HI"] = YOTEI_HI.string2
             }
             
             if jita1Field.text != "" {
@@ -428,7 +497,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }
             
             if seizouHI != nil {
-                param["SEIZOU"] = seizouHI.toString(format: "yyyyMMdd")
+                param["SEIZOU"] = seizouHI.string2
             }
             
             if yusenSwitch.isOn {
@@ -558,13 +627,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         })
         
     }
-    let arr1 = ["1:自社","2:他社"]
     
     func showPicker(_ textField:UITextField) {
         //print(textField.tag)
         
         var array:[String] = []
-        var intArr:[Int] = ([Int])(70...95)
+        var intArr:[Int] = ([Int])(70...95)+[50,98,100]
         intArr = intArr.sorted(by: {$0>$1})
         var popTitle = ""
         var row:Int = 0
@@ -572,7 +640,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         switch textField.tag {
         case 301, 304: //自社・他社区分
             //自社・他社
-            array = arr1
+            array = jitaArray.map({($0.cd+":"+$0.nm)})
             popTitle = "自社・他社区分"
             var jitak:Int!
             if textField.tag == 301 {
@@ -661,10 +729,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                     }
                 }else if textField.tag == 301 {
                     self.jitak1 = idx+1
+                    //self.jitak1 = Int(jitaArray[idx].cd)
                 }else if textField.tag == 303 {
                     self.ritsu1 = intArr[idx]
                 }else if textField.tag == 304 {
                     self.jitak2 = idx+1
+                    //self.jitak2 = Int(jitaArray[idx].cd)
                 }else if textField.tag == 306 {
                     self.ritsu2 = intArr[idx]
                 }
@@ -701,8 +771,7 @@ extension InfoViewController:UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         print(textField.tag)
         if textField.text! == "" {return}
-        
-        
+
         switch textField.tag {
         /*
         case 300: //羽毛グレード
