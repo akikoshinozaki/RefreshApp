@@ -268,28 +268,10 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 
     }
 
-    var seizoSelected:[Int] = [0,0]
-    var yearArr:[String] = [] //yyyy年
-    var montArr:[String] = [] //MM月
-
-    var kotoshi:Int = Calendar.current.component(.year, from: Date())
-    var arr1:[Int] = []
-    let arr2:[Int] = Array(1...12)
-
     //MARK: - 日付ピッカー
     @IBAction func selectDate(_ sender: UIButton) {
         let kongetu = Calendar.current.component(.month, from: Date())
         
-        arr1 = Array(kotoshi-1...kotoshi+1)
-        yearArr = arr1.map({String($0)+"年"})
-        montArr = arr2.map({String($0)+"月"})
-        
-//        print(yearArr)
-//        print(montArr)
-
-        seizoSelected[0] = arr1.firstIndex(of: kotoshi) ?? 0
-        seizoSelected[1] = arr2.firstIndex(of: kongetu) ?? 0
-
         //print(sender.title(for: .normal) as! String)
         var selectedDate:Date = Date()
         if sender.tag == 400 { //工場管理日
@@ -302,6 +284,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 pickerView.center = self.view.center
                 pickerView.delegate = self
                 pickerView.selectedDate = selectedDate
+                pickerView.picker.minimumDate = Date()-365*24*3600
+                pickerView.picker.maximumDate = Date()+2*365*24*3600
                 self.view.addSubview(pickerView)
                             
             } else {
@@ -343,6 +327,20 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             selectedDate = seizouHI ?? Date()
             
             //print(selectedDate)
+            var seizoSelected:[Int] = [0,0]
+            var yearArr:[String] = [] //yyyy年
+            var montArr:[String] = [] //MM月
+
+            let kotoshi:Int = Calendar.current.component(.year, from: Date())
+            var arr1:[Int] = []
+            let arr2:[Int] = Array(1...12)
+            
+            arr1 = Array(kotoshi-30...kotoshi-5)
+            yearArr = arr1.map({String($0)+"年"})
+            montArr = arr2.map({String($0)+"月"})
+
+            seizoSelected[0] = arr1.firstIndex(of: kotoshi-5) ?? 0
+            seizoSelected[1] = arr2.firstIndex(of: kongetu) ?? 0
      
             //@objc func selectMonth2(_ sender: UITextField) {
             let font = UIFont.init(name: "HelveticaNeue", size: 20.0)
@@ -352,11 +350,11 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                     (popover, selectedRows, selectedStrings) in
 
                     print(selectedRows)
-                    print(self.arr1[selectedRows[0]])
-                    print(self.arr2[selectedRows[1]])
+                    print(arr1[selectedRows[0]])
+                    print(arr2[selectedRows[1]])
                     
-                    let yy = String(self.arr1[selectedRows[0]])
-                    var mm = self.arr1[selectedRows[1]]
+                    let yy = String(arr1[selectedRows[0]])
+                    var mm = arr2[selectedRows[1]]
                     var date:Date!
                     
                     if mm != 12 {
@@ -374,18 +372,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                         self.seizouHI = (yy+"1231").date
                         
                     }
-                    print(self.seizouHI)
-                    
-                    
-                    var m1 = String(self.arr2[selectedRows[1]]+1)
-                    if m1.count == 1 {
-                        m1 = "0"+m1
-                    }
-                    //翌月の1日を指定して1日引く（月末日を求める）...12月以外
-                    let date = (yy+m1+"01").date
-                    self.seizouHI = date-24*3600
-                    print(date.string2)
-                    print(self.seizouHI.string2)
+//                    print(self.seizouHI!)
+//                    print(self.seizouHI.string2)
                     
                     let text = selectedStrings[0]+selectedStrings[1]
                     sender.setTitle(text, for: .normal)

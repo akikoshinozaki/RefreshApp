@@ -128,5 +128,11 @@ class FirstViewController: UIViewController {
         self.navigationController?.pushViewController(list, animated: true)
     }
     
+    @IBAction func listRefresh(_ sender: Any) {
+        //IBMからの情報更新
+        print("リスト取得")
+        GetLists().getList()
+    }
+    
 }
 

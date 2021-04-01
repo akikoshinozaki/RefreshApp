@@ -129,12 +129,28 @@
                                     <action selector="unsentList:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gi8-o7-a2r"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="isM-8m-zfd">
+                                <rect key="frame" x="844" y="678" width="100" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="JqE-C9-XWf"/>
+                                    <constraint firstAttribute="width" constant="100" id="rMT-zS-CJg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
+                                <state key="normal" title="データ更新">
+                                    <color key="titleColor" systemColor="linkColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="listRefresh:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YF4-Px-vEb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="isM-8m-zfd" secondAttribute="bottom" constant="50" id="2ym-Q2-yu5"/>
                             <constraint firstItem="7jC-8H-hV1" firstAttribute="height" secondItem="QhZ-ot-OCy" secondAttribute="height" id="30G-jL-xDG"/>
                             <constraint firstItem="QhZ-ot-OCy" firstAttribute="top" secondItem="Bar-bJ-Dbz" secondAttribute="bottom" constant="80" id="8Uj-Li-Yvb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="isM-8m-zfd" secondAttribute="trailing" constant="80" id="EVU-a3-VA1"/>
                             <constraint firstItem="3aj-sx-v9r" firstAttribute="top" secondItem="Nky-R6-zzw" secondAttribute="top" id="EVi-Ab-y6L"/>
                             <constraint firstItem="7jC-8H-hV1" firstAttribute="top" secondItem="QhZ-ot-OCy" secondAttribute="top" id="F1c-Qd-eXK"/>
                             <constraint firstItem="Bar-bJ-Dbz" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="NK4-P3-Vk8"/>
@@ -178,7 +194,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="127" y="76"/>
+            <point key="canvasLocation" x="126.56249999999999" y="75.78125"/>
         </scene>
         <!--Upload View Controller-->
         <scene sceneID="WYJ-eS-k9Q">
@@ -693,6 +709,9 @@
         <image name="right.png" width="50" height="200"/>
         <image name="unsent.png" width="456" height="456"/>
         <image name="upload.png" width="456" height="456"/>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
