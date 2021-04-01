@@ -356,12 +356,33 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                     print(self.arr2[selectedRows[1]])
                     
                     let yy = String(self.arr1[selectedRows[0]])
-                    var mm = String(self.arr2[selectedRows[1]]+1)
-                    if mm.count == 1 {
-                        mm = "0"+mm
+                    var mm = self.arr1[selectedRows[1]]
+                    var date:Date!
+                    
+                    if mm != 12 {
+                        //翌月の1日を指定して1日引く（月末日を求める）...12月以外
+                        mm += 1
+                        if mm < 10 {
+                            date = (yy+"0\(mm)01").date
+                        }else {
+                            date = (yy+"\(mm)01").date
+                        }
+
+                        self.seizouHI = date-24*3600
+                    }else {
+                        //12月を選択した場合
+                        self.seizouHI = (yy+"1231").date
+                        
                     }
-                    //翌月の1日を指定して1日引く（月末日を求める）
-                    let date = (yy+mm+"01").date
+                    print(self.seizouHI)
+                    
+                    
+                    var m1 = String(self.arr2[selectedRows[1]]+1)
+                    if m1.count == 1 {
+                        m1 = "0"+m1
+                    }
+                    //翌月の1日を指定して1日引く（月末日を求める）...12月以外
+                    let date = (yy+m1+"01").date
                     self.seizouHI = date-24*3600
                     print(date.string2)
                     print(self.seizouHI.string2)
@@ -632,7 +653,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         //print(textField.tag)
         
         var array:[String] = []
-        var intArr:[Int] = ([Int])(70...95)+[50,98,100]
+        var intArr:[Int] = ([Int])(70...95)+[50,98,99,100]
         intArr = intArr.sorted(by: {$0>$1})
         var popTitle = ""
         var row:Int = 0

@@ -220,7 +220,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
             let jita_k = Int(jita) ?? 0
             if jita_k > 0 {
                 let obj = jitaArray[jita_k-1]
-                detail.jitak1Label.text = obj.cd+":"+obj.nm
+                detail.jitak2Label.text = obj.cd+":"+obj.nm
             }
         }
         //羽毛グレード2
