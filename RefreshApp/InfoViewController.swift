@@ -26,7 +26,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet weak var deleteBtn: UIButton!
     @IBOutlet weak var printBtn: UIButton!
     @IBOutlet weak var closeBtn: UIButton!
-
+/* */
     @IBOutlet weak var yoteiBtn:UIButton!
     @IBOutlet weak var seizouBtn:UIButton!
     
@@ -48,6 +48,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet weak var ritsu2Field: UITextField!
     @IBOutlet weak var juryoField: UITextField!
     @IBOutlet weak var zogenField: UITextField!
+/* */
     
     @IBOutlet var fields: [UITextField]!
     @IBOutlet var btns: [UIButton]!
@@ -641,8 +642,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         //print(textField.tag)
         
         var array:[String] = []
-        var intArr:[Int] = ([Int])(70...95)+[50,98,99,100]
-        intArr = intArr.sorted(by: {$0>$1})
+//        var intArr:[Int] = ([Int])(70...95)+[50,98,99,100]
+//        intArr = intArr.sorted(by: {$0>$1})
         var popTitle = ""
         var row:Int = 0
         
@@ -675,7 +676,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }
         case 303, 306: //原料比率
             //原料比率
-            array = intArr.map({String($0)})
+            array = hiritsuArr.map({String($0)})
             popTitle = "原料比率"
             var ritsu:Int!
             if textField.tag == 303 {
@@ -683,8 +684,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }else {
                 ritsu = ritsu2
             }
-            let d = intArr.firstIndex(where: {$0==90}) //デフォルトは90
-            row = intArr.firstIndex(where: {$0==ritsu}) ?? d!
+            let d = hiritsuArr.firstIndex(where: {$0==90}) //デフォルトは90
+            row = hiritsuArr.firstIndex(where: {$0==ritsu}) ?? d!
             
         case 401://仕上り重量
             let arr:[Int] = ([Int])(7...21)
@@ -740,12 +741,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                     self.jitak1 = idx+1
                     //self.jitak1 = Int(jitaArray[idx].cd)
                 }else if textField.tag == 303 {
-                    self.ritsu1 = intArr[idx]
+                    self.ritsu1 = hiritsuArr[idx]
                 }else if textField.tag == 304 {
                     self.jitak2 = idx+1
                     //self.jitak2 = Int(jitaArray[idx].cd)
                 }else if textField.tag == 306 {
-                    self.ritsu2 = intArr[idx]
+                    self.ritsu2 = hiritsuArr[idx]
                 }
             })
             .setSelectedRow(row)
