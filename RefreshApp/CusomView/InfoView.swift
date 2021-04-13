@@ -24,6 +24,10 @@ class InfoView: UIView {
     @IBOutlet weak var btn1: UIButton!
     @IBOutlet weak var btn2: UIButton!
     
+    @IBOutlet weak var nextBtn: UIButton!
+    //@IBOutlet weak var backBtn: UIButton!
+    @IBOutlet var fields: [UITextField]!
+    //@IBOutlet var dspLbls: [UILabel]!
 
     /*
     // Only override draw() if you perform custom drawing.

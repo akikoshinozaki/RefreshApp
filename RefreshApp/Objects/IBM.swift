@@ -28,7 +28,7 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
         var json:NSDictionary!
         errMsg = ""
         var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=\(type)&"
-        
+        print(param)
         for p in parameter {
             param += "\(p.key)=\(p.value)&"
         }

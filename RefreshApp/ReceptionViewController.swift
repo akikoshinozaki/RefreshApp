@@ -594,7 +594,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }
         
         let storyboard = UIStoryboard.init(name: "Main2", bundle: nil)
-        let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
+        //let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
+        let infoVC = storyboard.instantiateViewController(identifier: "info2") as! InfoViewController2
         infoVC.delegate = self
         infoVC.isModalInPresentation = true
         self.present(infoVC, animated: true, completion: nil)
@@ -928,7 +929,7 @@ extension ReceptionViewController:UITextFieldDelegate {
     
 }
 
-extension ReceptionViewController:InfoViewControllerDelegate {
+extension ReceptionViewController:InfoViewController2Delegate {
 
     func setPrintInfo(json: NSDictionary!, type: String) {
         

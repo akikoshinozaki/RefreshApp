@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E0ED3FF2623D9E800A4B714 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0ED3FE2623D9E800A4B714 /* InfoView.swift */; };
 		4E37C87625F3D11400314885 /* DetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E37C87525F3D11400314885 /* DetailView.xib */; };
 		4E37C87925F3D13300314885 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E37C87825F3D13300314885 /* DetailView.swift */; };
 		4E3D93172615AC6E00C584F9 /* GetLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D93162615AC6E00C584F9 /* GetLists.swift */; };
@@ -27,10 +28,13 @@
 		4E776DE825580EEA009344EB /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E776DE625580EEA009344EB /* right.png */; };
 		4E81401625F48DF600CAE545 /* DetailView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E81401425F48DF500CAE545 /* DetailView2.swift */; };
 		4E81401725F48DF600CAE545 /* DetailView2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E81401525F48DF600CAE545 /* DetailView2.xib */; };
+		4E9C66BB26255684003E29FF /* InfoViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9C66BA26255683003E29FF /* InfoViewController2.swift */; };
 		4EB9B126260345EC003CCEFB /* RefListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB9B125260345EC003CCEFB /* RefListViewController.swift */; };
 		4EBCC91225BE9A0100882906 /* SelectDateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EBCC91125BE9A0100882906 /* SelectDateView.xib */; };
 		4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCC91325BE9A2C00882906 /* SelectDateView.swift */; };
 		4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */; };
+		4EE502372625181C00AAE522 /* BRLavelView2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EE502362625181C00AAE522 /* BRLavelView2.xib */; };
+		4EE5023A262531C600AAE522 /* BRLabelView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE50239262531C600AAE522 /* BRLabelView2.swift */; };
 		4EEC4D5825556C69003AF923 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5725556C69003AF923 /* AppDelegate.swift */; };
 		4EEC4D5C25556C69003AF923 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5B25556C69003AF923 /* ViewController.swift */; };
 		4EEC4D5F25556C69003AF923 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5D25556C69003AF923 /* Main.storyboard */; };
@@ -45,7 +49,6 @@
 		C32B7EBB2574CDC4008FDE4F /* BRLMPrinterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C32B7EB72574CD7A008FDE4F /* BRLMPrinterKit.framework */; };
 		C34B5BDF25F5FBF300CB41F4 /* inquiry.png in Resources */ = {isa = PBXBuildFile; fileRef = C34B5BDE25F5FBF200CB41F4 /* inquiry.png */; };
 		C35ABD96261C485F00687CB4 /* InfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C35ABD95261C485F00687CB4 /* InfoView.xib */; };
-		C35ABD9C261C497E00687CB4 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35ABD9B261C497D00687CB4 /* InfoView.swift */; };
 		C35ABDA5261C4CCD00687CB4 /* InfoView2.xib in Resources */ = {isa = PBXBuildFile; fileRef = C35ABDA3261C4CCC00687CB4 /* InfoView2.xib */; };
 		C35ABDA6261C4CCD00687CB4 /* InfoView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35ABDA4261C4CCD00687CB4 /* InfoView2.swift */; };
 		C35E2FB3255A15F2009C9057 /* qrScan.png in Resources */ = {isa = PBXBuildFile; fileRef = C35E2FB2255A15F2009C9057 /* qrScan.png */; };
@@ -100,6 +103,7 @@
 
 /* Begin PBXFileReference section */
 		13000F623F650A5F2C7ED428 /* Pods_RefreshApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RefreshApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E0ED3FE2623D9E800A4B714 /* InfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4E37C87525F3D11400314885 /* DetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailView.xib; sourceTree = "<group>"; };
 		4E37C87825F3D13300314885 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		4E3D93162615AC6E00C584F9 /* GetLists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GetLists.swift; path = Objects/GetLists.swift; sourceTree = "<group>"; };
@@ -121,10 +125,13 @@
 		4E776DE625580EEA009344EB /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
 		4E81401425F48DF500CAE545 /* DetailView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailView2.swift; sourceTree = "<group>"; };
 		4E81401525F48DF600CAE545 /* DetailView2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailView2.xib; sourceTree = "<group>"; };
+		4E9C66BA26255683003E29FF /* InfoViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController2.swift; sourceTree = "<group>"; };
 		4EB9B125260345EC003CCEFB /* RefListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefListViewController.swift; sourceTree = "<group>"; };
 		4EBCC91125BE9A0100882906 /* SelectDateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectDateView.xib; sourceTree = "<group>"; };
 		4EBCC91325BE9A2C00882906 /* SelectDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateView.swift; sourceTree = "<group>"; };
 		4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceptionViewController.swift; sourceTree = "<group>"; };
+		4EE502362625181C00AAE522 /* BRLavelView2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BRLavelView2.xib; sourceTree = "<group>"; };
+		4EE50239262531C600AAE522 /* BRLabelView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRLabelView2.swift; sourceTree = "<group>"; };
 		4EEC4D5425556C69003AF923 /* RefreshApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefreshApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EEC4D5725556C69003AF923 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EEC4D5B25556C69003AF923 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -143,7 +150,6 @@
 		C32B7EBD2574CFCB008FDE4F /* RefreshApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RefreshApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		C34B5BDE25F5FBF200CB41F4 /* inquiry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inquiry.png; sourceTree = "<group>"; };
 		C35ABD95261C485F00687CB4 /* InfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoView.xib; sourceTree = "<group>"; };
-		C35ABD9B261C497D00687CB4 /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InfoView.swift; path = /Users/administrator/Documents/iOS_App/RefreshApp/RefreshApp/CusomView/InfoView.swift; sourceTree = "<absolute>"; };
 		C35ABDA3261C4CCC00687CB4 /* InfoView2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfoView2.xib; sourceTree = "<group>"; };
 		C35ABDA4261C4CCD00687CB4 /* InfoView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoView2.swift; sourceTree = "<group>"; };
 		C35E2FB2255A15F2009C9057 /* qrScan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qrScan.png; sourceTree = "<group>"; };
@@ -240,6 +246,7 @@
 				C322589E2559215A007BB719 /* UnsentViewController.swift */,
 				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
 				4E6E772625D4F37800BBA885 /* InfoViewController.swift */,
+				4E9C66BA26255683003E29FF /* InfoViewController2.swift */,
 				4E776DDF2557C96C009344EB /* DispViewController.swift */,
 				C3DDC4DA25F8620700B2DEAC /* GawaImgViewController.swift */,
 				4EB9B125260345EC003CCEFB /* RefListViewController.swift */,
@@ -340,6 +347,8 @@
 			isa = PBXGroup;
 			children = (
 				4E6E771025D36F4E00BBA885 /* BRLabelView.xib */,
+				4EE50239262531C600AAE522 /* BRLabelView2.swift */,
+				4EE502362625181C00AAE522 /* BRLavelView2.xib */,
 				4E6E771325D36F6500BBA885 /* BRLabelView.swift */,
 				4E50A5BD25F767960015B997 /* _BRLabelView.xib */,
 				4EBCC91125BE9A0100882906 /* SelectDateView.xib */,
@@ -351,7 +360,7 @@
 				4E81401525F48DF600CAE545 /* DetailView2.xib */,
 				4E81401425F48DF500CAE545 /* DetailView2.swift */,
 				C35ABD95261C485F00687CB4 /* InfoView.xib */,
-				C35ABD9B261C497D00687CB4 /* InfoView.swift */,
+				4E0ED3FE2623D9E800A4B714 /* InfoView.swift */,
 				C35ABDA3261C4CCC00687CB4 /* InfoView2.xib */,
 				C35ABDA4261C4CCD00687CB4 /* InfoView2.swift */,
 			);
@@ -467,6 +476,7 @@
 				C3E4C31225BFB63E009AD55C /* reception.png in Resources */,
 				C35E2FBD255A191E009C9057 /* barcode.png in Resources */,
 				4E776DE825580EEA009344EB /* right.png in Resources */,
+				4EE502372625181C00AAE522 /* BRLavelView2.xib in Resources */,
 				C322589A2558DEC1007BB719 /* deletebtn.png in Resources */,
 				C35E2FBB255A1669009C9057 /* unsent.png in Resources */,
 				C35ABDA5261C4CCD00687CB4 /* InfoView2.xib in Resources */,
@@ -533,6 +543,8 @@
 				4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */,
 				C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */,
 				4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */,
+				4E9C66BB26255684003E29FF /* InfoViewController2.swift in Sources */,
+				4E0ED3FF2623D9E800A4B714 /* InfoView.swift in Sources */,
 				C3DDC4DB25F8620700B2DEAC /* GawaImgViewController.swift in Sources */,
 				C35ABDA6261C4CCD00687CB4 /* InfoView2.swift in Sources */,
 				4E3D93172615AC6E00C584F9 /* GetLists.swift in Sources */,
@@ -546,7 +558,7 @@
 				4E6E771425D36F6500BBA885 /* BRLabelView.swift in Sources */,
 				4E776DE02557C96C009344EB /* DispViewController.swift in Sources */,
 				C35E2FBF255A6F71009C9057 /* Common.swift in Sources */,
-				C35ABD9C261C497E00687CB4 /* InfoView.swift in Sources */,
+				4EE5023A262531C600AAE522 /* BRLabelView2.swift in Sources */,
 				4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */,
 				4E5DB9282555747100A53584 /* ScannerView.swift in Sources */,
 				4E81401625F48DF600CAE545 /* DetailView2.swift in Sources */,

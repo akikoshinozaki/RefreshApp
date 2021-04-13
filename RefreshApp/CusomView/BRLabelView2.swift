@@ -1,29 +1,26 @@
 //
-//  InfoView.swift
-//  
+//  BRLabelView2.swift
+//  RefreshApp
 //
-//  Created by administrator on 2021/04/06.
+//  Created by 篠崎 明子 on 2021/04/13.
+//  Copyright © 2021 Akiko Shinozaki. All rights reserved.
 //
 
 import UIKit
 
-class InfoView2: UIView {
+class BRLabelView2: UIView {
     
-    @IBOutlet weak var tagLabel: UILabel!
-    @IBOutlet weak var keiyakuLabel: UILabel!
-    @IBOutlet weak var customerLabel: UILabel!
-    @IBOutlet weak var syohinLabel: UILabel!
-    @IBOutlet weak var patternLabel: UILabel!
-    @IBOutlet weak var classLabel: UILabel!
-    @IBOutlet weak var nohinLabel: UILabel!
-    @IBOutlet weak var kigenLabel: UILabel!
-    @IBOutlet weak var yuuyoLabel: UILabel!
+    @IBOutlet weak var sitenCD: UILabel!
+    @IBOutlet weak var sitenNM: UILabel!
+    @IBOutlet weak var nouki: UILabel!
+    @IBOutlet weak var tagNO: UILabel!
+    @IBOutlet weak var keiNO: UILabel!
+    @IBOutlet weak var itemNO: UILabel!
+    @IBOutlet weak var itemNM: UILabel!
+    @IBOutlet weak var customer: UILabel!
+    @IBOutlet weak var tantou: UILabel!
+    
 
-    //@IBOutlet weak var nextBtn: UIButton!
-    @IBOutlet weak var backBtn: UIButton!
-    
-    @IBOutlet var dspLbls: [UILabel]!
-    
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -31,7 +28,7 @@ class InfoView2: UIView {
         // Drawing code
     }
     */
-    
+
     //コードから生成したときに通る初期化処理
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,18 +40,17 @@ class InfoView2: UIView {
         super.init(coder: aDecoder)
         self.nibInit()
     }
-
     
     // xibファイルを読み込んでviewに重ねる
     fileprivate func nibInit() {
         // File's OwnerをXibViewにしたので ownerはself になる
-        guard let view = UINib(nibName: "InfoView2", bundle: nil).instantiate(withOwner: self, options: nil).first as? UIView else {
+        guard let view = UINib(nibName: "BRLabelView2", bundle: nil).instantiate(withOwner: self, options: nil).first as? UIView else {
             return
         }
-        
         view.frame = self.bounds
-        self.addSubview(view)
         
+        view.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        self.addSubview(view)
     }
-
+    
 }
