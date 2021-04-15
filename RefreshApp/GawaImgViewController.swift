@@ -5,6 +5,7 @@
 //  Created by administrator on 2021/03/10.
 //  Copyright © 2021 Akiko Shinozaki. All rights reserved.
 //
+//  側生地の画像を表示する
 
 import UIKit
 

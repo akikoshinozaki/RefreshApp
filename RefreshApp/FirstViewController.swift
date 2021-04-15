@@ -5,6 +5,8 @@
 //  Created by 篠崎 明子 on 2020/11/06.
 //  Copyright © 2020 Akiko Shinozaki. All rights reserved.
 //
+//  開発用トップページ
+//  *********  未使用  **********
 
 import UIKit
 import AVFoundation

@@ -5,6 +5,8 @@
 //  Created by administrator on 2020/11/09.
 //  Copyright © 2020 Akiko Shinozaki. All rights reserved.
 //
+//  未送信データ（送信失敗したもの）
+//  FileManagerに保存されている画像を表示
 
 import UIKit
 
@@ -18,7 +20,6 @@ class UnsentViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     
     deinit {
-        //print("deinit")
         imageArr = []
         tagNO = ""
     }

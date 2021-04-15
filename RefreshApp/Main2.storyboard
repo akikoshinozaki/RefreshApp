@@ -478,6 +478,10 @@
                                                         <constraint firstAttribute="width" constant="200" id="IDh-QY-W5W"/>
                                                     </constraints>
                                                 </imageView>
+                                                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UjT-5I-53q">
+                                                    <rect key="frame" x="8" y="8" width="200" height="150"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oNo-sX-Hz2">
                                                     <rect key="frame" x="191" y="0.0" width="25" height="25"/>
                                                     <constraints>
@@ -489,15 +493,20 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="aOb-PC-JCX" secondAttribute="trailing" constant="8" id="19l-tb-01b"/>
+                                                <constraint firstItem="UjT-5I-53q" firstAttribute="top" secondItem="aOb-PC-JCX" secondAttribute="top" id="21w-8b-z9W"/>
                                                 <constraint firstAttribute="trailing" secondItem="oNo-sX-Hz2" secondAttribute="trailing" id="BR9-GV-j0E"/>
+                                                <constraint firstItem="UjT-5I-53q" firstAttribute="leading" secondItem="aOb-PC-JCX" secondAttribute="leading" id="KwZ-hZ-wnK"/>
+                                                <constraint firstItem="UjT-5I-53q" firstAttribute="bottom" secondItem="aOb-PC-JCX" secondAttribute="bottom" id="e85-1h-ept"/>
                                                 <constraint firstItem="oNo-sX-Hz2" firstAttribute="top" secondItem="Ox9-dO-lLW" secondAttribute="top" id="eFs-xb-72r"/>
                                                 <constraint firstItem="aOb-PC-JCX" firstAttribute="leading" secondItem="Ox9-dO-lLW" secondAttribute="leading" constant="8" id="l2n-P7-I2k"/>
                                                 <constraint firstAttribute="bottom" secondItem="aOb-PC-JCX" secondAttribute="bottom" constant="8" id="p40-qb-okz"/>
                                                 <constraint firstItem="aOb-PC-JCX" firstAttribute="top" secondItem="Ox9-dO-lLW" secondAttribute="top" constant="8" id="qOV-II-cAk"/>
+                                                <constraint firstItem="UjT-5I-53q" firstAttribute="trailing" secondItem="aOb-PC-JCX" secondAttribute="trailing" id="qye-HB-Cj9"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <connections>
                                             <outlet property="deleteBtn" destination="oNo-sX-Hz2" id="sRi-hC-rld"/>
+                                            <outlet property="filterView" destination="UjT-5I-53q" id="W1B-xV-KjY"/>
                                             <outlet property="imageView" destination="aOb-PC-JCX" id="kee-tQ-iT7"/>
                                         </connections>
                                     </collectionViewCell>
@@ -545,6 +554,18 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="画像が存在しています" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0c2-Cx-sjO">
+                                <rect key="frame" x="260" y="320" width="174" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rWd-E5-msL">
+                                <rect key="frame" x="764" y="320" width="240" height="345"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="dY2-a2-DHU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -2042,6 +2063,9 @@
         </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

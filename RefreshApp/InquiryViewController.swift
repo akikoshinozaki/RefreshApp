@@ -5,6 +5,7 @@
 //  Created by administrator on 2021/02/22.
 //  Copyright © 2021 Akiko Shinozaki. All rights reserved.
 //
+//  問い合わせ画面
 
 import UIKit
 import AVFoundation

@@ -106,7 +106,7 @@
 		4E0ED3FE2623D9E800A4B714 /* InfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4E37C87525F3D11400314885 /* DetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailView.xib; sourceTree = "<group>"; };
 		4E37C87825F3D13300314885 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
-		4E3D93162615AC6E00C584F9 /* GetLists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GetLists.swift; path = Objects/GetLists.swift; sourceTree = "<group>"; };
+		4E3D93162615AC6E00C584F9 /* GetLists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLists.swift; sourceTree = "<group>"; };
 		4E3D93252615BA0800C584F9 /* reload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reload.png; sourceTree = "<group>"; };
 		4E50A5BD25F767960015B997 /* _BRLabelView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = _BRLabelView.xib; sourceTree = "<group>"; };
 		4E5DB92525556E0600A53584 /* RefreshApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RefreshApp.entitlements; sourceTree = "<group>"; };
@@ -231,25 +231,24 @@
 				C3E6A40825E39DDA00AB420F /* Objects */,
 				C322589D255911B1007BB719 /* img */,
 				4EEC4D5725556C69003AF923 /* AppDelegate.swift */,
-				4E3D93162615AC6E00C584F9 /* GetLists.swift */,
 				4EEC4D5B25556C69003AF923 /* ViewController.swift */,
-				C313E7FF25E38F7C00666210 /* FirstViewController.swift */,
+				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
+				4E6E772625D4F37800BBA885 /* InfoViewController.swift */,
+				4E9C66BA26255683003E29FF /* InfoViewController2.swift */,
+				C388924C25E3750900EFD720 /* InquiryViewController.swift */,
+				C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */,
+				4EB9B125260345EC003CCEFB /* RefListViewController.swift */,
+				4E776DDF2557C96C009344EB /* DispViewController.swift */,
+				C3DDC4DA25F8620700B2DEAC /* GawaImgViewController.swift */,
+				C322589E2559215A007BB719 /* UnsentViewController.swift */,
 				C37D7BF725FB0D30000C91BF /* UploadViewController.swift */,
 				4E776DD92557B6C4009344EB /* PhotoViewController.swift */,
 				4E776DDC2557B853009344EB /* MyCollectionViewCell.swift */,
 				4E5DB92D25557C7700A53584 /* CameraViewController.swift */,
 				4E776DE22557D010009344EB /* Camera2ViewController.swift */,
+				C313E7FF25E38F7C00666210 /* FirstViewController.swift */,
 				4EEC4D5D25556C69003AF923 /* Main.storyboard */,
 				C3C95DEF25889D6F00BBE180 /* Main2.storyboard */,
-				C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */,
-				C388924C25E3750900EFD720 /* InquiryViewController.swift */,
-				C322589E2559215A007BB719 /* UnsentViewController.swift */,
-				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
-				4E6E772625D4F37800BBA885 /* InfoViewController.swift */,
-				4E9C66BA26255683003E29FF /* InfoViewController2.swift */,
-				4E776DDF2557C96C009344EB /* DispViewController.swift */,
-				C3DDC4DA25F8620700B2DEAC /* GawaImgViewController.swift */,
-				4EB9B125260345EC003CCEFB /* RefListViewController.swift */,
 				C3C95DEA25889D6F00BBE180 /* BRPrinter */,
 				C3E6A40925E39DF500AB420F /* CusomView */,
 				4EEC4D6325556C6C003AF923 /* Assets.xcassets */,
@@ -339,6 +338,7 @@
 				C322589B2558E4D3007BB719 /* Upload.swift */,
 				C35E2FBE255A6F71009C9057 /* Common.swift */,
 				C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */,
+				4E3D93162615AC6E00C584F9 /* GetLists.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";

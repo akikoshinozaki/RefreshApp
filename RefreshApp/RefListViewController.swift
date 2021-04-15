@@ -1,9 +1,9 @@
 //
 //  RefListViewController.swift
-//  
 //
-//  Created by administrator on 2021/03/16.
+//  Created by AkikoShinozaki on 2021/03/16.
 //
+//  同一契約内のリフレッシュ一覧を取得する
 
 import UIKit
 

@@ -105,7 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
     func applicationWillResignActive(_ application: UIApplication) {
         //アラートが表示されていたら消す
         if let top = SimpleAlert.topViewController() as? UIAlertController {
-            //print("dismiss")
+            print("dismiss")
             top.dismiss(animated: false, completion: nil)
         }
     }

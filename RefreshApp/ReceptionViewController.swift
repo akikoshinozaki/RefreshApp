@@ -5,6 +5,7 @@
 //  Created by 篠崎 明子 on 2021/02/03.
 //  Copyright © 2021 Akiko Shinozaki. All rights reserved.
 //
+//  受付入力画面
 
 import UIKit
 import SwiftyPickerPopover
@@ -134,6 +135,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     var YOTEI_HI:Date!
     var seizouHI:Date!
     
+    var isImgUploaded:Bool = false
     var lbl:BRLabelView! //印刷用のView
     
     deinit {
@@ -205,6 +207,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         seizouHI = nil
         enrolled = false
         kanriLabel.text = ""
+        iArr = []
+        imageArr = []
+        photoCollection.reloadData()
+        
         if tagNO == "" {
             tagField.text = ""
             tagLabel.text = "TagNo.未入力"
@@ -332,6 +338,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             tagLabel.text = tagNO
             tagLabel.textColor = .black
             self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
+            getImages(tag:tagNO)
             
         }
     }
@@ -594,8 +601,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }
         
         let storyboard = UIStoryboard.init(name: "Main2", bundle: nil)
-        //let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
-        let infoVC = storyboard.instantiateViewController(identifier: "info2") as! InfoViewController2
+        let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
+        //let infoVC = storyboard.instantiateViewController(identifier: "info2") as! InfoViewController2
         infoVC.delegate = self
         infoVC.isModalInPresentation = true
         self.present(infoVC, animated: true, completion: nil)
@@ -824,6 +831,103 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
     }
     
+    //アップロード済みの画像取得
+    func getImages(tag:String){
+
+        var json:NSDictionary!
+        let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
+        let url = URL(string: path)!
+        let param = "tagNo=\(tag)"
+        let config = URLSessionConfiguration.default
+        //config.timeoutIntervalForRequest = 5.0
+        let session = URLSession(configuration: config)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = param.data(using: .utf8)
+        // 通信のタスクを生成.
+        let task = session.dataTask(with:request, completionHandler: {
+            (data, response, err) in
+            if (err == nil){
+                if(data != nil){
+                    //戻ってきたデータを解析
+                    do{
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
+                        print(json!)
+                        let arr = json["images"] as? [String] ?? []
+                        print(arr)
+                        DispatchQueue.main.async {
+                            //Xserver内の画像を検索して、アップロード済みかどうか、チェック
+                            if arr.count > 0 {
+                                self.isImgUploaded = true
+                                self.imgDL(arr: arr, tag: tag)
+                            }else {
+                                self.isImgUploaded = false
+                            }
+                        }
+
+                    }catch{
+                        print("json error")
+                        errMsg += "E3001:json error"
+                    }
+                }else{
+                    print("レスポンスがない")
+                    errMsg += "E3001:No Response"
+                }
+                
+            } else {
+                print("error : \(err!)")
+                if (err! as NSError).code == -1001 {
+                    print("timeout")
+                }
+                
+                errMsg += "E3003:\(err!.localizedDescription)"
+            }
+
+        })
+        
+        // タスクの実行.
+        task.resume()
+        
+    }
+    var iArr:[UIImage] = []
+    func imgDL(arr:[String], tag:String) {
+        iArr = []
+//        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
+        //self.present(imgAlert, animated: true, completion: nil)
+        DispatchQueue.global().async {
+            for file in arr {
+                //画像をダウンロードして配列に保存
+                let str = "https://ipad:m8mawata@oktss03.xsrv.jp/refreshPhoto/\(file)"
+                let encodeStr = str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                let url = URL(string: encodeStr)!
+                
+                //print(url)
+                do{
+                    let imageData = try Data(contentsOf: url)
+                    let img = UIImage(data:imageData)
+                    
+                    self.iArr.append(img!)
+                    
+                }catch {
+                    //エラー
+                    print("imageファイルにアクセスできない")
+                }
+            }
+            
+            DispatchQueue.main.async {
+                self.photoCollection.reloadData()
+//                self.tagImg = iArr
+//                if arr.count > 0 {
+//                    self.photoView.isHidden = false
+//                    self.imgCollection.reloadData()
+//                }
+            }
+        }
+//        imgAlert.dismiss(animated: true, completion: nil)
+        
+    }
+    
 }
 extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataSource {
     
@@ -832,13 +936,24 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageArr.count
+        return iArr.count+imageArr.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCollectionViewCell", for: indexPath) as! MyCollectionViewCell
-        cell.imageView.image = imageArr[indexPath.item]
         cell.deleteBtn.isHidden = true
+        let row = indexPath.item
+        if indexPath.row < iArr.count {
+            //Xserver上の写真
+            cell.imageView.image = iArr[row]
+            cell.filterView.isHidden = false
+        
+        }else {
+            //撮影した写真
+            cell.imageView.image = imageArr[row-iArr.count]
+            cell.filterView.isHidden = true
+        }
+        
         /*
         cell.deleteBtn.isHidden = !cellEditing
         cell.deleteBtn.tag = 300+indexPath.row
@@ -929,7 +1044,7 @@ extension ReceptionViewController:UITextFieldDelegate {
     
 }
 
-extension ReceptionViewController:InfoViewController2Delegate {
+extension ReceptionViewController:InfoViewControllerDelegate {
 
     func setPrintInfo(json: NSDictionary!, type: String) {
         

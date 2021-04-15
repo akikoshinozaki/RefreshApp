@@ -5,6 +5,7 @@
 //  Created by 篠崎 明子 on 2020/11/08.
 //  Copyright © 2020 Akiko Shinozaki. All rights reserved.
 //
+//  ImageArr内の画像を拡大表示する
 
 import UIKit
 
