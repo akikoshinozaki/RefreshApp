@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/administrator/Documents/iOS_App/RefreshApp/RefreshApp/CusomView/InfoView.swift">
-   </FileRef>
-   <FileRef
       location = "group:RefreshApp.xcodeproj">
    </FileRef>
    <FileRef

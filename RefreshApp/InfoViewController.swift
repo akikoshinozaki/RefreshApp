@@ -11,11 +11,13 @@ import SwiftyPickerPopover
 
 //受け取るパラメーター
 var printData:PrintData!
+var isBLXexist:Bool = false
 var enrolled:Bool = false
-var _json:NSDictionary!
+var _json:Dictionary<String,Any>!
 
 protocol InfoViewControllerDelegate{
-    func setPrintInfo(json:NSDictionary!, type:String)
+    func setPrintInfo(json:Dictionary<String,Any>!, type:String)
+    func setEntry(param:[String:Any])
 }
 
 class InfoViewController: UIViewController, SelectDateViewDelegate {
@@ -55,7 +57,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     @IBOutlet var dspLbls: [UILabel]!
     @IBOutlet weak var enrollLabel: UILabel!
     @IBOutlet weak var yusenSwitch: UISwitch!
-
+    @IBOutlet weak var uploadedLabel: UILabel!
+    
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
@@ -68,7 +71,6 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     var juryo:Double!
     var zogen:Int!
 
-    
     var conAlert:UIAlertController!
     
     override func viewDidLoad() {
@@ -83,8 +85,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         for btn in btns {
             btn.layer.cornerRadius = 8
         }
-        
+        uploadedLabel.isHidden = !isImgUploaded
         closeBtn.addTarget(self, action: #selector(closeView), for: .touchUpInside)
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        print(#function)
+        uploadedLabel.isHidden = !isImgUploaded
     }
     
     func dspInit(){
@@ -119,21 +125,33 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         
     }
 
-    func display(json:NSDictionary){
+    func display(json:Dictionary<String,Any>){
         
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
 
         var yotei_hi = ""
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
-            //登録済み → 再印刷or削除
-            printBtn.isHidden = false
-            deleteBtn.isHidden = false
-            enrolled = true
+
             yotei_hi = yotei.date.short
             YOTEI_HI = yotei.date
             yoteiBtn.setTitle(formatter.string(from: yotei.date), for: .normal)
-            enrollBtn.setTitle("更新", for:.normal)
+            
+            if enrolled {
+                //未登録 → 登録&印刷
+                isBLXexist = false
+                
+                enrollBtn.setTitle("登録", for:.normal)
+            }else {
+                //登録済み → 再印刷or削除
+                printBtn.isHidden = false
+                deleteBtn.isHidden = false
+                
+                isBLXexist = true
+                enrollBtn.setTitle("更新", for:.normal)
+            }
+            
+            
         }else {
             if let yotei2 =  defaults.object(forKey: "yoteiHI") as? String {
                 print(yotei2)
@@ -142,11 +160,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 yoteiBtn.setTitle(formatter.string(from: yotei2.date), for: .normal)
             }
             //未登録 → 登録&印刷
-            enrolled = false
+            isBLXexist = false
+            enrolled = true
             //enrollBtn.isHidden = false
             enrollBtn.setTitle("登録", for:.normal)
         }
-        enrollLabel.isHidden = !enrolled
+        enrollLabel.isHidden = !isBLXexist
         
         printData = PrintData(date: yotei_hi,
                                    renban: json["RENBAN"] as? String ?? "",
@@ -258,11 +277,16 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             zogenField.text = "なし"
         }
         
-        if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
-            seizouHI = seizou.date
-            let yy = Calendar.current.component(.year, from: seizouHI)
-            let mm = Calendar.current.component(.month, from: seizouHI)
-            seizouBtn.setTitle("\(yy)年\(mm)月", for: .normal)
+        if let seizou = json["SEIZOU"] as? String, seizou != "00000000" {
+            let df = DateFormatter()
+            df.calendar = Calendar(identifier: .gregorian)
+            df.dateFormat = "yyyyMMdd"
+            if let d = df.date(from: seizou) {
+                seizouHI = d
+                let yy = Calendar.current.component(.year, from: seizouHI)
+                let mm = Calendar.current.component(.month, from: seizouHI)
+                seizouBtn.setTitle("\(yy)年\(mm)月", for: .normal)
+            }
         }
         //優先
         yusenSwitch.isOn = json["YUSEN"] as? String == "1"
@@ -308,7 +332,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                     //選択された日付をボタンタイトルへセット
                     if sender.tag == 400 {
                         self.YOTEI_HI = selectedDate
-                        if !enrolled {
+                        if !isBLXexist {
                             print("保存")
                             print(selectedDate.string2)
                             defaults.setValue(selectedDate.string2, forKey: "yoteiHI")
@@ -395,7 +419,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         if dateTag == 400 { //工場管理日
             self.YOTEI_HI = date
             self.yoteiBtn.setTitle(formatter.string(from: date), for: .normal)
-            if !enrolled {
+            if !isBLXexist {
                 print("保存")
                 print(YOTEI_HI.string2)
                 defaults.setValue(YOTEI_HI.string2, forKey: "yoteiHI")
@@ -408,7 +432,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         
     @IBAction func clearDate(_ sender: UIButton){
         if sender.tag == 801 {
-            if enrolled {return} //登録済みの場合は変更できない
+            if isBLXexist {return} //登録済みの場合は変更できない
             YOTEI_HI = nil
             self.yoteiBtn.setTitle("日付を選択", for: .normal)
         }else if sender.tag == 802 {
@@ -435,7 +459,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         var alertTitle:String = ""
         switch sender.tag {
         case 901:
-            if enrolled { //更新
+            if isBLXexist { //更新
                 type = "UPDATE"
                 alertTitle = "更新してよろしいですか"
             }else { //登録
@@ -446,15 +470,18 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 }
                 alertTitle = "登録してよろしいですか"
                 param["YOTEI_HI"] = YOTEI_HI.string2
+                _json["YOTEI_HI"] = YOTEI_HI.string2
             }
             
             if jita1Field.text != "" {
                 //自社・他社区分
                 param["JITAK1"] = String(jitak1)
+                _json["JITAK1"] = String(jitak1)
             }
             if grd1Field.text != "" {
                 //グレード
                 param["GRADE1"] = grd1
+                _json["GRADE1"] = grd1
             }else {
 //                if type == "UPDATE" {
 //                    param["GRADE1"] = ""
@@ -463,6 +490,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if ritsu1Field.text != "" {
                 //比率
                 param["RITSU1"] = String(ritsu1)
+                _json["RITSU1"] = String(ritsu1)
             }else {
                 if type == "UPDATE" {
                     param["RITSU1"] = 0
@@ -472,10 +500,12 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if jita2Field.text != "" {
                 //自社・他社区分
                 param["JITAK2"] = String(jitak2)
+                _json["JITAK2"] = String(jitak2)
             }
             if grd2Field.text != "" {
                 //グレード
                 param["GRADE2"] = grd2
+                _json["GRADE2"] = grd2
             }else {
 //                if type == "UPDATE" {
 //                    param["GRADE2"] = ""
@@ -484,6 +514,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if ritsu2Field.text != "" {
                 //比率
                 param["RITSU2"] = String(ritsu2)
+                _json["RITSU2"] = String(ritsu2)
             }else {
                 if type == "UPDATE" {
                     param["RITSU2"] = 0
@@ -493,27 +524,34 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if juryoField.text != "" {
                 if juryoField.text == "不明" {
                     param["WATA"] = "0"
+                    _json["WATA"] = "0"
                 }else {
                     param["WATA"] = juryoField.text!
+                    _json["WATA"] = juryoField.text!
                 }
             }
             
             if zogenField.text != "" {
                 if zogenField.text == "なし" {
                     param["ZOGEN"] = "0"
+                    _json["ZOGEN"] = "0"
                 }else {
                     param["ZOGEN"] = zogenField.text!
+                    _json["ZOGEN"] = zogenField.text!
                 }
             }
             
             if seizouHI != nil {
                 param["SEIZOU"] = seizouHI.string2
+                _json["SEIZOU"] = seizouHI.string2
             }
             
             if yusenSwitch.isOn {
                 param["YUSEN"] = "1"
+                _json["YUSEN"] = "1"
             }else {
                 param["YUSEN"] = ""
+                _json["YUSEN"] = ""
             }
             
         case 902:
@@ -525,21 +563,31 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         }
 
         print(param)
-        let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-            Void in
-            self.request(type: type, param: param)
-        }))
         
-        alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        if type == "ENTRY" {
+            print(param)
+            //print(_json)
+            self.dismiss(animated: true, completion: {
+                self.delegate?.setEntry(param: param)
+            })
+            
+        }else {
+            let alert = UIAlertController(title: alertTitle, message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                Void in
+                self.request(type: type, param: param)
+            }))
+            
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         
     }
     
 
     @IBAction func labelPrint(_ sender: Any) {
-        print(enrolled)
-        if enrolled {
+        print(isBLXexist)
+        if isBLXexist {
             self.dismiss(animated: true, completion: {
                 self.delegate?.setPrintInfo(json: _json, type: "print")
             })
@@ -595,7 +643,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                             }))
                             
                         }else if type == "ENTRY" {
-                            enrolled = true
+                            isBLXexist = true
                             self.conAlert.title = "登録成功"
                             self.conAlert.message = "正常に登録できました"
                             self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
@@ -607,7 +655,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                             }))
 
                         }else if type == "UPDATE" {
-                            enrolled = true
+                            isBLXexist = true
                             self.conAlert.title = "更新成功"
                             self.conAlert.message = "正常に更新できました"
                             self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {

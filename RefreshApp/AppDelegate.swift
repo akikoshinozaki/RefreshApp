@@ -100,11 +100,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             defaults.setValue(Date().string2, forKey: "lastLaunchDate")
             defaults.removeObject(forKey: "yoteiHI")
         }
+
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
         //アラートが表示されていたら消す
-        if let top = SimpleAlert.topViewController() as? UIAlertController {
+        if let top = UIApplication.topViewController() as? UIAlertController {
             print("dismiss")
             top.dismiss(animated: false, completion: nil)
         }
@@ -123,14 +124,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             GetLists().getList()
         }else {
             //ユーザーデフォルト呼び出し
-            let list1 = defaults.object(forKey: "grdList") as? [NSDictionary] ?? []
-            let list2 = defaults.object(forKey: "jitaList") as? [NSDictionary] ?? []
-            let list3 = defaults.object(forKey: "hiritsu") as? [NSDictionary] ?? []
+            let list1 = defaults.object(forKey: "grdList") as? [Dictionary<String,Any>] ?? []
+            let list2 = defaults.object(forKey: "jitaList") as? [Dictionary<String,Any>] ?? []
+            let list3 = defaults.object(forKey: "hiritsu") as? [Dictionary<String,Any>] ?? []
             
             print(list1)
             print(list2)
             print(list3)
-            if list1 != [], list2 != [], list3 != [] {
+            if !list1.isEmpty, !list2.isEmpty, !list3.isEmpty {
                 //print(list)
                 GetLists().setList(list1: list1, list2:list2, list3:list3)
             }else {
@@ -168,11 +169,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
 
         SimpleAlert.make(title: "サーバーに接続できません", message: errStr)
         //ユーザーデフォルトがあれば、セット
-        let list1 = defaults.object(forKey: "grdList") as? [NSDictionary] ?? []
-        let list2 = defaults.object(forKey: "jitaList") as? [NSDictionary] ?? []
-        let list3 = defaults.object(forKey: "hiritsu") as? [NSDictionary] ?? []
+        let list1 = defaults.object(forKey: "grdList") as? [Dictionary<String,Any>] ?? []
+        let list2 = defaults.object(forKey: "jitaList") as? [Dictionary<String,Any>] ?? []
+        let list3 = defaults.object(forKey: "hiritsu") as? [Dictionary<String,Any>] ?? []
         GetLists().setList(list1: list1, list2:list2, list3: list3)
 
     }
-
 }
+
+extension UIApplication {
+    
+    class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let navigationController = controller as? UINavigationController {
+            return topViewController(controller: navigationController.visibleViewController)
+        }
+        if let tabController = controller as? UITabBarController {
+            if let selected = tabController.selectedViewController {
+                return topViewController(controller: selected)
+            }
+        }
+        if let presented = controller?.presentedViewController {
+            return topViewController(controller: presented)
+        }
+        return controller
+    }
+    
+}
+

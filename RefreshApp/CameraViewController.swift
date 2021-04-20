@@ -75,7 +75,7 @@ class CameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, UIN
     }
         
     override func viewDidLoad() {
-        super.viewDidLoad()
+                super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         // セッションを生成

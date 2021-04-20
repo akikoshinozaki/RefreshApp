@@ -13,6 +13,10 @@ class GetLists: NSObject {
     func getList(){
         //リスト取得
         print("IBM リスト取得")
+        
+        let alert = UIAlertController(title: "リスト更新中", message: "", preferredStyle: .alert)
+        UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
+        
         IBM().IBMRequest(type: "GRD_LST", parameter: [:], completionClosure: {(_,json,err) in
             if err == nil, json != nil {
                 if json!["RTNCD"] as! String != "000" {
@@ -21,33 +25,41 @@ class GetLists: NSObject {
                         msg += m+"\n"
                     }
                     DispatchQueue.main.async {
-                        SimpleAlert.make(title: "エラー" , message: msg)
+                        //SimpleAlert.make(title: "エラー" , message: msg)
+                        alert.title = "エラー"
+                        alert.message = msg
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                     }
                 }else {
                     //取得成功
                     print(json!)
 
-                    var glist:[NSDictionary] = []
-                    var jlist:[NSDictionary] = []
-                    var hlist:[NSDictionary] = []
+                    var glist:[Dictionary<String,Any>] = []
+                    var jlist:[Dictionary<String,Any>] = []
+                    var hlist:[Dictionary<String,Any>] = []
                     
-                    if let list = json!["GRDLST"] as? [NSDictionary] {
+                    //print(glist.isEmpty)
+                    
+                    if let list = json!["GRDLST"] as? [Dictionary<String,Any>] {
                         glist = list
                         defaults.set(list, forKey: "grdList")
                     }
-                    if let list = json!["JITALST"] as? [NSDictionary] {
+                    if let list = json!["JITALST"] as? [Dictionary<String,Any>] {
                         jlist = list
                         defaults.set(list,forKey: "jitaList")
                     }
-                    if let list = json!["HIRITSU"] as? [NSDictionary] {
+                    if let list = json!["HIRITSU"] as? [Dictionary<String,Any>] {
                         hlist = list
                         defaults.set(list,forKey: "hiritsu")
                     }
 
-                    if glist != [], jlist != [], hlist != [] {
+                    if !glist.isEmpty, !jlist.isEmpty, !hlist.isEmpty {
                         defaults.setValue(Date().string, forKey: "lastDataDownload")
                     }
                     self.setList(list1: glist, list2:jlist, list3:hlist)
+                    DispatchQueue.main.async {
+                        alert.dismiss(animated: true, completion: nil)
+                    }
                 }
                 
             }else {
@@ -56,7 +68,10 @@ class GetLists: NSObject {
                     errMsg = "データ取得に失敗しました"
                 }
                 DispatchQueue.main.async {
-                    SimpleAlert.make(title: "エラー" , message: errMsg)
+                    //SimpleAlert.make(title: "エラー" , message: errMsg)
+                    alert.title = "エラー"
+                    alert.message = errMsg
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 }
                 
             }
@@ -65,7 +80,7 @@ class GetLists: NSObject {
     }
     
 
-    func setList(list1:[NSDictionary],list2:[NSDictionary],list3:[NSDictionary]) {
+    func setList(list1:[Dictionary<String,Any>],list2:[Dictionary<String,Any>],list3:[Dictionary<String,Any>]) {
         grd_lst = []
         jitaArray = []
         hiritsuArr = []

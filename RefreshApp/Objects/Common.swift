@@ -40,7 +40,7 @@ extension String {
         df.dateFormat = format
         return df.date(from: self)
     }
-    
+//    21078999
     var date: Date {
         let df = DateFormatter()
         df.calendar = Calendar(identifier: .gregorian)
@@ -49,8 +49,8 @@ extension String {
     }
 }
 
-typealias CompletionClosure = ((_ resultString:String?,_ resultJson:NSDictionary?, _ err:Error?) -> Void)
-
+typealias CompletionClosure = ((_ resultString:String?,_ resultJson:Dictionary<String,Any>?, _ err:Error?) -> Void)
+//typealias CompletionClosure = ((_ resultString:String?,_ resultJson:NSDictionary?, _ err:Error?) -> Void)
 //共通のパラメーター
 var iPadName:String = ""
 var idfv:String = ""

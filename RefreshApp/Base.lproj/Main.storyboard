@@ -434,8 +434,8 @@
                                     <action selector="upload:" destination="1h2-Xm-ahB" eventType="touchUpInside" id="hWS-Am-D60"/>
                                 </connections>
                             </button>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Hfc-1X-Xxx">
-                                <rect key="frame" x="34" y="95" width="700" height="834"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Hfc-1X-Xxx">
+                                <rect key="frame" x="162" y="80" width="700" height="578"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="700" id="OSS-zg-kdX"/>

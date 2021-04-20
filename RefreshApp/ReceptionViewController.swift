@@ -17,10 +17,10 @@ extension UIImage {
         var str = ""
         switch type {
         case "EAN13":
-            print("EAN13")
+            //print("EAN13")
             str = "CICode128BarcodeGenerator"
         case "QR":
-            print("QR")
+            //print("QR")
             str = "CIQRCodeGenerator"
         default:
             return nil
@@ -93,6 +93,8 @@ struct PrinterSetting {
     var paper:BRLMQLPrintSettingsLabelSize = .rollW62
 }
 
+var isImgUploaded:Bool = false
+
 class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDeviceTableViewControllerDelegate, RefListViewDelegate {
     
     @IBOutlet weak var scanBtn: UIButton!
@@ -134,12 +136,20 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
-    
-    var isImgUploaded:Bool = false
     var lbl:BRLabelView! //印刷用のView
+    @IBOutlet weak var uploadedLabel: UILabel!
+    var entryData:[String:Any] = [:] //infoViewから受け取ったパラメータ（ENTRY用）
+    var iArr:[UIImage] = [] //サーバー上の画像を格納する
+    @IBOutlet weak var edtBtn:UIButton!
+    let dispatchGroup = DispatchGroup()
+    var postAlert: UIAlertController!
+    var isPostImage:Bool = false
+    var isDouble:Bool = false
+
+    
     
     deinit {
-        print("deinit")
+        //print("deinit")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidConnect, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidDisconnect, object: nil)
         dspInit()
@@ -147,7 +157,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Do any additional setup after loading the view.
         //tagLabel.text = tagNO
         
@@ -174,7 +183,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         printBtn.addTarget(self, action: #selector(display), for: .touchUpInside)
         detailBtn.addTarget(self, action: #selector(dispDetail), for: .touchUpInside)
         cameraBtn.addTarget(self, action: #selector(takePhoto), for: .touchUpInside)
-        //edtBtn.addTarget(self, action: #selector(editCollection(_:)), for: .touchUpInside)
+        edtBtn.addTarget(self, action: #selector(editCollection(_:)), for: .touchUpInside)
         
         for btn in btns {
             btn.layer.cornerRadius = 8
@@ -194,9 +203,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         #else
         envLabel.isHidden = true
         #endif
-        
+        uploadedLabel.isHidden = true
         self.dspInit()
-
+        
     }
     
     func dspInit(){
@@ -206,10 +215,15 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         YOTEI_HI = nil
         seizouHI = nil
         enrolled = false
+        isBLXexist = false
         kanriLabel.text = ""
         iArr = []
         imageArr = []
+        cellEditing = false
+        edtBtn.setTitle("編集", for: .normal)
         photoCollection.reloadData()
+        isImgUploaded = false
+        uploadedLabel.isHidden = true
         
         if tagNO == "" {
             tagField.text = ""
@@ -221,6 +235,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }
         
         labelImgView.image = nil
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -337,6 +352,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }else {
             tagLabel.text = tagNO
             tagLabel.textColor = .black
+            dspInit()
             self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
             getImages(tag:tagNO)
             
@@ -361,8 +377,9 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @objc func display(){
         kanriLabel.text = ""
         labelImgView.image = nil
-
-        if !enrolled || _json==nil {
+        print(_json)
+        if _json==nil {
+        //if !isBLXexist || _json==nil {
             SimpleAlert.make(title: "対象のデータがありません", message: "")
             return
         }
@@ -517,13 +534,13 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     }
        
     func request(type:String, param:[String:Any]) {
-        self.dspInit()
+        //self.dspInit()
         DispatchQueue.main.async {
             self.conAlert = UIAlertController(title: "データ取得中", message: "しばらくお待ちください", preferredStyle: .alert)
             self.present(self.conAlert, animated: true, completion: nil)
         }
         
-        IBM().IBMRequest(type: type, parameter: param, completionClosure: {(_,json,err) in
+        IBM().IBMRequest(type: type, parameter: param, completionClosure: { [self](_,json,err) in
             print("IBMRequest")
             _json = nil
             printData = nil
@@ -540,14 +557,31 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                     DispatchQueue.main.async {
                         self.conAlert.title = "エラー"
                         self.conAlert.message = msg
-                        self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        if !self.isDouble {
+                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        }
                     }
-
                     
                 }else {
-                    if json!["TAG_NO"] == nil { //契約No.でSearchした結果
+                    if type == "ENTRY" {
+                        _json = json
+                        enrolled = true
+                        if !self.isDouble {
+                            DispatchQueue.main.async {
+                                self.conAlert.title = "登録成功"
+                                self.conAlert.message = "正常に登録できました"
+                                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                                    Void in
+                                    //print(_json)
+                                    self.display()
+                                    
+                                }))
+                            }
+                        }
+
+                    }else if json!["TAG_NO"] == nil { //契約No.でSearchした結果
                         //明細チェック
-                        if let arr = json!["MEISAI"] as? [NSDictionary], arr.count>0 {
+                        if let arr = json!["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
                             DispatchQueue.main.async {
                                 self.conAlert.dismiss(animated: true, completion: {
                                     self.display2(json: json!)
@@ -578,23 +612,30 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                 }
                 
             }else {
-                print(err!)
+                //print(err!)
                 if errMsg == "" {
                     errMsg = "データ取得に失敗しました"
                 }
                 DispatchQueue.main.async {
                     self.conAlert.title = "エラー"
                     self.conAlert.message = errMsg
-                    self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    if !self.isDouble {
+                        self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    }
                 }
                 
             }
             
+            if self.isDouble {
+                print("-----IBM登録-----")
+                self.dispatchGroup.leave()
+            }
         })
         
     }
     
     @objc func dispDetail(){
+
         if _json == nil {
             SimpleAlert.make(title: "表示する対象がありません", message: "")
             return
@@ -625,8 +666,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func display2(json:NSDictionary){
-        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>0 {
+    func display2(json:Dictionary<String,Any>){
+        if let arr = json["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
             
             if arr.count == 1 { //明細が1つだったら、TagNo.で問い合わせ
                 if let tag = arr[0]["TAG_NO"] as? String {
@@ -805,6 +846,125 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
     }
     
+    @IBAction func entryDataAndImage(_ sender: UIButton) {
+        print(entryData)
+        if _json == nil {
+            return
+        }
+        guard let yotei = _json["YOTEI_HI"] as? String, yotei != "" else {
+            SimpleAlert.make(title: "工場管理日が未入力です", message: "")
+            return
+        }
+        
+        if imageArr.count == 0 {
+            let alert = UIAlertController(title: "写真がありません", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "データだけ送る", style: .default, handler: {
+                Void in
+                self.request(type: "ENTRY", param: self.entryData)
+            }))
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: {
+                Void in
+                return
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+            
+        }else {
+            //データ・画像両方送る
+            let alert = UIAlertController(title: "送信してよろしいですか", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                Void in
+                self.isDouble = true
+                self.upload()
+            }))
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+
+        }
+
+    }
+    
+    func upload() {
+        let dispatchQueue = DispatchQueue(label: "queue", attributes: .concurrent)
+        self.dispatchGroup.enter()
+        dispatchQueue.async(group: self.dispatchGroup) {
+            self.request(type: "ENTRY", param: self.entryData)
+        }
+        self.dispatchGroup.enter()
+        dispatchQueue.async(group: self.dispatchGroup) {
+            self.postImages()
+        }
+        
+        self.dispatchGroup.notify(queue: .main) {
+            print("All Process Done!")
+            print("enrolled = \(enrolled)")
+            print("post = \(self.isPostImage)")
+            self.isDouble = false
+            
+            DispatchQueue.main.async {
+                //var success:Bool = false
+                if enrolled {
+                    self.conAlert.title = "登録成功"
+                    self.conAlert.message! = "データ登録成功\n"
+                    
+                }
+                
+                if self.isPostImage {
+                    self.conAlert.title = "送信完了しました"
+                    self.conAlert.message! += "画像送信成功\n"
+                    
+                    Upload().deleteFM(tag: tagNO)
+                    imageArr = []
+                    self.photoCollection.reloadData()
+                    tagNO = ""
+                    self.tagField.text = ""
+                    self.setTag()
+                    
+                }else {
+                    self.conAlert.title = "画像アップロードに失敗しました"
+                    self.conAlert.message! += "画像は未送信データに一時的に保存されました\n"+errorCode
+                    //self.uploadFault = true
+                    Upload().saveFM(tag: tagNO, arr: imageArr)
+                }
+                
+                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                    Void in
+                    self.display()
+                }))
+                    
+            }
+            
+            
+        }
+    }
+    
+    //MARK: - 画像送信
+    func postImages() {
+        isPostImage = false
+        DispatchQueue.main.async {
+            if self.conAlert != nil {
+                self.conAlert.title = "画像送信中"
+            }
+            //self.present(self.postAlert, animated: true, completion: nil)
+            Upload().uploadData()
+            NotificationCenter.default.addObserver(self, selector: #selector(self.finishUpload), name: Notification.Name(rawValue:"postImage"), object: nil)
+        }
+    }
+    
+    @objc func finishUpload(){
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"postImage"), object: nil)
+        DispatchQueue.main.async {
+            if errorCode == "" {
+                //アップロード成功
+                self.isPostImage = true
+            }
+            print("-----画像アップロード-----")
+            self.dispatchGroup.leave()
+        }
+    }
+    
+    
     @objc func back(){
         if imageArr.count > 0 {
             let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
@@ -828,15 +988,14 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
         }
         
-        
     }
     
     //アップロード済みの画像取得
     func getImages(tag:String){
 
-        var json:NSDictionary!
-        let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
-        let url = URL(string: path)!
+        var json:Dictionary<String,Any>!
+        //let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
+        let url = URL(string: "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php")!
         let param = "tagNo=\(tag)"
         let config = URLSessionConfiguration.default
         //config.timeoutIntervalForRequest = 5.0
@@ -852,17 +1011,25 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                 if(data != nil){
                     //戻ってきたデータを解析
                     do{
-                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
-                        print(json!)
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? Dictionary<String,Any>
+                        //print(json!)
                         let arr = json["images"] as? [String] ?? []
-                        print(arr)
+                        //print(arr)
                         DispatchQueue.main.async {
                             //Xserver内の画像を検索して、アップロード済みかどうか、チェック
                             if arr.count > 0 {
-                                self.isImgUploaded = true
+                                isImgUploaded = true
                                 self.imgDL(arr: arr, tag: tag)
+                                self.uploadedLabel.isHidden = false
+                                //TODO: 画像存在する場合ラベル表示
+                                if InfoViewController() != nil {
+                                    if let label = InfoViewController().uploadedLabel {
+                                        label.isHidden = false
+                                    }
+                                }
+                                
                             }else {
-                                self.isImgUploaded = false
+                                isImgUploaded = false
                             }
                         }
 
@@ -890,11 +1057,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         task.resume()
         
     }
-    var iArr:[UIImage] = []
+
     func imgDL(arr:[String], tag:String) {
         iArr = []
-//        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
-        //self.present(imgAlert, animated: true, completion: nil)
+        
         DispatchQueue.global().async {
             for file in arr {
                 //画像をダウンロードして配列に保存
@@ -917,14 +1083,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             
             DispatchQueue.main.async {
                 self.photoCollection.reloadData()
-//                self.tagImg = iArr
-//                if arr.count > 0 {
-//                    self.photoView.isHidden = false
-//                    self.imgCollection.reloadData()
-//                }
             }
         }
-//        imgAlert.dismiss(animated: true, completion: nil)
         
     }
     
@@ -952,19 +1112,17 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
             //撮影した写真
             cell.imageView.image = imageArr[row-iArr.count]
             cell.filterView.isHidden = true
+            cell.deleteBtn.isHidden = !cellEditing
+            cell.deleteBtn.tag = 300+row-iArr.count
+            cell.deleteBtn.addTarget(self, action: #selector(deleteCell(_:)), for: .touchUpInside)
         }
         
-        /*
-        cell.deleteBtn.isHidden = !cellEditing
-        cell.deleteBtn.tag = 300+indexPath.row
-        cell.deleteBtn.addTarget(self, action: #selector(deleteCell(_:)), for: .touchUpInside)
-        */
         return cell
     }
     
-    /*
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if !cellEditing {//編集中は拡大しない
+        if indexPath.row > iArr.count, !cellEditing { //編集中は拡大しない
             //タップしたら拡大表示
             num = indexPath.row
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -974,6 +1132,7 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
             self.present(disp, animated: true, completion: nil)
         }
     }
+    
     @objc func editCollection(_ sender:UIButton){
         cellEditing = !cellEditing
         if cellEditing {
@@ -983,6 +1142,7 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
         }
         photoCollection.reloadData()
     }
+    
     @objc func deleteCell(_ sender:UIButton){
         let alert = UIAlertController(title: "写真を削除しますか？", message: "", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "削除", style: .destructive, handler: {
@@ -990,11 +1150,11 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
             let i = sender.tag-300
             //削除したときの処理
             imageArr.remove(at: i)
+            if imageArr.count == 0 {
+                self.cellEditing = false
+            }
             DispatchQueue.main.async {
                 self.photoCollection.reloadData()
-                if imageArr.isEmpty{
-                    //self.back()
-                }
             }
         }))
         alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
@@ -1002,7 +1162,7 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
         self.present(alert, animated: true, completion: nil)
         
     }
-    */
+    
 }
 
 extension ReceptionViewController:UITextFieldDelegate {
@@ -1029,6 +1189,7 @@ extension ReceptionViewController:UITextFieldDelegate {
             }else { //keiyakuField
                 //契約No.でSearch
                 keiNO = textField.text!
+                dspInit()
                 self.request(type: "SEARCH", param: ["KEI_NO":keiNO])
             }
             
@@ -1045,8 +1206,13 @@ extension ReceptionViewController:UITextFieldDelegate {
 }
 
 extension ReceptionViewController:InfoViewControllerDelegate {
+    func setEntry(param: [String : Any]) {
+        print(_json)
+        self.entryData = param
+    }
+    
 
-    func setPrintInfo(json: NSDictionary!, type: String) {
+    func setPrintInfo(json: Dictionary<String,Any>!, type: String) {
         
         print(type)
         if type == "print" {

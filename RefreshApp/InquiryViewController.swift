@@ -52,7 +52,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
     var conAlert:UIAlertController!
 
     var keiMeisai:[KEIYAKU] = []
-    var json_:NSDictionary!
+    var json_:Dictionary<String,Any>!
     var detail:DetailView!
     var detail2:DetailView2!
     var tagImg:[UIImage] = []
@@ -127,7 +127,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
     }
 
     
-    func display(json:NSDictionary){
+    func display(json:Dictionary<String,Any>){
         keiMeisai = []
         kanriLabel.text = ""
         keiyakuNO = ""
@@ -291,7 +291,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         kanriLabel.text = kanri
         
         //明細
-        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>0 {
+        if let arr = json["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
             //seizouLabel.text = formatter.string(from: seizou.date)
             for dic in arr {
                 print(dic)
@@ -317,9 +317,9 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         self.infoCollection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
     
-    func display2(json:NSDictionary){
+    func display2(json:Dictionary<String,Any>){
         print(json)
-        if let arr = json["MEISAI"] as? [NSDictionary], arr.count>0 {
+        if let arr = json["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
             
             if arr.count == 1 {
                 if let tag = arr[0]["TAG_NO"] as? String {
@@ -468,7 +468,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
                 }else {
                     if json!["TAG_NO"] == nil { //契約No.でSearchした結果
                         //明細チェック
-                        if let arr = json!["MEISAI"] as? [NSDictionary], arr.count>0 {
+                        if let arr = json!["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
                             DispatchQueue.main.async {
                                 self.conAlert.dismiss(animated: true, completion: {
                                     self.display2(json: json!)
@@ -528,7 +528,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
     //アップロード済みの画像取得
     func getImages(parm:String,val:String) {
 
-        var json:NSDictionary!
+        var json:Dictionary<String,Any>!
         let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
         let url = URL(string: path)!
         //let param = "tagNo=\(tagNo)
@@ -548,7 +548,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
                 if(data != nil){
                     //戻ってきたデータを解析
                     do{
-                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? Dictionary<String,Any>
                         print(json!)
                         let arr = json["images"] as? [String] ?? []
                         print(arr)

@@ -10,7 +10,7 @@ import UIKit
 
 
 var buttonTag_:Int!
-var json_:NSDictionary!
+var json_:Dictionary<String,Any>!
 //IBMのレスポンスから取り出すデータ
 //var UKE_TYPE:String! = "" //受付タイプ
 //var UKE_CDD:String! = "" //受付CD表示用
@@ -23,9 +23,9 @@ var errMsg = ""
 class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
     
     func IBMRequest(type:String, parameter:[String:Any], completionClosure:@escaping CompletionClosure){
-
         IBMResponse = false
-        var json:NSDictionary!
+        var json:Dictionary<String,Any>!
+        //var json:Dictionary<String,Any>!
         errMsg = ""
         var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=\(type)&"
         print(param)
@@ -57,9 +57,10 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
                 if(data != nil){
                     //戻ってきたデータを解析
                     do{
-                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
+                        //json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? Dictionary<String,Any>
                         IBMResponse = true
-                        print(json!)
+                        //print(json!)
                     }catch{
                         print("json error")
                         errMsg += "E3001:json error"
@@ -77,7 +78,7 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
                 
                 errMsg += "E3003:\(err!.localizedDescription)"
             }
-            
+
             completionClosure(nil,json, err)
 
         })

@@ -15,7 +15,7 @@ var enrolled:Bool = false
 var _json:NSDictionary!
 */
 protocol InfoViewController2Delegate{
-    func setPrintInfo(json:NSDictionary!, type:String)
+    func setPrintInfo(json:Dictionary<String,Any>!, type:String)
 }
 
 class InfoViewController2: UIViewController, SelectDateViewDelegate {
@@ -129,7 +129,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
         
     }
 
-    func display(json:NSDictionary){
+    func display(json:Dictionary<String,Any>){
         
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
@@ -142,7 +142,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
             //登録済み → 再印刷or削除
             printBtn.isHidden = false
             deleteBtn.isHidden = false
-            enrolled = true
+            isBLXexist = true
             yotei_hi = yotei.date.short
             YOTEI_HI = yotei.date
             infoV.yoteiBtn.setTitle(formatter.string(from: yotei.date), for: .normal)
@@ -155,11 +155,11 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
                 infoV.yoteiBtn.setTitle(formatter.string(from: yotei2.date), for: .normal)
             }
             //未登録 → 登録&印刷
-            enrolled = false
+            isBLXexist = false
             //enrollBtn.isHidden = false
             enrollBtn.setTitle("登録", for:.normal)
         }
-        enrollLabel.isHidden = !enrolled
+        enrollLabel.isHidden = !isBLXexist
         
         printData = PrintData(date: yotei_hi,
                                    renban: json["RENBAN"] as? String ?? "",
@@ -337,7 +337,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
                     //選択された日付をボタンタイトルへセット
                     if sender.tag == 400 {
                         self.YOTEI_HI = selectedDate
-                        if !enrolled {
+                        if !isBLXexist {
                             print("保存")
                             print(selectedDate.string2)
                             defaults.setValue(selectedDate.string2, forKey: "yoteiHI")
@@ -424,7 +424,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
         if dateTag == 400 { //工場管理日
             self.YOTEI_HI = date
             infoV.yoteiBtn.setTitle(formatter.string(from: date), for: .normal)
-            if !enrolled {
+            if !isBLXexist {
                 print("保存")
                 print(YOTEI_HI.string2)
                 defaults.setValue(YOTEI_HI.string2, forKey: "yoteiHI")
@@ -437,7 +437,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
         
     @IBAction func clearDate(_ sender: UIButton){
         if sender.tag == 801 {
-            if enrolled {return} //登録済みの場合は変更できない
+            if isBLXexist {return} //登録済みの場合は変更できない
             YOTEI_HI = nil
             infoV.yoteiBtn.setTitle("日付を選択", for: .normal)
         }else if sender.tag == 802 {
@@ -464,7 +464,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
         var alertTitle:String = ""
         switch sender.tag {
         case 901:
-            if enrolled { //更新
+            if isBLXexist { //更新
                 type = "UPDATE"
                 alertTitle = "更新してよろしいですか"
             }else { //登録
@@ -567,8 +567,8 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
     
 
     @IBAction func labelPrint(_ sender: Any) {
-        print(enrolled)
-        if enrolled {
+        print(isBLXexist)
+        if isBLXexist {
             self.dismiss(animated: true, completion: {
                 self.delegate?.setPrintInfo(json: _json, type: "print")
             })
@@ -624,7 +624,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
                             }))
                             
                         }else if type == "ENTRY" {
-                            enrolled = true
+                            isBLXexist = true
                             self.conAlert.title = "登録成功"
                             self.conAlert.message = "正常に登録できました"
                             self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
@@ -636,7 +636,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
                             }))
 
                         }else if type == "UPDATE" {
-                            enrolled = true
+                            isBLXexist = true
                             self.conAlert.title = "更新成功"
                             self.conAlert.message = "正常に更新できました"
                             self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {

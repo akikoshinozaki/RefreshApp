@@ -97,6 +97,7 @@ class PhotoViewController: UIViewController {
                 //tagNO = ""
                 imageArr = []
                 self.back()
+                isImgUploaded = true
                 
             }))
         }else {
