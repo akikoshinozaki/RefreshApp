@@ -852,15 +852,15 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         if _json == nil {
             return
         }
-        if entryData.count == 0 {
-            SimpleAlert.make(title: "データが不足しています", message: "")
+        if entryData.count == 0, imageArr.count == 0 {
+            //SimpleAlert.make(title: "データが不足しています", message: "")
             return
         }
         guard let yotei = _json["YOTEI_HI"] as? String, yotei != "" else {
             SimpleAlert.make(title: "工場管理日が未入力です", message: "")
             return
         }
-        
+
         if imageArr.count == 0 {
             let alert = UIAlertController(title: "写真がありません", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "データだけ送る", style: .default, handler: {
@@ -873,6 +873,19 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             }))
             
             self.present(alert, animated: true, completion: nil)
+        }else if entryData.count == 0 {
+            let alert = UIAlertController(title: "画像を送信します", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                Void in
+                self.postImages()
+            }))
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: {
+                Void in
+                return
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+            
             
         }else {
             //データ・画像両方送る
@@ -920,6 +933,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                     self.conAlert.message! += "画像送信成功\n"
                     
                     Upload().deleteFM(tag: tagNO)
+                    self.iArr = []
                     imageArr = []
                     self.photoCollection.reloadData()
                     tagNO = ""
@@ -960,12 +974,28 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @objc func finishUpload(){
         NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"postImage"), object: nil)
         DispatchQueue.main.async {
-            if errorCode == "" {
-                //アップロード成功
-                self.isPostImage = true
+            if self.isDouble {
+                self.isPostImage = errorCode == ""
+                self.dispatchGroup.leave()
+            }else {
+                if errorCode == "" {
+                    //アップロード成功
+                    SimpleAlert.make(title: "送信完了しました", message: "")
+                    
+                    Upload().deleteFM(tag: tagNO)
+                    self.iArr = []
+                    imageArr = []
+                    self.photoCollection.reloadData()
+                    tagNO = ""
+                    self.tagField.text = ""
+                    self.setTag()
+                    
+                }else {
+                    SimpleAlert.make(title: "画像アップロードに失敗しました", message: "画像は未送信データに一時的に保存されました\n"+errorCode)
+                    Upload().saveFM(tag: tagNO, arr: imageArr)
+                }
             }
-            print("-----画像アップロード-----")
-            self.dispatchGroup.leave()
+
         }
     }
     

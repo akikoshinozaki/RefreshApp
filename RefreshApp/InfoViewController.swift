@@ -85,12 +85,13 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         for btn in btns {
             btn.layer.cornerRadius = 8
         }
-        uploadedLabel.isHidden = !isImgUploaded
+        //uploadedLabel.isHidden = !isImgUploaded
+        uploadedLabel.isHidden = true
         closeBtn.addTarget(self, action: #selector(closeView), for: .touchUpInside)
     }
     override func viewDidAppear(_ animated: Bool) {
         print(#function)
-        uploadedLabel.isHidden = !isImgUploaded
+        //uploadedLabel.isHidden = !isImgUploaded
     }
     
     func dspInit(){
@@ -601,7 +602,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     
     @objc func closeView(){
         self.dismiss(animated: true, completion: {
-            self.delegate?.setPrintInfo(json: _json, type: "clear")
+            //self.delegate?.setPrintInfo(json: _json, type: "close")
         })
     }
     
