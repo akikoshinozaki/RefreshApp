@@ -847,8 +847,13 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     }
     
     @IBAction func entryDataAndImage(_ sender: UIButton) {
-        print(entryData)
+//        print(_json)
+//        print(entryData)
         if _json == nil {
+            return
+        }
+        if entryData.count == 0 {
+            SimpleAlert.make(title: "データが不足しています", message: "")
             return
         }
         guard let yotei = _json["YOTEI_HI"] as? String, yotei != "" else {
@@ -1096,6 +1101,8 @@ extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        //imageArrがゼロだったら、編集ボタンを隠す
+        edtBtn.isHidden = imageArr.count == 0
         return iArr.count+imageArr.count
     }
     
@@ -1213,13 +1220,13 @@ extension ReceptionViewController:InfoViewControllerDelegate {
     
 
     func setPrintInfo(json: Dictionary<String,Any>!, type: String) {
-        
         print(type)
         if type == "print" {
             //print(json!)
             _json = json
             self.display()
-        }else if type == "delete" {
+        }else{
+        //}else if type == "delete" {
             self.dspInit()
             self.clear(self)
         }

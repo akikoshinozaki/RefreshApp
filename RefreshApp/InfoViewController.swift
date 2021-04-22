@@ -127,12 +127,15 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 
     func display(json:Dictionary<String,Any>){
         
+        //enrolled :新規登録 -> true
+        //isBLXexist :BLKに登録済-> true
+        
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
 
         var yotei_hi = ""
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
-
+            //予定日がある-> 登録済み（enrolledで２回目表示した場合もある）
             yotei_hi = yotei.date.short
             YOTEI_HI = yotei.date
             yoteiBtn.setTitle(formatter.string(from: yotei.date), for: .normal)
@@ -140,8 +143,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             if enrolled {
                 //未登録 → 登録&印刷
                 isBLXexist = false
-                
-                enrollBtn.setTitle("登録", for:.normal)
+                enrollBtn.setTitle("完了", for:.normal)
             }else {
                 //登録済み → 再印刷or削除
                 printBtn.isHidden = false
@@ -152,7 +154,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             }
             
             
-        }else {
+        }else { //予定日がなかった場合
             if let yotei2 =  defaults.object(forKey: "yoteiHI") as? String {
                 print(yotei2)
                 yotei_hi = yotei2.date.short
@@ -598,7 +600,9 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
     }
     
     @objc func closeView(){
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: {
+            self.delegate?.setPrintInfo(json: _json, type: "clear")
+        })
     }
     
     
@@ -642,17 +646,17 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                                 })
                             }))
                             
-                        }else if type == "ENTRY" {
-                            isBLXexist = true
-                            self.conAlert.title = "登録成功"
-                            self.conAlert.message = "正常に登録できました"
-                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                                Void in
-                                //print(_json)
-                                _json = json
-                                self.labelPrint(self)
-                                
-                            }))
+//                        }else if type == "ENTRY" {
+//                            isBLXexist = true
+//                            self.conAlert.title = "登録成功"
+//                            self.conAlert.message = "正常に登録できました"
+//                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+//                                Void in
+//                                //print(_json)
+//                                _json = json
+//                                self.labelPrint(self)
+//
+//                            }))
 
                         }else if type == "UPDATE" {
                             isBLXexist = true

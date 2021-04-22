@@ -28,6 +28,7 @@
 		4E776DE825580EEA009344EB /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E776DE625580EEA009344EB /* right.png */; };
 		4E81401625F48DF600CAE545 /* DetailView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E81401425F48DF500CAE545 /* DetailView2.swift */; };
 		4E81401725F48DF600CAE545 /* DetailView2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E81401525F48DF600CAE545 /* DetailView2.xib */; };
+		4E913929263142EA00DA29A9 /* entry.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E913928263142E900DA29A9 /* entry.png */; };
 		4E9C66BB26255684003E29FF /* InfoViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9C66BA26255683003E29FF /* InfoViewController2.swift */; };
 		4EB9B126260345EC003CCEFB /* RefListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB9B125260345EC003CCEFB /* RefListViewController.swift */; };
 		4EBCC91225BE9A0100882906 /* SelectDateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EBCC91125BE9A0100882906 /* SelectDateView.xib */; };
@@ -125,6 +126,7 @@
 		4E776DE625580EEA009344EB /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
 		4E81401425F48DF500CAE545 /* DetailView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailView2.swift; sourceTree = "<group>"; };
 		4E81401525F48DF600CAE545 /* DetailView2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailView2.xib; sourceTree = "<group>"; };
+		4E913928263142E900DA29A9 /* entry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = entry.png; sourceTree = "<group>"; };
 		4E9C66BA26255683003E29FF /* InfoViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController2.swift; sourceTree = "<group>"; };
 		4EB9B125260345EC003CCEFB /* RefListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefListViewController.swift; sourceTree = "<group>"; };
 		4EBCC91125BE9A0100882906 /* SelectDateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectDateView.xib; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 				C35E2FB8255A165C009C9057 /* upload.png */,
 				C35E2FBA255A1669009C9057 /* unsent.png */,
 				4E3D93252615BA0800C584F9 /* reload.png */,
+				4E913928263142E900DA29A9 /* entry.png */,
 			);
 			path = img;
 			sourceTree = "<group>";
@@ -453,6 +456,7 @@
 			files = (
 				4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */,
 				C3C95DF325889D6F00BBE180 /* 100×200.bmp in Resources */,
+				4E913929263142EA00DA29A9 /* entry.png in Resources */,
 				C3C95DF425889D6F00BBE180 /* rj4030ai_102mm.bin in Resources */,
 				4E6E771125D36F4E00BBA885 /* BRLabelView.xib in Resources */,
 				4E5DB92B2555748300A53584 /* ScannerView.xib in Resources */,

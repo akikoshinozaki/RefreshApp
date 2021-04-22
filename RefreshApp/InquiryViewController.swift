@@ -176,11 +176,6 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         print("detail not nil")
 
         //１ページ目
-        for lbl in detail.labels{ //初期化
-            lbl.text = ""
-        }
-
-        
         detail.tagLabel.text = printData.tagNO
         detail.syohinLabel.text = printData.itemCD+": "+printData.itemNM
         detail.pattenLabel.text = json["PATERN"] as? String ?? ""
@@ -272,30 +267,43 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         
         detail.gawaLnkBtn.addTarget(self, action: #selector(gawaLink(_:)), for: .touchUpInside)
         //２ページ目
-        for lbl in detail2.labels{ //初期化
-            lbl.text = ""
-        }
         //預り重量
         //洗浄後重量
         //洗浄前重量
         //投入重量
         //受付検査
-        if let kensa = json["UKE_KNS"] as? String, kensa != "0" {
+        if var kensa = json["UKE_KNS"] as? String, kensa != "0" {
+            if kensa.count == 8 {
+                let str = Array(kensa)
+                kensa = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+            }
             detail2.kensaLabel.text = kensa
         }
         //受付
-        if let uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
+        if var uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
+            if uketuke.count == 8 {
+                let str = Array(uketuke)
+                uketuke = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+            }
             detail2.ukeLabel.text = uketuke
         }
         //ばらし
         //洗浄
         //投入
         //最終検査
-        if let saisyu = json["SAISYU"] as? String, saisyu != "0" {
+        if var saisyu = json["SAISYU"] as? String, saisyu != "0" {
+            if saisyu.count == 8 {
+                let str = Array(saisyu)
+                saisyu = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+            }
             detail2.saisyuLabel.text = saisyu
         }
         //出荷
-        if let syukka = json["SYUKKA"] as? String, syukka != "20000000" {
+        if var syukka = json["SYUKKA"] as? String, syukka != "20000000" {
+            if syukka.count == 8 {
+                let str = Array(syukka)
+                syukka = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+            }
             detail2.syukkaLabel.text = syukka
         }
         
@@ -768,6 +776,9 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
                 detail = DetailView(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height))
                 detail.nextBtn.tag = 901
                 detail.nextBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
+                for lbl in detail.labels{ //初期化
+                    lbl.text = ""
+                }
                 cell.contentView.addSubview(detail)
 
             } else {
@@ -775,6 +786,9 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
                 detail2 = DetailView2(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height))
                 detail2.backBtn.tag = 902
                 detail2.backBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
+                for lbl in detail2.labels{ //初期化
+                    lbl.text = ""
+                }
                 cell.contentView.addSubview(detail2)
             }
             return cell
