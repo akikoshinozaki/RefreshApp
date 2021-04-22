@@ -128,9 +128,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             let list2 = defaults.object(forKey: "jitaList") as? [Dictionary<String,Any>] ?? []
             let list3 = defaults.object(forKey: "hiritsu") as? [Dictionary<String,Any>] ?? []
             
-            print(list1)
-            print(list2)
-            print(list3)
+//            print(list1)
+//            print(list2)
+//            print(list3)
             if !list1.isEmpty, !list2.isEmpty, !list3.isEmpty {
                 //print(list)
                 GetLists().setList(list1: list1, list2:list2, list3:list3)

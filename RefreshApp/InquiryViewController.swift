@@ -280,12 +280,24 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         //洗浄前重量
         //投入重量
         //受付検査
+        if let kensa = json["UKE_KNS"] as? String, kensa != "0" {
+            detail2.kensaLabel.text = kensa
+        }
         //受付
+        if let uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
+            detail2.ukeLabel.text = uketuke
+        }
         //ばらし
         //洗浄
         //投入
         //最終検査
+        if let saisyu = json["SAISYU"] as? String, saisyu != "0" {
+            detail2.saisyuLabel.text = saisyu
+        }
         //出荷
+        if let syukka = json["SYUKKA"] as? String, syukka != "20000000" {
+            detail2.syukkaLabel.text = syukka
+        }
         
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri

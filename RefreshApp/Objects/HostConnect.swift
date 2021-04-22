@@ -52,7 +52,6 @@ class HostConnect: NSObject {
             }
         }
 
-        //print(reachability?.connection.description ?? "")
         startNotifier()
         NotificationCenter.default.addObserver(
             self,
@@ -67,7 +66,7 @@ class HostConnect: NSObject {
         do {
             try reachability?.startNotifier()
         } catch {
-            networkStatus = "Unable to start\nnotifier"
+            networkStatus = "Unable to start notifier"
             print(networkStatus)
             return
         }
@@ -76,13 +75,14 @@ class HostConnect: NSObject {
     func stopNotifier() {
         print("--- stop notifier")
         reachability?.stopNotifier()
-        NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: nil)
+        //NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: nil)
         reachability = nil
     }
     
 
     @objc func reachabilityChanged(_ note: Notification) {
-//        print(#function)
+        //print(#function)
+        NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: nil)
         let reachability = note.object as! Reachability
         print(reachability.connection)
         connect = .notConnect
