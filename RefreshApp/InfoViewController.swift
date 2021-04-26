@@ -5,6 +5,7 @@
 //  Created by 篠崎 明子 on 2021/02/11.
 //  Copyright © 2021 Akiko Shinozaki. All rights reserved.
 //
+//　問い合わせ画面内で情報表示する
 
 import UIKit
 import SwiftyPickerPopover

@@ -28,6 +28,13 @@
 		4E776DE825580EEA009344EB /* right.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E776DE625580EEA009344EB /* right.png */; };
 		4E81401625F48DF600CAE545 /* DetailView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E81401425F48DF500CAE545 /* DetailView2.swift */; };
 		4E81401725F48DF600CAE545 /* DetailView2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E81401525F48DF600CAE545 /* DetailView2.xib */; };
+		4E8857AD26368B1C00E9D05C /* koshin.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857AC26368B1B00E9D05C /* koshin.png */; };
+		4E8857B726368B9900E9D05C /* bn03.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857B426368B9900E9D05C /* bn03.png */; };
+		4E8857B826368B9900E9D05C /* bn02.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857B526368B9900E9D05C /* bn02.png */; };
+		4E8857B926368B9900E9D05C /* bn01.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857B626368B9900E9D05C /* bn01.png */; };
+		4E8857BF26368F8000E9D05C /* camera2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857BE26368F8000E9D05C /* camera2.png */; };
+		4E8857C226368FB100E9D05C /* entry2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857C126368FB100E9D05C /* entry2.png */; };
+		4E8857C52636905900E9D05C /* scan.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857C42636905900E9D05C /* scan.png */; };
 		4E913929263142EA00DA29A9 /* entry.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E913928263142E900DA29A9 /* entry.png */; };
 		4E9C66BB26255684003E29FF /* InfoViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9C66BA26255683003E29FF /* InfoViewController2.swift */; };
 		4EB9B126260345EC003CCEFB /* RefListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB9B125260345EC003CCEFB /* RefListViewController.swift */; };
@@ -126,6 +133,13 @@
 		4E776DE625580EEA009344EB /* right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right.png; sourceTree = "<group>"; };
 		4E81401425F48DF500CAE545 /* DetailView2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailView2.swift; sourceTree = "<group>"; };
 		4E81401525F48DF600CAE545 /* DetailView2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailView2.xib; sourceTree = "<group>"; };
+		4E8857AC26368B1B00E9D05C /* koshin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = koshin.png; sourceTree = "<group>"; };
+		4E8857B426368B9900E9D05C /* bn03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bn03.png; sourceTree = "<group>"; };
+		4E8857B526368B9900E9D05C /* bn02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bn02.png; sourceTree = "<group>"; };
+		4E8857B626368B9900E9D05C /* bn01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bn01.png; sourceTree = "<group>"; };
+		4E8857BE26368F8000E9D05C /* camera2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera2.png; sourceTree = "<group>"; };
+		4E8857C126368FB100E9D05C /* entry2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = entry2.png; sourceTree = "<group>"; };
+		4E8857C42636905900E9D05C /* scan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scan.png; sourceTree = "<group>"; };
 		4E913928263142E900DA29A9 /* entry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = entry.png; sourceTree = "<group>"; };
 		4E9C66BA26255683003E29FF /* InfoViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController2.swift; sourceTree = "<group>"; };
 		4EB9B125260345EC003CCEFB /* RefListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefListViewController.swift; sourceTree = "<group>"; };
@@ -289,6 +303,13 @@
 				C35E2FBA255A1669009C9057 /* unsent.png */,
 				4E3D93252615BA0800C584F9 /* reload.png */,
 				4E913928263142E900DA29A9 /* entry.png */,
+				4E8857AC26368B1B00E9D05C /* koshin.png */,
+				4E8857B626368B9900E9D05C /* bn01.png */,
+				4E8857B526368B9900E9D05C /* bn02.png */,
+				4E8857B426368B9900E9D05C /* bn03.png */,
+				4E8857BE26368F8000E9D05C /* camera2.png */,
+				4E8857C126368FB100E9D05C /* entry2.png */,
+				4E8857C42636905900E9D05C /* scan.png */,
 			);
 			path = img;
 			sourceTree = "<group>";
@@ -456,7 +477,9 @@
 			files = (
 				4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */,
 				C3C95DF325889D6F00BBE180 /* 100×200.bmp in Resources */,
+				4E8857BF26368F8000E9D05C /* camera2.png in Resources */,
 				4E913929263142EA00DA29A9 /* entry.png in Resources */,
+				4E8857C52636905900E9D05C /* scan.png in Resources */,
 				C3C95DF425889D6F00BBE180 /* rj4030ai_102mm.bin in Resources */,
 				4E6E771125D36F4E00BBA885 /* BRLabelView.xib in Resources */,
 				4E5DB92B2555748300A53584 /* ScannerView.xib in Resources */,
@@ -468,7 +491,9 @@
 				C3675D1725F1E21300EF415D /* barcode2.png in Resources */,
 				C35E2FB5255A1627009C9057 /* camera.png in Resources */,
 				C35ABD96261C485F00687CB4 /* InfoView.xib in Resources */,
+				4E8857B726368B9900E9D05C /* bn03.png in Resources */,
 				4E5DB93125557CD300A53584 /* shutter.png in Resources */,
+				4E8857AD26368B1C00E9D05C /* koshin.png in Resources */,
 				C35E2FB9255A165C009C9057 /* upload.png in Resources */,
 				4E3D93262615BA0800C584F9 /* reload.png in Resources */,
 				4E37C87625F3D11400314885 /* DetailView.xib in Resources */,
@@ -478,12 +503,15 @@
 				4E81401725F48DF600CAE545 /* DetailView2.xib in Resources */,
 				C3C95DF225889D6F00BBE180 /* rj4030ai_102mm152mm.bin in Resources */,
 				C3E4C31225BFB63E009AD55C /* reception.png in Resources */,
+				4E8857B926368B9900E9D05C /* bn01.png in Resources */,
 				C35E2FBD255A191E009C9057 /* barcode.png in Resources */,
+				4E8857C226368FB100E9D05C /* entry2.png in Resources */,
 				4E776DE825580EEA009344EB /* right.png in Resources */,
 				4EE502372625181C00AAE522 /* BRLavelView2.xib in Resources */,
 				C322589A2558DEC1007BB719 /* deletebtn.png in Resources */,
 				C35E2FBB255A1669009C9057 /* unsent.png in Resources */,
 				C35ABDA5261C4CCD00687CB4 /* InfoView2.xib in Resources */,
+				4E8857B826368B9900E9D05C /* bn02.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -744,7 +772,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.26;
+				CURRENT_PROJECT_VERSION = 1.27;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -760,7 +788,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.26;
+				MARKETING_VERSION = 1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -778,7 +806,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.26;
+				CURRENT_PROJECT_VERSION = 1.27;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -794,7 +822,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.26;
+				MARKETING_VERSION = 1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -874,7 +902,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.26;
+				CURRENT_PROJECT_VERSION = 1.27;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -890,7 +918,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.26;
+				MARKETING_VERSION = 1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -965,7 +993,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.26;
+				CURRENT_PROJECT_VERSION = 1.27;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -981,7 +1009,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.26;
+				MARKETING_VERSION = 1.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";

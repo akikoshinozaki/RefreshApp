@@ -146,8 +146,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     var isPostImage:Bool = false
     var isDouble:Bool = false
 
-    
-    
     deinit {
         //print("deinit")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidConnect, object: nil)
@@ -216,6 +214,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         seizouHI = nil
         enrolled = false
         isBLXexist = false
+        isPostImage = false
         kanriLabel.text = ""
         iArr = []
         imageArr = []
@@ -337,7 +336,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         if Int(data) != nil, data.count == 13 {
             //バーコードの時
             tagNO = String(Array(data)[4...11])
-        }else if data.hasPrefix("RF="){
+        }else if data.hasPrefix("RF="), data.count > 11{
             //QRの時
             tagNO = String(Array(data)[3...10])
         }
@@ -360,7 +359,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     }
     
     @IBAction func clear(_ sender: Any) {
-        if imageArr.count > 0 {
+        if imageArr.count > 0, isPostImage == false {
             let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             
@@ -377,7 +376,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @objc func display(){
         kanriLabel.text = ""
         labelImgView.image = nil
-        print(_json)
+//        print(_json)
+//        print("tag=\(tagNO)")
         if _json==nil {
         //if !isBLXexist || _json==nil {
             SimpleAlert.make(title: "対象のデータがありません", message: "")
@@ -849,6 +849,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @IBAction func entryDataAndImage(_ sender: UIButton) {
 //        print(_json)
 //        print(entryData)
+        if isPostImage { return } //二重登録禁止
         if _json == nil {
             return
         }
@@ -933,12 +934,12 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                     self.conAlert.message! += "画像送信成功\n"
                     
                     Upload().deleteFM(tag: tagNO)
-                    self.iArr = []
-                    imageArr = []
-                    self.photoCollection.reloadData()
-                    tagNO = ""
-                    self.tagField.text = ""
-                    self.setTag()
+//                    self.iArr = []
+//                    imageArr = []
+//                    self.photoCollection.reloadData()
+//                    tagNO = ""
+//                    self.tagField.text = ""
+//                    self.setTag()
                     
                 }else {
                     self.conAlert.title = "画像アップロードに失敗しました"
@@ -960,7 +961,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     
     //MARK: - 画像送信
     func postImages() {
-        isPostImage = false
+//        isPostImage = false
         DispatchQueue.main.async {
             if self.conAlert != nil {
                 self.conAlert.title = "画像送信中"
@@ -972,6 +973,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     }
     
     @objc func finishUpload(){
+        
         NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"postImage"), object: nil)
         DispatchQueue.main.async {
             if self.isDouble {
@@ -983,12 +985,12 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                     SimpleAlert.make(title: "送信完了しました", message: "")
                     
                     Upload().deleteFM(tag: tagNO)
-                    self.iArr = []
-                    imageArr = []
-                    self.photoCollection.reloadData()
-                    tagNO = ""
-                    self.tagField.text = ""
-                    self.setTag()
+//                    self.iArr = []
+//                    imageArr = []
+//                    self.photoCollection.reloadData()
+//                    tagNO = ""
+//                    self.tagField.text = ""
+//                    self.setTag()
                     
                 }else {
                     SimpleAlert.make(title: "画像アップロードに失敗しました", message: "画像は未送信データに一時的に保存されました\n"+errorCode)
@@ -1001,7 +1003,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     
     
     @objc func back(){
-        if imageArr.count > 0 {
+        if imageArr.count > 0, isPostImage == false {
             let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             

@@ -130,13 +130,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="isM-8m-zfd">
-                                <rect key="frame" x="844" y="678" width="100" height="40"/>
+                                <rect key="frame" x="844" y="673" width="100" height="45"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="JqE-C9-XWf"/>
+                                    <constraint firstAttribute="height" constant="45" id="JqE-C9-XWf"/>
                                     <constraint firstAttribute="width" constant="100" id="rMT-zS-CJg"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
-                                <state key="normal" title="データ更新">
+                                <state key="normal" title="データ更新" image="koshin.png">
                                     <color key="titleColor" systemColor="linkColor"/>
                                 </state>
                                 <connections>
@@ -704,6 +704,7 @@
         <image name="camera.png" width="456" height="456"/>
         <image name="deletebtn.png" width="100" height="100"/>
         <image name="inquiry.png" width="456" height="456"/>
+        <image name="koshin.png" width="556" height="252"/>
         <image name="left.png" width="50" height="200"/>
         <image name="reception.png" width="456" height="456"/>
         <image name="right.png" width="50" height="200"/>
