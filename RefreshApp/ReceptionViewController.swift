@@ -150,7 +150,28 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     var postAlert: UIAlertController!
     var isPostImage:Bool = false
     var isDouble:Bool = false
+//    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var kanriView: UIView!
+    @IBOutlet var kanriLabels: [UILabel]!
+    @IBOutlet weak var kLabel01: UILabel!
+    @IBOutlet weak var kLabel02: UILabel!
+    @IBOutlet weak var kLabel03: UILabel!
+    @IBOutlet weak var kLabel04: UILabel!
+    @IBOutlet weak var kLabel05: UILabel!
+    @IBOutlet weak var kLabel06: UILabel!
+    @IBOutlet weak var kLabel07: UILabel!
+    @IBOutlet weak var kLabel08: UILabel!
+    @IBOutlet weak var kLabel09: UILabel!
+    @IBOutlet weak var kLabel10: UILabel!
+    @IBOutlet weak var kLabel11: UILabel!
+    @IBOutlet weak var kLabel12: UILabel!
+    @IBOutlet weak var kLabel13: UILabel!
+    @IBOutlet weak var kLabel14: UILabel!
+    @IBOutlet weak var kLabel15: UILabel!
 
+    
+    
+    
     deinit {
         //print("deinit")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidConnect, object: nil)
@@ -243,6 +264,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         fnLabel1.text = "未"
         fnLabel2.text = "未"
         fnLabel3.text = "未"
+        kanriView.isHidden = true
+        for lbl in kanriLabels {
+            lbl.text = ""
+        }
         
     }
     
@@ -255,8 +280,13 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         super.viewWillAppear(animated)
         self.photoCollection.reloadData()
         connectChk()
+        if printData != nil {
+            self.imageChk()
+        }
         
-        
+    }
+    
+    func imageChk() {
         if printData != nil, printData.jita2 != "", printData.jita2 != "0" { //2枚目預りがある場合は、写真4枚以上必要
             imgCnt = 4
         }else {
@@ -268,10 +298,118 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         }else {
             fnLabel2.text = "済"
         }
-        
-        
+
     }
 
+    func setKanriLabel() {
+        if _json == nil {return}
+        kanriView.isHidden = false
+        kanriView.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        kanriView.layer.borderWidth = 2
+        kanriView.layer.cornerRadius = 8
+        for lbl in kanriLabels {
+            lbl.text = ""
+        }
+
+        if let yotei = _json["YOTEI_HI"] as? String, yotei != ""{
+            if yotei.count == 8 {
+                kLabel01.text = yotei.date.toString(format: "yyyy年MM月dd日")
+            }
+        }
+
+        let grade1 = _json["GRADE1"] as? String ?? ""
+        let ritsu1 = _json["RITSU1"] as? String ?? "0.0"
+        let jita1 = _json["JITAK1"] as? String ?? ""
+        let grade2 = _json["GRADE2"] as? String ?? ""
+        let ritsu2 = _json["RITSU2"] as? String ?? "0.0"
+        let jita2 = _json["JITAK2"] as? String ?? ""
+
+        //grade1
+        if grade1=="",ritsu1=="", jita1=="" {
+            kLabel06.text = ""
+        }else {
+            var grd = ""
+            if let obj = grd_lst.first(where: {$0.cd==grade1}) {
+                grd = obj.nm
+            }
+            var ritsu = ""
+            if let rit = Double(ritsu1), rit != 0.0 {
+                ritsu = "\(Int(rit))"
+            }
+            
+            var jita = ""
+            let j = Int(jita1) ?? 0
+            if j > 0 {
+                let obj = jitaArray[j-1]
+                jita = obj.nm
+            }
+            //kLabel06.text = grd + "　\(ritsu)\(jita)"
+            kLabel06.text = "\(jita) \(grd) \(ritsu)"+"%"
+        }
+        
+        //grade2
+        if grade2=="",ritsu2=="", jita2=="" {
+            kLabel07.text = ""
+        }else {
+            var grd = ""
+            if let obj = grd_lst.first(where: {$0.cd==grade2}) {
+                grd = obj.nm
+            }
+            var ritsu = ""
+            if let rit = Double(ritsu2), rit != 0.0 {
+                ritsu = "\(Int(rit))"
+            }
+            var jita = ""
+            let j = Int(jita2) ?? 0
+            if j > 0 {
+                let obj = jitaArray[j-1]
+                jita = obj.nm
+            }
+            //kLabel07.text = grd + "　\(ritsu)\(jita)"
+            kLabel07.text = "\(jita) \(grd) \(ritsu)"+"%"
+        }
+        //仕上り重量
+        if var wata = _json["WATA"] as? String, wata != "0.0" {
+            wata = wata.trimmingCharacters(in: .whitespaces)
+            if let dwata = Double(wata) {
+                kLabel08.text = "\(dwata)"+" Kg"
+            }else {
+                kLabel08.text = wata
+            }
+        }
+        //増減
+        if let zgn = _json["ZOGEN"] as? String, zgn != "0" {
+            kLabel09.text = zgn+" g"
+        }else {
+            kLabel09.text = "なし"
+        }
+        
+        if let seizou = _json["SEIZOU"] as? String, seizou != "00000000" {
+            let seiz = Array(seizou)
+            if seiz.count == 8 {
+                kLabel10.text = seiz[0...3]+"年"+seiz[4...5]+"月"
+                
+            }
+  
+        }
+        //納期
+        if let nouki = _json["NOUKI"] as? String, nouki != "0/00/00" {
+            kLabel13.text = nouki
+        }
+        //出荷期限
+        if let kigen = _json["KIGEN"] as? String, kigen != "0/00/00" {
+            kLabel14.text = printData.kigen
+        }
+               
+        kLabel02.text = tagNO//tagNO.
+        kLabel03.text = _json["KEI_NO"] as? String ?? ""//契約NO.
+        kLabel04.text = (_json["CUSTOMER_NM"] as? String ?? "")+" 様"//顧客
+        kLabel05.text = (_json["SYOHIN_CD"] as? String ?? "")+": "+(_json["SYOHIN_NM"] as? String ?? "")//item
+        kLabel11.text = _json["PATERN"] as? String ?? ""//パターン
+        kLabel12.text = _json["CLASS"] as? String ?? ""//クラス
+        kLabel15.isHidden = !(_json["YUSEN"] as? String == "1")
+        
+    }
     
     func connectChk(){
         deviceListByMfi = BRPtouchBluetoothManager.shared()?.pairedDevices() as? [BRPtouchDeviceInfo] ?? []
@@ -1293,14 +1431,17 @@ extension ReceptionViewController:InfoViewControllerDelegate {
         print(_json)
         self.entryData = param
         print(param)
-        
         if param.count > 0 {
             self.fnLabel1.text = "済"
         }else {
             self.fnLabel1.text = "未"
         }
+        if printData != nil {
+            self.imageChk()
+        }
+        setKanriLabel()
+//        textView.text = "\(_json)"
     }
-    
 
     func setPrintInfo(json: Dictionary<String,Any>!, type: String) {
         print(type)
@@ -1308,10 +1449,18 @@ extension ReceptionViewController:InfoViewControllerDelegate {
             print(json!)
             _json = json
             self.display()
-        }else{
-        //}else if type == "delete" {
+        //}else{
+        }else if type == "delete" {
             self.dspInit()
             self.clear(self)
+        }else if type == "update" {
+            self.fnLabel1.text = "済"
+            self.fnLabel3.text = "済"
+            if printData != nil {
+                self.imageChk()
+            }
+            setKanriLabel()
+//            textView.text = "\(json)"
         }
         
     }

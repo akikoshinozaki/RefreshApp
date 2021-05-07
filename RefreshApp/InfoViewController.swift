@@ -699,7 +699,10 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                             self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                                 Void in
                                 _json = json
-                                self.closeView()
+                                //self.closeView()
+                                self.dismiss(animated: true, completion: {
+                                    self.delegate?.setPrintInfo(json: _json, type: "update")
+                                })
                             }))
 
                         }
