@@ -206,7 +206,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         }
         
         //自社・他社区分1
-        if let jita1 = json["JITAK1"] as? String, jita1 != " " {
+        if let jita1 = json["JITAK1"] as? String, jita1 != "" {
             jitak1 = Int(jita1) ?? 0
             if jitak1 > 0 {
                 let obj = jitaArray[jitak1-1]
@@ -227,7 +227,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             ritsu1Field.text = "\(ritsu1!)"
         }
         //自社・他社区分2
-        if let jita2 = json["JITAK2"] as? String, jita2 != " " {
+	        if let jita2 = json["JITAK2"] as? String, jita2 != "" {
             jitak2 = Int(jita2) ?? 0
             if jitak2 > 0 {
                 let obj = jitaArray[jitak2-1]
@@ -433,6 +433,38 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 //            self.seizouBtn.setTitle(formatter.string(from: date), for: .normal)
         }
     }
+    
+    @IBAction func clearGRD(_ sender: UIButton) {
+        if sender.tag == 301 { //1枚目クリア
+            jitak1 = nil
+            grd1 = ""
+            ritsu1 = nil
+            
+            jita1Field.text = ""
+            grd1Field.text = ""
+            ritsu1Field.text = ""
+            
+            printData.jita1 = ""
+            printData.grade1 = ""
+            printData.ritsu1 = "0.0"
+            
+            
+        }else if sender.tag == 302 { //2枚目クリア
+            jitak2 = nil
+            ritsu2 = nil
+            grd2 = ""
+            
+            jita2Field.text = ""
+            grd2Field.text = ""
+            ritsu2Field.text = ""
+            
+            printData.jita2 = ""
+            printData.grade2 = ""
+            printData.ritsu2 = "0.0"
+        }
+        
+    }
+    
         
     @IBAction func clearDate(_ sender: UIButton){
         if sender.tag == 801 {
@@ -477,53 +509,53 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
                 _json["YOTEI_HI"] = YOTEI_HI.string2
             }
             
-            if jita1Field.text != "" {
-                //自社・他社区分
-                param["JITAK1"] = String(jitak1)
-                _json["JITAK1"] = String(jitak1)
+            //自社・他社区分
+            var j1 = ""
+            if jitak1 != nil {
+                j1 = String(jitak1)
             }
-            if grd1Field.text != "" {
-                //グレード
-                param["GRADE1"] = grd1
-                _json["GRADE1"] = grd1
-            }else {
-//                if type == "UPDATE" {
-//                    param["GRADE1"] = ""
-//                }
-            }
-            if ritsu1Field.text != "" {
-                //比率
-                param["RITSU1"] = String(ritsu1)
-                _json["RITSU1"] = String(ritsu1)
-            }else {
-                if type == "UPDATE" {
-                    param["RITSU1"] = 0
-                }
-            }
+            param["JITAK1"] = j1
+            _json["JITAK1"] = j1
+            printData.jita1 = j1
             
-            if jita2Field.text != "" {
-                //自社・他社区分
-                param["JITAK2"] = String(jitak2)
-                _json["JITAK2"] = String(jitak2)
-            }
-            if grd2Field.text != "" {
-                //グレード
-                param["GRADE2"] = grd2
-                _json["GRADE2"] = grd2
-            }else {
-//                if type == "UPDATE" {
-//                    param["GRADE2"] = ""
-//                }
-            }
-            if ritsu2Field.text != "" {
+            //グレード
+            param["GRADE1"] = grd1
+            _json["GRADE1"] = grd1
+            printData.grade1 = grd1
+            
+            //比率
+            var r1 = "0"
+            if ritsu1 != nil {
                 //比率
-                param["RITSU2"] = String(ritsu2)
-                _json["RITSU2"] = String(ritsu2)
-            }else {
-                if type == "UPDATE" {
-                    param["RITSU2"] = 0
-                }
+                r1 = String(ritsu1)
             }
+            param["RITSU1"] = r1
+            _json["RITSU1"] = r1
+            printData.ritsu1 = r1
+
+            //自社・他社区分
+            var j2 = ""
+            if jitak2 != nil {
+                j2 = String(jitak2)
+            }
+            param["JITAK2"] = j2
+            _json["JITAK2"] = j2
+            printData.jita2 = j2
+            
+            //グレード
+            param["GRADE2"] = grd2
+            _json["GRADE2"] = grd2
+            printData.grade2 = grd2
+            
+            //比率
+            var r2 = "0"
+            if ritsu2 != nil {
+                r2 = String(ritsu2)
+            }
+
+            param["RITSU2"] = r2
+            _json["RITSU2"] = r2
+            printData.ritsu2 = r2
             
             if juryoField.text != "" {
                 if juryoField.text == "不明" {

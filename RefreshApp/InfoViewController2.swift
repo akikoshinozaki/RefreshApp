@@ -196,7 +196,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
         }
         
         //自社・他社区分1
-        if let jita1 = json["JITAK1"] as? String, jita1 != " " {
+        if let jita1 = json["JITAK1"] as? String, jita1 != "" {
             jitak1 = Int(jita1) ?? 0
             if jitak1 > 0 {
                 let obj = jitaArray[jitak1-1]
@@ -217,7 +217,7 @@ class InfoViewController2: UIViewController, SelectDateViewDelegate {
             infoV.ritsu1Field.text = "\(ritsu1!)"
         }
         //自社・他社区分2
-        if let jita2 = json["JITAK2"] as? String, jita2 != " " {
+        if let jita2 = json["JITAK2"] as? String, jita2 != "" {
             jitak2 = Int(jita2) ?? 0
             if jitak2 > 0 {
                 let obj = jitaArray[jitak2-1]

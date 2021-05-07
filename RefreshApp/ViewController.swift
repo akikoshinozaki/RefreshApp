@@ -99,13 +99,13 @@ class _ViewController: UIViewController {
     
 
     @IBAction func refreshReception(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let recept = storyboard.instantiateViewController(withIdentifier: "recept")
         self.navigationController?.pushViewController(recept, animated: true)
     }
    
     @IBAction func refreshInquiry(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let inq = storyboard.instantiateViewController(withIdentifier: "inquiry")
         self.navigationController?.pushViewController(inq, animated: true)
     }

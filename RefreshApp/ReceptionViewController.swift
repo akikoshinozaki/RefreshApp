@@ -133,6 +133,11 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     var keiNO:String = ""
     //@IBOutlet var edtBtn:UIButton!
     
+    @IBOutlet weak var fnLabel1: UILabel!
+    @IBOutlet weak var fnLabel2: UILabel!
+    @IBOutlet weak var fnLabel3: UILabel!
+    var imgCnt = 2
+    
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
@@ -235,6 +240,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
         labelImgView.image = nil
         
+        fnLabel1.text = "未"
+        fnLabel2.text = "未"
+        fnLabel3.text = "未"
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -246,6 +255,20 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         super.viewWillAppear(animated)
         self.photoCollection.reloadData()
         connectChk()
+        
+        
+        if printData != nil, printData.jita2 != "", printData.jita2 != "0" { //2枚目預りがある場合は、写真4枚以上必要
+            imgCnt = 4
+        }else {
+            imgCnt = 2
+        }
+        
+        if imageArr.count + iArr.count < imgCnt {
+            fnLabel2.text = "未"
+        }else {
+            fnLabel2.text = "済"
+        }
+        
         
     }
 
@@ -336,9 +359,14 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         if Int(data) != nil, data.count == 13 {
             //バーコードの時
             tagNO = String(Array(data)[4...11])
-        }else if data.hasPrefix("RF="), data.count > 11{
-            //QRの時
-            tagNO = String(Array(data)[3...10])
+        }else if data.hasPrefix("RF="){
+            if data.count > 10 {
+                //QRの時
+                tagNO = String(Array(data)[3...10])
+            }else {
+                SimpleAlert.make(title: "このコードは読み取れません", message: "")
+                return
+            }
         }
         setTag()
     }
@@ -352,7 +380,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             tagLabel.text = tagNO
             tagLabel.textColor = .black
             dspInit()
-            self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
+            self.request(type: "ENTCHK", param: ["TAG_NO":tagNO])
+            //self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
             getImages(tag:tagNO)
             
         }
@@ -371,16 +400,15 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             dspInit()
         }
     }
-    
-    
+
+    //ラベルシールのイメージを表示
     @objc func display(){
         kanriLabel.text = ""
         labelImgView.image = nil
 //        print(_json)
 //        print("tag=\(tagNO)")
-        if _json==nil {
-        //if !isBLXexist || _json==nil {
-            SimpleAlert.make(title: "対象のデータがありません", message: "")
+        if _json==nil || _json["YOTEI_HI"] == nil {
+            SimpleAlert.make(title: "印刷できません", message: "")
             return
         }
         var kanri = ""
@@ -523,14 +551,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         self._printLabel()
         self.printLabel()
         
-        /*
-        if isConnectPrinter {
-            self.printLabel()
-            
-        }else {
-            SimpleAlert.make(title: "プリンターに接続してください", message: "")
-        }*/
-        
     }
        
     func request(type:String, param:[String:Any]) {
@@ -559,6 +579,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                         self.conAlert.message = msg
                         if !self.isDouble {
                             self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        }else {
+                            enrolled = false
                         }
                     }
                     
@@ -641,7 +663,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             return
         }
         
-        let storyboard = UIStoryboard.init(name: "Main2", bundle: nil)
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let infoVC = storyboard.instantiateViewController(identifier: "info") as! InfoViewController
         //let infoVC = storyboard.instantiateViewController(identifier: "info2") as! InfoViewController2
         infoVC.delegate = self
@@ -700,7 +722,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                 meisai.append(obj)
                 //print(keiMeisai)
             }
-            let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let list = storyboard.instantiateViewController(withIdentifier: "refList") as! RefListViewController
 
             list.delegate = self
@@ -849,6 +871,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @IBAction func entryDataAndImage(_ sender: UIButton) {
 //        print(_json)
 //        print(entryData)
+        
         if isPostImage { return } //二重登録禁止
         if _json == nil {
             return
@@ -857,11 +880,26 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             //SimpleAlert.make(title: "データが不足しています", message: "")
             return
         }
+        if entryData.count == 0 {
+            SimpleAlert.make(title: "データが不足しています", message: "")
+            return
+        }
         guard let yotei = _json["YOTEI_HI"] as? String, yotei != "" else {
             SimpleAlert.make(title: "工場管理日が未入力です", message: "")
             return
         }
-
+        print(printData)
+        if printData.jita2 != "", printData.jita2 != "0" { //2枚目預りがある場合は、写真4枚以上必要
+            imgCnt = 4
+        }else {
+            imgCnt = 2
+        }
+        
+        if imageArr.count + iArr.count < imgCnt {
+            SimpleAlert.make(title: "\(imgCnt)枚以上画像が必要です", message: "")
+            return
+        }
+/*
         if imageArr.count == 0 {
             let alert = UIAlertController(title: "写真がありません", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "データだけ送る", style: .default, handler: {
@@ -888,7 +926,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             self.present(alert, animated: true, completion: nil)
             
             
-        }else {
+        }else {*/
             //データ・画像両方送る
             let alert = UIAlertController(title: "送信してよろしいですか", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
@@ -900,7 +938,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             
             self.present(alert, animated: true, completion: nil)
 
-        }
+        //}
 
     }
     
@@ -910,9 +948,11 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         dispatchQueue.async(group: self.dispatchGroup) {
             self.request(type: "ENTRY", param: self.entryData)
         }
-        self.dispatchGroup.enter()
-        dispatchQueue.async(group: self.dispatchGroup) {
-            self.postImages()
+        if imageArr.count > 0 {
+            self.dispatchGroup.enter()
+            dispatchQueue.async(group: self.dispatchGroup) {
+                self.postImages()
+            }
         }
         
         self.dispatchGroup.notify(queue: .main) {
@@ -926,31 +966,34 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                 if enrolled {
                     self.conAlert.title = "登録成功"
                     self.conAlert.message! = "データ登録成功\n"
-                    
+                    self.fnLabel3.text = "済"
                 }
-                
-                if self.isPostImage {
-                    self.conAlert.title = "送信完了しました"
-                    self.conAlert.message! += "画像送信成功\n"
-                    
-                    Upload().deleteFM(tag: tagNO)
-//                    self.iArr = []
-//                    imageArr = []
-//                    self.photoCollection.reloadData()
-//                    tagNO = ""
-//                    self.tagField.text = ""
-//                    self.setTag()
-                    
-                }else {
-                    self.conAlert.title = "画像アップロードに失敗しました"
-                    self.conAlert.message! += "画像は未送信データに一時的に保存されました\n"+errorCode
-                    //self.uploadFault = true
-                    Upload().saveFM(tag: tagNO, arr: imageArr)
+                if imageArr.count > 0 {
+                    if self.isPostImage {
+                        self.conAlert.title = "送信完了しました"
+                        self.conAlert.message! += "画像送信成功\n"
+                        
+                        Upload().deleteFM(tag: tagNO)
+//                        self.iArr = []
+//                        imageArr = []
+//                        self.photoCollection.reloadData()
+//                        tagNO = ""
+//                        self.tagField.text = ""
+//                        self.setTag()
+                        
+                    }else {
+                        self.conAlert.title = "画像アップロードに失敗しました"
+                        self.conAlert.message! += "画像は未送信データに一時的に保存されました\n"+errorCode
+                        //self.uploadFault = true
+                        Upload().saveFM(tag: tagNO, arr: imageArr)
+                    }
                 }
-                
+                                
                 self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                     Void in
-                    self.display()
+                    if enrolled {
+                        self.display()
+                    }
                 }))
                     
             }
@@ -991,6 +1034,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 //                    tagNO = ""
 //                    self.tagField.text = ""
 //                    self.setTag()
+                    
                     
                 }else {
                     SimpleAlert.make(title: "画像アップロードに失敗しました", message: "画像は未送信データに一時的に保存されました\n"+errorCode)
@@ -1248,13 +1292,20 @@ extension ReceptionViewController:InfoViewControllerDelegate {
     func setEntry(param: [String : Any]) {
         print(_json)
         self.entryData = param
+        print(param)
+        
+        if param.count > 0 {
+            self.fnLabel1.text = "済"
+        }else {
+            self.fnLabel1.text = "未"
+        }
     }
     
 
     func setPrintInfo(json: Dictionary<String,Any>!, type: String) {
         print(type)
         if type == "print" {
-            //print(json!)
+            print(json!)
             _json = json
             self.display()
         }else{

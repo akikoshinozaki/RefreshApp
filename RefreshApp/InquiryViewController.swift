@@ -193,7 +193,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         }
         //1枚目
         //自社・他社区分1
-        if let jita = json["JITAK1"] as? String, jita != " " {
+        if let jita = json["JITAK1"] as? String, jita != "" {
             let jita_k = Int(jita) ?? 0
             if jita_k > 0 {
                 let obj = jitaArray[jita_k-1]
@@ -212,7 +212,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         }
         //2枚目
         //自社・他社区分2
-        if let jita = json["JITAK2"] as? String, jita != " " {
+        if let jita = json["JITAK2"] as? String, jita != "" {
             let jita_k = Int(jita) ?? 0
             if jita_k > 0 {
                 let obj = jitaArray[jita_k-1]
@@ -372,7 +372,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
                 self.keiMeisai.append(obj)
                 //print(keiMeisai)
             }
-            let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
 //            let list = storyboard.instantiateViewController(withIdentifier: "refList") as! RefListViewController
             let list = storyboard.instantiateViewController(withIdentifier: "refList") as! RefListViewController
             
@@ -651,7 +651,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
     
     @objc func gawaLink(_ sender: Any) {
         if gawaImg.count > 0 {
-            let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let gawaVC = storyboard.instantiateViewController(withIdentifier: "gawa") as! GawaImgViewController
             gawaVC.isModalInPresentation = true
             

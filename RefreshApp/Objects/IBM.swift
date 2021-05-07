@@ -28,18 +28,18 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
         //var json:Dictionary<String,Any>!
         errMsg = ""
         var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=\(type)&"
-        print(param)
+        //print(param)
         for p in parameter {
             param += "\(p.key)=\(p.value)&"
         }
         
         if param.last == "&" {
             param = String(param.dropLast())
-            print(param)
+            //print(param)
         }
         
         let url = URL(string: hostURL)!
-        print(url)
+        //print(url)
         
         let config = URLSessionConfiguration.default
         //config.timeoutIntervalForRequest = 5.0
@@ -60,7 +60,7 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
                         //json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
                         json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? Dictionary<String,Any>
                         IBMResponse = true
-                        //print(json!)
+                        print(json!)
                     }catch{
                         print("json error")
                         errMsg += "E3001:json error"

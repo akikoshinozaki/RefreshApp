@@ -5,8 +5,7 @@
 //  Created by 篠崎 明子 on 2020/11/06.
 //  Copyright © 2020 Akiko Shinozaki. All rights reserved.
 //
-//  開発用トップページ
-//  *********  未使用  **********
+//  トップページ
 
 import UIKit
 import AVFoundation
@@ -36,7 +35,7 @@ class FirstViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("FirstViewController")
         // Do any additional setup after loading the view.
         let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         versionLabel.text = "Ver. "+bundleVersion
@@ -56,6 +55,7 @@ class FirstViewController: UIViewController {
             devControl.addTarget(self, action: #selector(valueChange(_:)), for: .valueChanged)
             titleLabel.backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
         }
+        label1.isHidden = true
 
     }
     
@@ -71,16 +71,18 @@ class FirstViewController: UIViewController {
         
     @objc func tapHidBtn(_ sender: UIButton) {
         self.timer?.invalidate() //タイマーを破棄
-        
+        label1.isHidden = false
         tapCnt += 1
         label1.text = "タップした回数：\(tapCnt)回"
         if tapCnt >= maxCnt {
             tapCnt = 0
             EnvironmentSwitch().make(dev: devMode)
+            label1.isHidden = true
         }
 
         self.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true, block: { _ in
             self.tapCnt = 0
+            self.label1.isHidden = true
         })
         
     }
@@ -106,13 +108,13 @@ class FirstViewController: UIViewController {
     }
     
     @IBAction func refreshReception(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let recept = storyboard.instantiateViewController(withIdentifier: "recept")
         self.navigationController?.pushViewController(recept, animated: true)
     }
     
     @IBAction func refreshInquiry(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let inq = storyboard.instantiateViewController(withIdentifier: "inquiry")
         self.navigationController?.pushViewController(inq, animated: true)
     }
@@ -134,6 +136,13 @@ class FirstViewController: UIViewController {
         //IBMからの情報更新
         print("リスト取得")
         GetLists().getList()
+    }
+    
+    
+    @IBAction func koutei(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let recept = storyboard.instantiateViewController(withIdentifier: "koutei")
+        self.navigationController?.pushViewController(recept, animated: true)
     }
     
 }
