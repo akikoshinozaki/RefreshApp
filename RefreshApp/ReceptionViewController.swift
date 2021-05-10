@@ -168,7 +168,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     @IBOutlet weak var kLabel13: UILabel!
     @IBOutlet weak var kLabel14: UILabel!
     @IBOutlet weak var kLabel15: UILabel!
-
+    var _type:String = ""
     
     
     
@@ -598,7 +598,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                 let n = printData.nouki.components(separatedBy: "/")
                 if n.count>2 {
                     print(n)
-                    lbl.label6.text = n[1]+"月"+n[2]+"日"
+                    lbl.label6.text = n [1]+"月"+n[2]+"日"
                 }else {
                     lbl.label6.text = printData.nouki
                 }
@@ -723,22 +723,23 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                     }
                     
                 }else {
-                    if type == "ENTRY" {
+                    if type == "ENTRY" || type == "UPDATE" {
                         _json = json
                         enrolled = true
-                        if !self.isDouble {
-                            DispatchQueue.main.async {
-                                self.conAlert.title = "登録成功"
-                                self.conAlert.message = "正常に登録できました"
-                                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                                    Void in
-                                    //print(_json)
-                                    self.display()
-                                    
-                                }))
-                            }
-                        }
-
+                        
+//                        if !self.isDouble {
+//                            DispatchQueue.main.async {
+//                                self.conAlert.title = "登録成功"
+//                                self.conAlert.message = "正常に登録できました"
+//                                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+//                                    Void in
+//                                    //print(_json)
+//                                    self.display()
+//
+//                                }))
+//                            }
+//                        }
+ 
                     }else if json!["TAG_NO"] == nil { //契約No.でSearchした結果
                         //明細チェック
                         if let arr = json!["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
@@ -786,7 +787,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                 
             }
             
-            if self.isDouble {
+            if type == "ENTRY" || type == "UPDATE" {
+//            if self.isDouble {
                 print("-----IBM登録-----")
                 self.dispatchGroup.leave()
             }
@@ -1007,8 +1009,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     }
     
     @IBAction func entryDataAndImage(_ sender: UIButton) {
-//        print(_json)
-//        print(entryData)
+        print(_json)
+        print(entryData)
         
         if isPostImage { return } //二重登録禁止
         if _json == nil {
@@ -1022,10 +1024,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             SimpleAlert.make(title: "データが不足しています", message: "")
             return
         }
-        guard let yotei = _json["YOTEI_HI"] as? String, yotei != "" else {
-            SimpleAlert.make(title: "工場管理日が未入力です", message: "")
-            return
-        }
+        
         print(printData)
         if printData.jita2 != "", printData.jita2 != "0" { //2枚目預りがある場合は、写真4枚以上必要
             imgCnt = 4
@@ -1033,10 +1032,19 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             imgCnt = 2
         }
         
-        if imageArr.count + iArr.count < imgCnt {
-            SimpleAlert.make(title: "\(imgCnt)枚以上画像が必要です", message: "")
-            return
+        if _type == "ENTRY" {
+            guard let yotei = _json["YOTEI_HI"] as? String, yotei != "" else {
+                SimpleAlert.make(title: "工場管理日が未入力です", message: "")
+                return
+            }
+
+            if imageArr.count + iArr.count < imgCnt {
+                SimpleAlert.make(title: "\(imgCnt)枚以上画像が必要です", message: "")
+                return
+            }
         }
+        
+        
 /*
         if imageArr.count == 0 {
             let alert = UIAlertController(title: "写真がありません", message: "", preferredStyle: .alert)
@@ -1069,8 +1077,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             let alert = UIAlertController(title: "送信してよろしいですか", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                 Void in
-                self.isDouble = true
-                self.upload()
+                self.isDouble = imageArr.count>0
+                self.upload(type: self._type)
             }))
             alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
             
@@ -1080,11 +1088,12 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
 
     }
     
-    func upload() {
+    func upload(type:String) {
         let dispatchQueue = DispatchQueue(label: "queue", attributes: .concurrent)
         self.dispatchGroup.enter()
         dispatchQueue.async(group: self.dispatchGroup) {
-            self.request(type: "ENTRY", param: self.entryData)
+//            self.request(type: "ENTRY", param: self.entryData)
+            self.request(type: type, param: self.entryData)
         }
         if imageArr.count > 0 {
             self.dispatchGroup.enter()
@@ -1157,9 +1166,10 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
         NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"postImage"), object: nil)
         DispatchQueue.main.async {
-            if self.isDouble {
+            //if self.isDouble {
                 self.isPostImage = errorCode == ""
                 self.dispatchGroup.leave()
+                /*
             }else {
                 if errorCode == "" {
                     //アップロード成功
@@ -1178,7 +1188,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
                     SimpleAlert.make(title: "画像アップロードに失敗しました", message: "画像は未送信データに一時的に保存されました\n"+errorCode)
                     Upload().saveFM(tag: tagNO, arr: imageArr)
                 }
-            }
+            }*/
 
         }
     }
@@ -1427,10 +1437,11 @@ extension ReceptionViewController:UITextFieldDelegate {
 }
 
 extension ReceptionViewController:InfoViewControllerDelegate {
-    func setEntry(param: [String : Any]) {
+    func setEntry(param: [String : Any], type:String) {
         print(_json)
         self.entryData = param
         print(param)
+        _type = type
         if param.count > 0 {
             self.fnLabel1.text = "済"
         }else {

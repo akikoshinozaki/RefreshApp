@@ -18,7 +18,7 @@ var _json:Dictionary<String,Any>!
 
 protocol InfoViewControllerDelegate{
     func setPrintInfo(json:Dictionary<String,Any>!, type:String)
-    func setEntry(param:[String:Any])
+    func setEntry(param:[String:Any], type:String)
 }
 
 class InfoViewController: UIViewController, SelectDateViewDelegate {
@@ -600,11 +600,11 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 
         print(param)
         
-        if type == "ENTRY" {
+        if type == "ENTRY" || type == "UPDATE"{
             print(param)
             //print(_json)
             self.dismiss(animated: true, completion: {
-                self.delegate?.setEntry(param: param)
+                self.delegate?.setEntry(param: param, type: type)
             })
             
         }else {
@@ -692,18 +692,18 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 //
 //                            }))
 
-                        }else if type == "UPDATE" {
-                            isBLXexist = true
-                            self.conAlert.title = "更新成功"
-                            self.conAlert.message = "正常に更新できました"
-                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                                Void in
-                                _json = json
-                                //self.closeView()
-                                self.dismiss(animated: true, completion: {
-                                    self.delegate?.setPrintInfo(json: _json, type: "update")
-                                })
-                            }))
+//                        }else if type == "UPDATE" {
+//                            isBLXexist = true
+//                            self.conAlert.title = "更新成功"
+//                            self.conAlert.message = "正常に更新できました"
+//                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+//                                Void in
+//                                _json = json
+//                                //self.closeView()
+//                                self.dismiss(animated: true, completion: {
+//                                    self.delegate?.setPrintInfo(json: _json, type: "update")
+//                                })
+//                            }))
 
                         }
                          
