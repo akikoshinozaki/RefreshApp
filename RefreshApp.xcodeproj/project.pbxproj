@@ -41,6 +41,9 @@
 		4EBCC91225BE9A0100882906 /* SelectDateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EBCC91125BE9A0100882906 /* SelectDateView.xib */; };
 		4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCC91325BE9A2C00882906 /* SelectDateView.swift */; };
 		4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */; };
+		4ED33534265F7EDF00EB821D /* KoteiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED33533265F7EDF00EB821D /* KoteiViewController.swift */; };
+		4ED33539265FC09D00EB821D /* MyPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4ED33537265FC09D00EB821D /* MyPickerView.xib */; };
+		4ED3353A265FC09D00EB821D /* MyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED33538265FC09D00EB821D /* MyPickerView.swift */; };
 		4EE502372625181C00AAE522 /* BRLavelView2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EE502362625181C00AAE522 /* BRLavelView2.xib */; };
 		4EE5023A262531C600AAE522 /* BRLabelView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE50239262531C600AAE522 /* BRLabelView2.swift */; };
 		4EEC4D5825556C69003AF923 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5725556C69003AF923 /* AppDelegate.swift */; };
@@ -49,6 +52,8 @@
 		4EEC4D6225556C69003AF923 /* RefreshApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6025556C69003AF923 /* RefreshApp.xcdatamodeld */; };
 		4EEC4D6425556C6C003AF923 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6325556C6C003AF923 /* Assets.xcassets */; };
 		4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6525556C6C003AF923 /* LaunchScreen.storyboard */; };
+		4EF3EF6F2665D9110050AE42 /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF3EF6D2665D9110050AE42 /* DetailTableViewCell.swift */; };
+		4EF3EF702665D9110050AE42 /* DetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3EF6E2665D9110050AE42 /* DetailTableViewCell.xib */; };
 		C313E80025E38F7C00666210 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C313E7FF25E38F7C00666210 /* FirstViewController.swift */; };
 		C322589A2558DEC1007BB719 /* deletebtn.png in Resources */ = {isa = PBXBuildFile; fileRef = C32258992558DEC1007BB719 /* deletebtn.png */; };
 		C322589C2558E4D3007BB719 /* Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C322589B2558E4D3007BB719 /* Upload.swift */; };
@@ -147,6 +152,9 @@
 		4EBCC91125BE9A0100882906 /* SelectDateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectDateView.xib; sourceTree = "<group>"; };
 		4EBCC91325BE9A2C00882906 /* SelectDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateView.swift; sourceTree = "<group>"; };
 		4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceptionViewController.swift; sourceTree = "<group>"; };
+		4ED33533265F7EDF00EB821D /* KoteiViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoteiViewController.swift; sourceTree = "<group>"; };
+		4ED33537265FC09D00EB821D /* MyPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPickerView.xib; sourceTree = "<group>"; };
+		4ED33538265FC09D00EB821D /* MyPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPickerView.swift; sourceTree = "<group>"; };
 		4EE502362625181C00AAE522 /* BRLavelView2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BRLavelView2.xib; sourceTree = "<group>"; };
 		4EE50239262531C600AAE522 /* BRLabelView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRLabelView2.swift; sourceTree = "<group>"; };
 		4EEC4D5425556C69003AF923 /* RefreshApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefreshApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,6 +165,8 @@
 		4EEC4D6325556C6C003AF923 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4EEC4D6625556C6C003AF923 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4EEC4D6825556C6C003AF923 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4EF3EF6D2665D9110050AE42 /* DetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewCell.swift; sourceTree = "<group>"; };
+		4EF3EF6E2665D9110050AE42 /* DetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailTableViewCell.xib; sourceTree = "<group>"; };
 		7C47E5FEF43F033786A47B69 /* Pods-RefreshApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.release.xcconfig"; sourceTree = "<group>"; };
 		ADAB64EF3A0D9F56C9F19713 /* Pods-RefreshApp.dev-release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.dev-release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.dev-release.xcconfig"; sourceTree = "<group>"; };
 		C313E7FF25E38F7C00666210 /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -255,6 +265,7 @@
 				4E9C66BA26255683003E29FF /* InfoViewController2.swift */,
 				C388924C25E3750900EFD720 /* InquiryViewController.swift */,
 				C3675D1925F1EE4E00EF415D /* InqTableViewCell.swift */,
+				4ED33533265F7EDF00EB821D /* KoteiViewController.swift */,
 				4EB9B125260345EC003CCEFB /* RefListViewController.swift */,
 				4E776DDF2557C96C009344EB /* DispViewController.swift */,
 				C3DDC4DA25F8620700B2DEAC /* GawaImgViewController.swift */,
@@ -267,6 +278,8 @@
 				C313E7FF25E38F7C00666210 /* FirstViewController.swift */,
 				4EEC4D5D25556C69003AF923 /* Main.storyboard */,
 				C3C95DEF25889D6F00BBE180 /* Main2.storyboard */,
+				4ED33538265FC09D00EB821D /* MyPickerView.swift */,
+				4ED33537265FC09D00EB821D /* MyPickerView.xib */,
 				C3C95DEA25889D6F00BBE180 /* BRPrinter */,
 				C3E6A40925E39DF500AB420F /* CusomView */,
 				4EEC4D6325556C6C003AF923 /* Assets.xcassets */,
@@ -386,6 +399,8 @@
 				4E37C87825F3D13300314885 /* DetailView.swift */,
 				4E81401525F48DF600CAE545 /* DetailView2.xib */,
 				4E81401425F48DF500CAE545 /* DetailView2.swift */,
+				4EF3EF6D2665D9110050AE42 /* DetailTableViewCell.swift */,
+				4EF3EF6E2665D9110050AE42 /* DetailTableViewCell.xib */,
 				C35ABD95261C485F00687CB4 /* InfoView.xib */,
 				4E0ED3FE2623D9E800A4B714 /* InfoView.swift */,
 				C35ABDA3261C4CCC00687CB4 /* InfoView2.xib */,
@@ -484,7 +499,9 @@
 				4E913929263142EA00DA29A9 /* entry.png in Resources */,
 				4E8857C52636905900E9D05C /* scan.png in Resources */,
 				C3C95DF425889D6F00BBE180 /* rj4030ai_102mm.bin in Resources */,
+				4EF3EF702665D9110050AE42 /* DetailTableViewCell.xib in Resources */,
 				4E6E771125D36F4E00BBA885 /* BRLabelView.xib in Resources */,
+				4ED33539265FC09D00EB821D /* MyPickerView.xib in Resources */,
 				4E5DB92B2555748300A53584 /* ScannerView.xib in Resources */,
 				C3C95DF525889D6F00BBE180 /* Main2.storyboard in Resources */,
 				4E776DE725580EEA009344EB /* left.png in Resources */,
@@ -593,6 +610,8 @@
 				C3C95DF625889D6F00BBE180 /* PrintSampleViewController.swift in Sources */,
 				4E6E771425D36F6500BBA885 /* BRLabelView.swift in Sources */,
 				4E776DE02557C96C009344EB /* DispViewController.swift in Sources */,
+				4EF3EF6F2665D9110050AE42 /* DetailTableViewCell.swift in Sources */,
+				4ED3353A265FC09D00EB821D /* MyPickerView.swift in Sources */,
 				C35E2FBF255A6F71009C9057 /* Common.swift in Sources */,
 				4EE5023A262531C600AAE522 /* BRLabelView2.swift in Sources */,
 				4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */,
@@ -602,6 +621,7 @@
 				C38C13CD25BA88B800653CE9 /* HostConnect.swift in Sources */,
 				4EEC4D5825556C69003AF923 /* AppDelegate.swift in Sources */,
 				C38C13D425BA8BBE00653CE9 /* IBM.swift in Sources */,
+				4ED33534265F7EDF00EB821D /* KoteiViewController.swift in Sources */,
 				4EEC4D6225556C69003AF923 /* RefreshApp.xcdatamodeld in Sources */,
 				C313E80025E38F7C00666210 /* FirstViewController.swift in Sources */,
 				4E37C87925F3D13300314885 /* DetailView.swift in Sources */,

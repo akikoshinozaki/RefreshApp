@@ -25,7 +25,7 @@
         <!--First View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="FirstViewController" customModule="RefreshApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="first" id="BYZ-38-t0r" customClass="FirstViewController" customModule="RefreshApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -149,9 +149,9 @@
                                     <constraint firstAttribute="width" constant="200" id="3w7-mD-lo6"/>
                                     <constraint firstAttribute="height" constant="200" id="93q-hd-59q"/>
                                 </constraints>
-                                <state key="normal" title="ばらし"/>
+                                <state key="normal" title="工程管理"/>
                                 <connections>
-                                    <action selector="test:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5Qg-fu-iJS"/>
+                                    <action selector="kotei:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iGh-tc-J8y"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2615,7 +2615,7 @@
         <!--First View Controller-->
         <scene sceneID="uz4-j3-nGG">
             <objects>
-                <viewController storyboardIdentifier="first" id="wju-fH-1oV" customClass="FirstViewController" customModule="RefreshApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="wju-fH-1oV" customClass="FirstViewController" customModule="RefreshApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="W0n-uo-4U2">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

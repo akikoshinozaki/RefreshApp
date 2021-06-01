@@ -579,6 +579,8 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
         
+        print(printData)
+        
         lbl = BRLabelView(frame:self.view.frame)
         // シールのPrintView
         let QR = "RF="+tagNO
@@ -1044,47 +1046,16 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             }
         }
         
+        //データ・画像両方送る
+        let alert = UIAlertController(title: "送信してよろしいですか", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+            Void in
+            self.isDouble = imageArr.count>0
+            self.upload(type: self._type)
+        }))
+        alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
         
-/*
-        if imageArr.count == 0 {
-            let alert = UIAlertController(title: "写真がありません", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "データだけ送る", style: .default, handler: {
-                Void in
-                self.request(type: "ENTRY", param: self.entryData)
-            }))
-            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: {
-                Void in
-                return
-            }))
-            
-            self.present(alert, animated: true, completion: nil)
-        }else if entryData.count == 0 {
-            let alert = UIAlertController(title: "画像を送信します", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                Void in
-                self.postImages()
-            }))
-            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: {
-                Void in
-                return
-            }))
-            
-            self.present(alert, animated: true, completion: nil)
-            
-            
-        }else {*/
-            //データ・画像両方送る
-            let alert = UIAlertController(title: "送信してよろしいですか", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                Void in
-                self.isDouble = imageArr.count>0
-                self.upload(type: self._type)
-            }))
-            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-
-        //}
+        self.present(alert, animated: true, completion: nil)
 
     }
     

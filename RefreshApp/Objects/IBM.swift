@@ -28,6 +28,10 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
         //var json:Dictionary<String,Any>!
         errMsg = ""
         var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=\(type)&"
+        
+        if type == "HBR031" {
+            param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR031&PROC_TYPE=ENTRY&"
+        }
         //print(param)
         for p in parameter {
             param += "\(p.key)=\(p.value)&"
@@ -88,5 +92,63 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
         
     }
 
+    func search(param:String, cd:String,completionClosure:@escaping CompletionClosure){
+        var json:Dictionary<String,Any>!
+        var errMsg = ""
+        var parameter = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID="
+        
+        if param == "item" {
+            parameter += "HFL002&PROC_TYPE=SYOCHK&SYOHIN_CD=\(cd)"
+        }else if param == "syain"{
+            parameter += "HFJ004&PROC_TYPE=ENTCHK&SYAIN_CD=\(cd)"
+        }
+
+        let url = URL(string: hostURL+"HTP2/WAH001CL.PGM?")!
+        
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 5.0
+        let session = URLSession(configuration: config)
+        
+        var request = URLRequest(url: url)
+        // POSTを指定
+        request.httpMethod = "POST"
+        // POSTするデータをBodyとして設定
+        request.httpBody = parameter.data(using: .utf8)
+        // 通信のタスクを生成.
+        let task = session.dataTask(with:request, completionHandler: {
+            (data, response, err) in
+            if (err == nil){
+                if(data != nil){
+                    //戻ってきたデータを解析
+                    do{
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? Dictionary<String,Any>
+                        IBMResponse = true
+                        print(json!)
+                    }catch{
+                        print("json error")
+                        errMsg += "E3001:json error"
+                    }
+                    
+                }else{
+                    print("レスポンスがない")
+                    errMsg += "E3001:No Response"
+                }
+                
+            } else {
+                print("error : \(err!)")
+                if (err! as NSError).code == -1001 {
+                    print("timeout")
+                }
+                
+                errMsg += "E3003:\(err!.localizedDescription)"
+            }
+            completionClosure(nil,json, err)
+
+        })
+        
+        // タスクの実行.
+        task.resume()
+        
+    }
     
 }

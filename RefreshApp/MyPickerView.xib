@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyPickerView" customModule="HachikatenMail" customModuleProvider="target">
+            <connections>
+                <outlet property="picker" destination="rma-ec-FDk" id="EzE-Oo-DjD"/>
+                <outlet property="titleLabel" destination="2zE-5v-d7Y" id="ILY-2K-NYS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="mC3-kC-Jgm">
+            <rect key="frame" x="0.0" y="0.0" width="300" height="250"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2zE-5v-d7Y">
+                    <rect key="frame" x="0.0" y="0.0" width="300" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="t5K-Yj-Nev"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="5" style="wheels" translatesAutoresizingMaskIntoConstraints="NO" id="rma-ec-FDk">
+                    <rect key="frame" x="0.0" y="40" width="300" height="210"/>
+                    <locale key="locale" localeIdentifier="ja_JP"/>
+                    <connections>
+                        <action selector="selectDate:" destination="-1" eventType="valueChanged" id="dKv-gI-5vH"/>
+                    </connections>
+                </datePicker>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="2zE-5v-d7Y" secondAttribute="trailing" id="9mo-Cw-s9P"/>
+                <constraint firstItem="2zE-5v-d7Y" firstAttribute="top" secondItem="mC3-kC-Jgm" secondAttribute="top" id="Ejs-qb-dcz"/>
+                <constraint firstAttribute="trailing" secondItem="rma-ec-FDk" secondAttribute="trailing" id="FXN-wv-CzO"/>
+                <constraint firstItem="rma-ec-FDk" firstAttribute="leading" secondItem="mC3-kC-Jgm" secondAttribute="leading" id="Hgc-ui-0mV"/>
+                <constraint firstItem="2zE-5v-d7Y" firstAttribute="leading" secondItem="mC3-kC-Jgm" secondAttribute="leading" id="ROD-Cn-IH7"/>
+                <constraint firstItem="rma-ec-FDk" firstAttribute="top" secondItem="2zE-5v-d7Y" secondAttribute="bottom" id="ekf-pC-00U"/>
+                <constraint firstAttribute="bottom" secondItem="rma-ec-FDk" secondAttribute="bottom" id="r23-Sy-XIO"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-175.36231884057972" y="-1259.5982142857142"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

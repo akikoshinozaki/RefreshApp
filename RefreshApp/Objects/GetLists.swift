@@ -8,6 +8,9 @@
 
 import UIKit
 
+let kList:[String] = ["grdList","jitaList","hiritsu","koteiList","wetherList"]
+var lList:[(key:String,list:[Dictionary<String,Any>])] = []
+
 class GetLists: NSObject {
 
     func getList(){
@@ -33,30 +36,42 @@ class GetLists: NSObject {
                 }else {
                     //取得成功
                     print(json!)
-
-                    var glist:[Dictionary<String,Any>] = []
-                    var jlist:[Dictionary<String,Any>] = []
-                    var hlist:[Dictionary<String,Any>] = []
                     
-                    //print(glist.isEmpty)
+                    lList = []
+                    var isEmpty:Bool = false
                     
                     if let list = json!["GRDLST"] as? [Dictionary<String,Any>] {
-                        glist = list
                         defaults.set(list, forKey: "grdList")
-                    }
-                    if let list = json!["JITALST"] as? [Dictionary<String,Any>] {
-                        jlist = list
+                        lList.append((key:"grdList", list:list))
+                        if list.count == 0 {isEmpty = true}
+                    }else {isEmpty = true}
+                    if let list = json!["JITALIST"] as? [Dictionary<String,Any>] {
                         defaults.set(list,forKey: "jitaList")
-                    }
+                        lList.append((key:"jitaList", list:list))
+                        if list.count == 0 {isEmpty = true}
+                    }else {isEmpty = true}
                     if let list = json!["HIRITSU"] as? [Dictionary<String,Any>] {
-                        hlist = list
                         defaults.set(list,forKey: "hiritsu")
-                    }
+                        lList.append((key:"hiritsu", list:list))
+                        if list.count == 0 {isEmpty = true}
+                    }else {isEmpty = true}
+                    if let list = json!["KOTEILST"] as? [Dictionary<String,Any>] {
+                        defaults.set(list, forKey: "koteiList")
+                        lList.append((key:"koteiList", list:list))
+                        if list.count == 0 {isEmpty = true}
+                    }else {isEmpty = true}
+                    if let list = json!["WTHRLST"] as? [Dictionary<String,Any>] {
+                        defaults.set(list,forKey: "wetherList")
+                        lList.append((key:"wetherList", list:list))
+                        if list.count == 0 {isEmpty = true}
+                    }else {isEmpty = true}
 
-                    if !glist.isEmpty, !jlist.isEmpty, !hlist.isEmpty {
+                    print(isEmpty)
+                    if !isEmpty {
                         defaults.setValue(Date().string, forKey: "lastDataDownload")
                     }
-                    self.setList(list1: glist, list2:jlist, list3:hlist)
+                    
+                    self.setList(lists: lList)
                     DispatchQueue.main.async {
                         alert.dismiss(animated: true, completion: nil)
                     }
@@ -77,55 +92,76 @@ class GetLists: NSObject {
             }
             
         })
+        
     }
     
 
-    func setList(list1:[Dictionary<String,Any>],list2:[Dictionary<String,Any>],list3:[Dictionary<String,Any>]) {
-        grd_lst = []
-        jitaArray = []
-        hiritsuArr = []
-        
-        for li in list1 {
-            let cd = li["GRDCD"] as? String ?? ""
-            let nm = li["GRDNM"] as? String ?? ""
-            grd_lst.append((cd:cd, nm:nm))
-        }
-        
-        if grd_lst.count == 0 {
+    func setList(lists:[(key:String,list:[Dictionary<String,Any>])]) {
+
+        for obj in lists {
+            switch obj.key {
+            case "grdList":
+                grd_lst = []
+                for li in obj.list {
+                    let cd = li["GRDCD"] as? String ?? ""
+                    let nm = li["GRDNM"] as? String ?? ""
+                    grd_lst.append((cd:cd, nm:nm))
+                }
+                if grd_lst.count == 0 {
+                    //デフォルト値
+                }
+            case "jitaList":
+                jitaArray = []
+                for li in obj.list {
+                    let cd = li["KEY"] as? String ?? ""
+                    let nm = li["VALUE"] as? String ?? ""
+                    jitaArray.append((cd:cd, nm:nm))
+                }
+                
+                if jitaArray.count == 0 {
+                    jitaArray = [("1","自社"),("2","他社"),("3","再リフォーム")]
+                }
+            case "hiritsu":
+                hiritsuArr = []
+                for li in obj.list {
+                    let min = Int(li["MIN"] as! String) ?? 0
+                    let max = Int(li["MAX"] as! String) ?? 0
+                    if max != 0 {
+                        hiritsuArr += ([Int])(min...max)
+                    }else {
+                        hiritsuArr.append(min)
+                    }
+                }
+                if hiritsuArr.count == 0 {
+                    hiritsuArr = ([Int])(70...95)+[50,98,99,100]
+                }
+                hiritsuArr = hiritsuArr.sorted(by: {$0>$1})
+            case "koteiList":
+                koteiList = []
+                for li in obj.list {
+                    let key = li["KEY"] as? String ?? ""
+                    let val = li["VALUE"] as? String ?? ""
+                    koteiList.append((key:key, val:val))
+                }
+                if koteiList.count == 0 {
+                    //デフォルト値
+                }
+            case "wetherList":
+                weatherList = []
+                for li in obj.list {
+                    let key = li["KEY"] as? String ?? ""
+                    let val = li["VALUE"] as? String ?? ""
+                    weatherList.append((key:key, val:val))
+                }
+                if weatherList.count == 0 {
+                    //デフォルト値
+                }
+            default:
+                return
+            }
             
         }
-        
-        for li in list2 {
-            let cd = li["KEY"] as? String ?? ""
-            let nm = li["VALUE"] as? String ?? ""
-            jitaArray.append((cd:cd, nm:nm))
-        }
-        
-        if jitaArray.count == 0 {
-            jitaArray = [("1","自社"),("2","他社"),("3","再リフォーム")]
-        }
-        
-        for li in list3 {
-            let min = Int(li["MIN"] as! String) ?? 0
-            let max = Int(li["MAX"] as! String) ?? 0
-            if max != 0 {
-                hiritsuArr += ([Int])(min...max)
-            }else {
-                hiritsuArr.append(min)
-            }
-        }
-        
-        print(hiritsuArr)
-        if hiritsuArr.count == 0 {
-            hiritsuArr = ([Int])(70...95)+[50,98,99,100]
-        }
 
-        hiritsuArr = hiritsuArr.sorted(by: {$0>$1})
-
-//        print(grd_lst)
-//        print(jitaArray)
-//        print(hiritsuArr)
     }
-    
     
 }

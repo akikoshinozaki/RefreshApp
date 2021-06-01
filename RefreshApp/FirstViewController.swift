@@ -139,9 +139,9 @@ class FirstViewController: UIViewController {
     }
     
     
-    @IBAction func koutei(_ sender: Any) {
+    @IBAction func kotei(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main2", bundle: nil)
-        let recept = storyboard.instantiateViewController(withIdentifier: "koutei")
+        let recept = storyboard.instantiateViewController(withIdentifier: "kotei")
         self.navigationController?.pushViewController(recept, animated: true)
     }
     

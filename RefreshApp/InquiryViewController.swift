@@ -91,9 +91,6 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         tableView.dataSource = self
         imgCollection.delegate = self
         imgCollection.dataSource = self
-        infoCollection.delegate = self
-        infoCollection.dataSource = self
-        infoCollection.isPagingEnabled = true
         
     }
     
@@ -110,6 +107,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         layout.sectionInset = UIEdgeInsets(top: 0, left: 5, bottom: 5, right: 5)
         layout.sectionInsetReference = .fromSafeArea
         imgCollection.collectionViewLayout = layout
+        
     }
     
     
@@ -135,6 +133,10 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         var kanri = ""
         let formatter = DateFormatter()
         formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
+        infoCollection.delegate = self
+        infoCollection.dataSource = self
+        infoCollection.isPagingEnabled = true
+
 
         var yotei_hi = ""
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
@@ -169,144 +171,12 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
                                    grade2: json["GRADE2"] as? String ?? "",
                                    ritsu2: json["RITSU2"] as? String ?? "0.0",
                                    jita2: json["JITAK2"] as? String ?? "")
-        
-        //let detail:DetailView = DetailView(frame: self.infoView.frame)
+        keiyakuNO = json["KEI_NO"] as? String ?? ""
+        /*
         if detail == nil {return}
         if detail2 == nil {return}
         print("detail not nil")
-
-        //１ページ目
-        detail.tagLabel.text = printData.tagNO
-        detail.syohinLabel.text = printData.itemCD+": "+printData.itemNM
-        detail.pattenLabel.text = json["PATERN"] as? String ?? ""
-        detail.classLabel.text = json["CLASS"] as? String ?? ""
-        keiyakuNO = json["KEI_NO"] as? String ?? ""
-        detail.keiyakuLabel.text = keiyakuNO
-
-        if printData.customer != "" {
-            detail.customerLabel.text = printData.customer+" 様"
-        }
-        //優先
-        detail.yusenLabel.isHidden = true
-        if let yusen = json["YUSEN"] as? String, yusen != " " {
-            detail.yusenLabel.isHidden = false
-        }
-        //1枚目
-        //自社・他社区分1
-        if let jita = json["JITAK1"] as? String, jita != "" {
-            let jita_k = Int(jita) ?? 0
-            if jita_k > 0 {
-                let obj = jitaArray[jita_k-1]
-                detail.jitak1Label.text = obj.cd+":"+obj.nm
-            }
-        }
-        //羽毛グレード1
-        if let grd1 = json["GRADE1"] as? String, grd1 != "  " {
-            if let obj = grd_lst.first(where: {$0.cd==grd1}) {
-                detail.grade1Label.text = obj.nm
-            }
-        }
-        //原料比率1
-        if let ritsu = Double(json["RITSU1"] as? String ?? "0.0"), ritsu != 0.0 {
-            detail.ritsu1Label.text = "\(Int(ritsu))"
-        }
-        //2枚目
-        //自社・他社区分2
-        if let jita = json["JITAK2"] as? String, jita != "" {
-            let jita_k = Int(jita) ?? 0
-            if jita_k > 0 {
-                let obj = jitaArray[jita_k-1]
-                detail.jitak2Label.text = obj.cd+":"+obj.nm
-            }
-        }
-        //羽毛グレード2
-        if let grd2 = json["GRADE2"] as? String, grd2 != "  " {
-            if let obj = grd_lst.first(where: {$0.cd==grd2}) {
-                detail.grade2Label.text = obj.nm
-            }
-        }
-        //原料比率2
-        if let ritsu = Double(json["RITSU2"] as? String ?? "0.0"), ritsu != 0.0 {
-            detail.ritsu2Label.text = "\(Int(ritsu))"
-        }
-        
-        //仕上り重量
-        if var wata = json["WATA"] as? String, wata != "0.0" {
-            wata = wata.trimmingCharacters(in: .whitespaces)
-            if let dwata = Double(wata) {
-                detail.juryoLabel.text = "\(dwata)"
-            }else {
-                detail.juryoLabel.text = wata
-            }
-        }
-        
-        //足し羽毛
-        if let zogen = json["ZOGEN"] as? String, zogen != "0"{
-            detail.zogenLabel.text = zogen
-        }
-
-        //製造日
-        
-        if let seizou = json["SEIZOU"] as? String, seizou != "00000000"{
-            let date = seizou.date
-            let yy = Calendar.current.component(.year, from: date)
-            let mm = Calendar.current.component(.month, from: date)
-            detail.seizouLabel.text = "\(yy)年\(mm)月"
-
-        }
-        //納期・期限
-        if printData.nouki != "0/00/00" {
-            detail.noukiLabel.text = printData.nouki
-        }
-        if printData.kigen != "0/00/00" {
-            detail.kigenLabel.text = printData.kigen
-        }
-        if let yuuyo = json["YUUYO"] as? String, yuuyo != "0" {
-            detail.yuuyoLabel.text = yuuyo.trimmingCharacters(in: .whitespaces)
-        }
-        
-        detail.gawaLnkBtn.addTarget(self, action: #selector(gawaLink(_:)), for: .touchUpInside)
-        //２ページ目
-        //預り重量
-        //洗浄後重量
-        //洗浄前重量
-        //投入重量
-        //受付検査
-        if var kensa = json["UKE_KNS"] as? String, kensa != "0" {
-            if kensa.count == 8 {
-                let str = Array(kensa)
-                kensa = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-            }
-            detail2.kensaLabel.text = kensa
-        }
-        //受付
-        if var uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
-            if uketuke.count == 8 {
-                let str = Array(uketuke)
-                uketuke = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-            }
-            detail2.ukeLabel.text = uketuke
-        }
-        //ばらし
-        //洗浄
-        //投入
-        //最終検査
-        if var saisyu = json["SAISYU"] as? String, saisyu != "0" {
-            if saisyu.count == 8 {
-                let str = Array(saisyu)
-                saisyu = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-            }
-            detail2.saisyuLabel.text = saisyu
-        }
-        //出荷
-        if var syukka = json["SYUKKA"] as? String, syukka != "20000000" {
-            if syukka.count == 8 {
-                let str = Array(syukka)
-                syukka = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-            }
-            detail2.syukkaLabel.text = syukka
-        }
-        
+ */
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
         
@@ -333,6 +203,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         }
         keiyakuLabel.text = keiyakuNO
         self.tableView.reloadData()
+        self.infoCollection.reloadData()
         //infoCollectionを１ページ目にセット
         self.infoCollection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
@@ -601,9 +472,9 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         
     }
     
-    
+    var iArr:[UIImage] = []
     func imgDL(arr:[String], tag:String, syu:String) {
-        var iArr:[UIImage] = []
+        iArr = []
 //        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
         //self.present(imgAlert, animated: true, completion: nil)
         DispatchQueue.global().async {
@@ -618,7 +489,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
                     let imageData = try Data(contentsOf: url)
                     let img = UIImage(data:imageData)
                     
-                    iArr.append(img!)
+                    self.iArr.append(img!)
                     
                 }catch {
                     //エラー
@@ -629,19 +500,14 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         
             DispatchQueue.main.async {
                 if syu == "tagNo" {
-                    self.tagImg = iArr
+                    self.tagImg = self.iArr
                     if arr.count > 0 {
                         self.photoView.isHidden = false
                         self.imgCollection.reloadData()
                     }
                     
                 }else {  //syoCD
-                    self.gawaImg = iArr
-                    if iArr.count > 0 {
-                        self.detail.syohinLabel.textColor = .systemBlue
-                    }else {
-                        self.detail.syohinLabel.textColor = .black
-                    }
+                    self.gawaImg = self.iArr
                 }
             }
         }
@@ -773,22 +639,30 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             let colSize = collectionView.frame.size
             if indexPath.row == 0 { //1ページ目
-                detail = DetailView(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height))
+                detail = DetailView(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height), json: _json)
                 detail.nextBtn.tag = 901
                 detail.nextBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
+                detail.backBtn.isHidden = true
+                detail.gawaLnkBtn.addTarget(self, action: #selector(gawaLink(_:)), for: .touchUpInside)
                 for lbl in detail.labels{ //初期化
                     lbl.text = ""
+                }
+                if iArr.count > 0 {//リンクボタン青くする
+                    self.detail.syohinLabel.textColor = .systemBlue
+                }else {
+                    self.detail.syohinLabel.textColor = .black
                 }
                 cell.contentView.addSubview(detail)
 
             } else {
                 //2ページ目
-                detail2 = DetailView2(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height))
+                detail2 = DetailView2(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height), json: _json)
+                detail2.nextBtn.isHidden = true
                 detail2.backBtn.tag = 902
                 detail2.backBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
-                for lbl in detail2.labels{ //初期化
-                    lbl.text = ""
-                }
+//                for lbl in detail2.labels{ //初期化
+//                    lbl.text = ""
+//                }
                 cell.contentView.addSubview(detail2)
             }
             return cell

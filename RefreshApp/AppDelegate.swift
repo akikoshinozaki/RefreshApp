@@ -99,6 +99,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             //最終起動日が今日じゃなければセット
             defaults.setValue(Date().string2, forKey: "lastLaunchDate")
             defaults.removeObject(forKey: "yoteiHI")
+            //
+            defaults.removeObject(forKey: "weather") //天気
+            defaults.removeObject(forKey: "temperature") //気温
+            defaults.removeObject(forKey: "humidity") //湿度
+            defaults.removeObject(forKey: "tareWeight") //風袋
         }
 
     }
@@ -123,17 +128,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             //データ取得
             GetLists().getList()
         }else {
-            //ユーザーデフォルト呼び出し
-            let list1 = defaults.object(forKey: "grdList") as? [Dictionary<String,Any>] ?? []
-            let list2 = defaults.object(forKey: "jitaList") as? [Dictionary<String,Any>] ?? []
-            let list3 = defaults.object(forKey: "hiritsu") as? [Dictionary<String,Any>] ?? []
             
-//            print(list1)
-//            print(list2)
-//            print(list3)
-            if !list1.isEmpty, !list2.isEmpty, !list3.isEmpty {
+            lList = []
+            var isEmpty:Bool = false
+            //ユーザーデフォルト呼び出し
+
+            for key in kList {
+                let list = defaults.object(forKey: key) as? [Dictionary<String,Any>] ?? []
+                lList.append((key:key, list:list))
+                if list.count==0 { //5つのリストのうち1つでもからだったらisEmptyとする
+                    isEmpty = true
+                }
+            }
+            
+            if !isEmpty {
                 //print(list)
-                GetLists().setList(list1: list1, list2:list2, list3:list3)
+                GetLists().setList(lists: lList)
+                
             }else {
                 //データ取得
                 GetLists().getList()
@@ -169,10 +180,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
 
         SimpleAlert.make(title: "サーバーに接続できません", message: errStr)
         //ユーザーデフォルトがあれば、セット
-        let list1 = defaults.object(forKey: "grdList") as? [Dictionary<String,Any>] ?? []
-        let list2 = defaults.object(forKey: "jitaList") as? [Dictionary<String,Any>] ?? []
-        let list3 = defaults.object(forKey: "hiritsu") as? [Dictionary<String,Any>] ?? []
-        GetLists().setList(list1: list1, list2:list2, list3: list3)
+        lList = []
+        for key in kList {
+            let list = defaults.object(forKey: key) as? [Dictionary<String,Any>] ?? []
+            lList.append((key:key, list:list))
+        }
+        print(lList)
+        GetLists().setList(lists: lList)
 
     }
 }

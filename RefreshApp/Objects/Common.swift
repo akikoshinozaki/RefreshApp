@@ -47,6 +47,18 @@ extension String {
         df.dateFormat = "yyyyMMdd"
         return df.date(from: self)!
     }
+    
+    // 英数字かどうか
+    var isAlphanumeric:Bool {
+        let range = "[a-zA-Z0-9]+"
+        return NSPredicate(format: "SELF MATCHES %@", range).evaluate(with: self)
+    }
+    
+    var isNumeric:Bool {
+        let range = "[0-9&\\.]+"
+        return NSPredicate(format: "SELF MATCHES %@", range).evaluate(with: self)
+        //return NSPredicate(format: "SELF MATCHES '\\\\d+'").evaluate(with: self)
+    }
 }
 
 typealias CompletionClosure = ((_ resultString:String?,_ resultJson:Dictionary<String,Any>?, _ err:Error?) -> Void)
