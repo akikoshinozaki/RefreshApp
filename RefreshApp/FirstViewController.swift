@@ -32,6 +32,7 @@ class FirstViewController: UIViewController {
     @IBOutlet weak var label1: UILabel!
     @IBOutlet weak var envLabel: UILabel!
     @IBOutlet weak var devControl: UISegmentedControl!
+    @IBOutlet weak var koteiBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +44,9 @@ class FirstViewController: UIViewController {
         for btn in btns {
             btn.layer.cornerRadius = 8
         }
+        koteiBtn.layer.borderWidth = 2
+        koteiBtn.layer.borderColor = UIColor.systemBlue.cgColor
+
         //本番のデプロイのみ隠しボタン設置
         #if DEV
         #else

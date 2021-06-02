@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -451,7 +451,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="洗浄前重量" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Maf-iX-cDz">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="重量(風袋込み)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Maf-iX-cDz">
                                         <rect key="frame" x="0.0" y="285" width="126" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -563,7 +563,7 @@
                                         <rect key="frame" x="150" y="50" width="99" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="社員名" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KoK-Gm-hVB">
                                         <rect key="frame" x="274" y="56" width="188" height="21"/>
@@ -579,21 +579,39 @@
                                     <constraint firstAttribute="height" constant="505" id="cKZ-7r-flp"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ばらし" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xyf-9b-2GI">
-                                <rect key="frame" x="512" y="132" width="462" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZbP-qk-PXp">
+                                <rect key="frame" x="450" y="20" width="284" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="AN7-zd-3NJ"/>
+                                    <constraint firstAttribute="width" constant="284" id="N18-wC-cXU"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="工程" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="awM-26-1if">
+                                <rect key="frame" x="512" y="142" width="102" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="woD-9c-23g">
+                                <rect key="frame" x="656" y="137" width="176" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ha0-2o-3aV"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="ZbP-qk-PXp" firstAttribute="leading" secondItem="HBi-Lc-NMz" secondAttribute="trailing" constant="106" id="ANl-Pf-iuG"/>
                             <constraint firstItem="uug-dL-1lJ" firstAttribute="leading" secondItem="ha0-2o-3aV" secondAttribute="leading" constant="20" id="IAu-dk-aHP"/>
                             <constraint firstItem="ha0-2o-3aV" firstAttribute="bottom" secondItem="uug-dL-1lJ" secondAttribute="bottom" constant="15" id="Jp4-ol-wN5"/>
                             <constraint firstItem="HBi-Lc-NMz" firstAttribute="top" secondItem="ha0-2o-3aV" secondAttribute="top" constant="5" id="NSV-aj-QhN"/>
                             <constraint firstItem="ha0-2o-3aV" firstAttribute="bottom" secondItem="MUW-tL-8wg" secondAttribute="bottom" constant="50" id="dch-8G-2Db"/>
+                            <constraint firstItem="ZbP-qk-PXp" firstAttribute="top" secondItem="ha0-2o-3aV" secondAttribute="top" constant="20" id="emA-IX-afE"/>
                             <constraint firstItem="uug-dL-1lJ" firstAttribute="top" secondItem="HBi-Lc-NMz" secondAttribute="bottom" constant="15" id="fFk-Ja-xrc"/>
                             <constraint firstItem="ha0-2o-3aV" firstAttribute="bottom" secondItem="uug-dL-1lJ" secondAttribute="bottom" constant="15" id="h2w-7c-7Md"/>
                             <constraint firstItem="HBi-Lc-NMz" firstAttribute="leading" secondItem="ha0-2o-3aV" secondAttribute="leading" constant="20" id="nky-KZ-BL0"/>
@@ -604,6 +622,8 @@
                         <outlet property="humidField" destination="qbt-nK-VcB" id="QIo-iP-Px0"/>
                         <outlet property="infoCollection" destination="ame-ni-GbG" id="JCg-ev-CRv"/>
                         <outlet property="infoView" destination="uug-dL-1lJ" id="Ymp-px-Wlx"/>
+                        <outlet property="kanriLabel" destination="ZbP-qk-PXp" id="1zp-MV-FGG"/>
+                        <outlet property="koteiBtn" destination="woD-9c-23g" id="Nht-3r-CJu"/>
                         <outlet property="scanBtn" destination="N5D-H9-ahN" id="Dp6-1s-KUg"/>
                         <outlet property="syainField" destination="g2d-XC-bcT" id="hcJ-p0-jDq"/>
                         <outlet property="syainLabel" destination="KoK-Gm-hVB" id="5eo-zc-beN"/>
@@ -821,7 +841,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bZp-nU-liZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="691" y="-595"/>
+            <point key="canvasLocation" x="692" y="-723"/>
         </scene>
         <!--Reception View Controller-->
         <scene sceneID="vNn-4h-uqP">
@@ -1190,7 +1210,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TXs-px-HCX" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="758.7890625" y="-595.3125"/>
+            <point key="canvasLocation" x="800" y="-606"/>
         </scene>
     </scenes>
     <resources>

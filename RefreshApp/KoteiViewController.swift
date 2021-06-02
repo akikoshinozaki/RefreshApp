@@ -18,6 +18,8 @@ class KoteiViewController: UIViewController {
     @IBOutlet weak var scanBtn: UIButton!
     var scanner:ScannerView!
     @IBOutlet weak var tagLabel: UILabel!
+    @IBOutlet weak var kanriLabel: UILabel!
+    @IBOutlet weak var koteiBtn: UIButton!
     
     @IBOutlet var textFields: [UITextField]!
     @IBOutlet weak var tagField: UITextField!
@@ -39,6 +41,7 @@ class KoteiViewController: UIViewController {
     var weight:Double!
     var workDay:Date!
     var tareWeight:Double = 0.2
+    var maxrow:Int = 0//工程選択ピッカー用
     
     /* inquiryVCからコピー ---START---*/
     @IBOutlet weak var yoteiLabel:UILabel!
@@ -59,8 +62,9 @@ class KoteiViewController: UIViewController {
         // Do any additional setup after loading the view.
         dspInit()
         scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
-        
-        print(koteiList)
+        koteiBtn.addTarget(self, action: #selector(selectKotei(_:)), for: .touchUpInside)
+
+        //        print(koteiList)
 //        print(weatherList)
 
     }
@@ -114,8 +118,13 @@ class KoteiViewController: UIViewController {
     }
     
     func dspInit(){
+        tagLabel.text = ""
+        kanriLabel.text = ""
         infoView.isHidden = true
-        kotei = "04" //"04:ばらし"
+        kotei = "" //"04:ばらし"
+        koteiBtn.setTitle("", for: .normal)
+        koteiBtn.isEnabled = false
+        
         _tagNO = ""
         weight = 0
         workDay = Date()
@@ -138,12 +147,9 @@ class KoteiViewController: UIViewController {
         IBM().IBMRequest(type: type, parameter: param, completionClosure: {(_,json,err) in
             //print("IBMRequest")
             _json = nil
-            printData = nil
             
             if err == nil, json != nil {
-                //print(json!)
                 _json = json
-                //print(json!["CUSTOMER_NM"] as? String ?? "")
                 if json!["RTNCD"] as! String != "000" {
                     var msg = ""
                     for m in json!["RTNMSG"] as? [String] ?? [] {
@@ -197,17 +203,42 @@ class KoteiViewController: UIViewController {
         workDay = sender.date
         workField.text = sender.date.toString(format: "yyyy年MM月dd日")
     }
+    
+    
+    @objc func selectKotei(_ sender:UIButton) {
+        var array:[String] = []
+        var popTitle = ""
+        var row:Int = 0
+        popTitle = "工程選択"
+        row = koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
+        
+        //array = koteiList.map({($0.key+":"+$0.val)})
+        array = koteiList[0...maxrow].map({($0.key+":"+$0.val)})
+
+        let font = UIFont(name: "HelveticaNeue",size: 17.0)!
+        let picker = StringPickerPopover(title: popTitle, choices: array)
+            .setFont(font)
+            .setDoneButton(action: {
+                (_, idx, item) in
+                
+                sender.setTitle(item, for: .normal)
+                self.kotei = koteiList[idx].key
+                
+            })
+            .setSelectedRow(row)
+            .setCancelButton(action: { _,_,_ in print("キャンセル") })
+        picker.appear(originView: sender, baseViewController: self)
+
+    }
         
     func selectWeather(_ textField:UITextField) {
-        //print(textField.tag)
         
         var array:[String] = []
         var popTitle = ""
         var row:Int = 0
         
-            //自社・他社
-            array = weatherList.map({($0.key+":"+$0.val)})
-            popTitle = "天気"
+        array = weatherList.map({($0.key+":"+$0.val)})
+        popTitle = "天気"
         row = weatherList.firstIndex(where: {$0.key==weather}) ?? 0
         
         let font = UIFont(name: "HelveticaNeue",size: 17.0)!
@@ -233,6 +264,9 @@ class KoteiViewController: UIViewController {
         self.view.endEditing(true)
         var errStr:[String] = []
         //ブランクチェック
+        if kotei == "" {
+            errStr.append("工程を選択してください")
+        }
         if _tagNO == "" {
             errStr.append("TAGを読み込んでください")
         }
@@ -259,11 +293,13 @@ class KoteiViewController: UIViewController {
             var param:[String:Any] = [:]
             param["TAG_NO"] = _tagNO
             param["SYAIN"] = _syainCD
-            param["KOTEI"] = "04"
+            param["KOTEI"] = kotei
             param["DATE"] = workDay.string2
             param["TEMP"] = temperature
             param["HUMID"] = humidity
-            param["WEIGHT"] = String(weight-tareWeight)
+            //浮動小数点数の誤差対応
+            let w = floor((weight-tareWeight)*100)/100
+            param["WEIGHT"] = String(w)
             param["WEATHER"] = weather
             
             print(param)
@@ -584,17 +620,15 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
     
     func display(json:Dictionary<String,Any>){
 //        keiMeisai = []
-//        kanriLabel.text = ""
+        kanriLabel.text = ""
         keiyakuNO = ""
         _tagNO = json["TAG_NO"] as? String ?? ""
-        //var kanri = ""
-        let formatter = DateFormatter()
-        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "ydMMM", options: 0, locale: Locale(identifier: "ja_JP"))
+        var kanri = ""
         infoCollection.delegate = self
         infoCollection.dataSource = self
         infoCollection.isPagingEnabled = true
 
-        var yotei_hi = ""
+        //var yotei_hi = ""
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
             //登録済み → 再印刷or削除
             infoView.isHidden = false
@@ -605,42 +639,43 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
             infoView.layer.shadowOpacity = 0.6
             infoView.layer.shadowRadius = 4
             
-            yotei_hi = yotei.date.short
-            yoteiLabel.text = formatter.string(from: yotei.date)
-            //kanri = yotei
+            //yotei_hi = yotei.date.short
+            yoteiLabel.text = yotei.date.toString(format: "yyyy年MM月dd日")
+            kanri = yotei
         }else {
             //未登録 → 登録&印刷
             SimpleAlert.make(title: "登録なし", message: "リフレッシュ受付がされていません")
             return
         }
-/*
-        kanri += "-"+printData.renban+"-"+printData.tagNO
-        kanriLabel.text = kanri
-        
-        //明細
-        if let arr = json["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
-            //seizouLabel.text = formatter.string(from: seizou.date)
-            for dic in arr {
-                print(dic)
-                var azukari = ""
-                if let azu = dic["AZU_HI"] as? String, azu.count == 6  { //預かり日yy/mm/ddに変換
-                    let str = Array(azu)
-                    azukari = str[0...1]+"/"+str[2...3]+"/"+str[4...5]
-                    
-                }
-                let obj = KEIYAKU(tag: dic["TAG_NO"] as? String ?? "",
-                                  syohinCD: dic["SYOHIN_CD"] as? String ?? "",
-                                  syohinNM: dic["SYOHIN_NM"] as? String ?? "",
-                                  jyotai: dic["JYOTAI"] as? String ?? "",
-                                  azukari: azukari
-                )
 
-                keiMeisai.append(obj)
-            }
-        }
-        keiyakuLabel.text = keiyakuNO
-        self.tableView.reloadData()*/
+        let renban = json["RENBAN"] as? String ?? ""
+        kanri += "-"+renban+"-"+_tagNO
+        kanriLabel.text = kanri
+        tagLabel.text = _tagNO
         
+        //工程を確認
+        koteiBtn.isEnabled = true
+        if let arr = json["KOTEI_LST"] as? [Dictionary<String,Any>], arr.count>0 {
+
+            var koteiArr = arr.map({$0["KOTEI"] as? String ?? ""})
+            koteiArr.sort()
+            print(koteiArr.last!)
+            let ko = koteiArr.last! //既に登録済みの工程
+            var idx = Int(koteiList.firstIndex(where: {$0.key==ko}) ?? 0)
+            print(idx)
+            if idx < koteiList.count-1 {
+                idx += 1
+            }
+            kotei = koteiList[idx].key
+            koteiBtn.setTitle(koteiList[idx].val, for: .normal)
+
+        }else {
+            //工程履歴がなければ、バラシから
+            kotei = "04"
+            koteiBtn.setTitle("ばらし", for: .normal)
+        }
+        
+        maxrow = koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
         self.infoCollection.reloadData()
         //infoCollectionを１ページ目にセット
         self.infoCollection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)

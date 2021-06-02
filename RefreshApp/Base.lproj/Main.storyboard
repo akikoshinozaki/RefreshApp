@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ngb-X9-bSv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ngb-X9-bSv">
     <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -149,6 +149,7 @@
                                     <constraint firstAttribute="width" constant="200" id="3w7-mD-lo6"/>
                                     <constraint firstAttribute="height" constant="200" id="93q-hd-59q"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="工程管理"/>
                                 <connections>
                                     <action selector="kotei:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iGh-tc-J8y"/>
@@ -196,6 +197,7 @@
                         <outlet property="devView" destination="Bar-bJ-Dbz" id="8xM-Iu-BK8"/>
                         <outlet property="envLabel" destination="E1b-fZ-Uax" id="Laj-kz-mNk"/>
                         <outlet property="hiddenBtn" destination="Nky-R6-zzw" id="S90-aW-5Nm"/>
+                        <outlet property="koteiBtn" destination="XBV-Va-I3M" id="pTk-62-V3w"/>
                         <outlet property="label1" destination="hUJ-P7-oYW" id="nt1-IU-jfP"/>
                         <outlet property="titleLabel" destination="ykg-DG-BoR" id="Nlj-fs-Y4A"/>
                         <outlet property="versionLabel" destination="3aj-sx-v9r" id="Ftp-jl-XpZ"/>
@@ -203,6 +205,7 @@
                         <outletCollection property="btns" destination="QhZ-ot-OCy" collectionClass="NSMutableArray" id="vjz-ip-Afb"/>
                         <outletCollection property="btns" destination="7jC-8H-hV1" collectionClass="NSMutableArray" id="iXc-O8-Z7s"/>
                         <outletCollection property="btns" destination="XWw-nH-MA4" collectionClass="NSMutableArray" id="rnc-YW-bzC"/>
+                        <outletCollection property="btns" destination="XBV-Va-I3M" collectionClass="NSMutableArray" id="wUP-qH-McT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

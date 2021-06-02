@@ -472,9 +472,8 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         
     }
     
-    var iArr:[UIImage] = []
     func imgDL(arr:[String], tag:String, syu:String) {
-        iArr = []
+        var iArr:[UIImage] = []
 //        let imgAlert = UIAlertController(title: "ダウンロード中", message: "しばらくお待ちください", preferredStyle: .alert)
         //self.present(imgAlert, animated: true, completion: nil)
         DispatchQueue.global().async {
@@ -489,7 +488,7 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
                     let imageData = try Data(contentsOf: url)
                     let img = UIImage(data:imageData)
                     
-                    self.iArr.append(img!)
+                    iArr.append(img!)
                     
                 }catch {
                     //エラー
@@ -500,14 +499,21 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         
             DispatchQueue.main.async {
                 if syu == "tagNo" {
-                    self.tagImg = self.iArr
+                    self.tagImg = iArr
                     if arr.count > 0 {
                         self.photoView.isHidden = false
                         self.imgCollection.reloadData()
                     }
                     
                 }else {  //syoCD
-                    self.gawaImg = self.iArr
+                    self.gawaImg = iArr
+                    if self.detail != nil{
+                        if self.gawaImg.count > 0 {//リンクボタン青くする
+                            self.detail.syohinLabel.textColor = .systemBlue
+                        }else {
+                            self.detail.syohinLabel.textColor = .black
+                        }
+                    }
                 }
             }
         }
@@ -647,11 +653,7 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
                 for lbl in detail.labels{ //初期化
                     lbl.text = ""
                 }
-                if iArr.count > 0 {//リンクボタン青くする
-                    self.detail.syohinLabel.textColor = .systemBlue
-                }else {
-                    self.detail.syohinLabel.textColor = .black
-                }
+                
                 cell.contentView.addSubview(detail)
 
             } else {

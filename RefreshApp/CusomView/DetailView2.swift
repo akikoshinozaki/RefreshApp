@@ -64,117 +64,81 @@ class DetailView2: UIView {
             //self.kensaLabel.text = kensa
             kotei1.date = kensa
         }
-        //受付
-//        var kotei2 = Kotei(kotei: "受付")
-//        if var uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
-//            if uketuke.count == 8 {
-//                let str = Array(uketuke)
-//                uketuke = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-//            }
-//            //self.ukeLabel.text = uketuke
-//            kotei2.date = uketuke
-//        }
-        koteiArray = [kotei1]
         
+        var kotei2 = Kotei(kotei: "工場受付")
+        if var uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
+            if uketuke.count == 8 {
+                let str = Array(uketuke)
+                uketuke = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+            }
+            kotei2.date = uketuke
+        }
+        
+        koteiArray = [kotei1,kotei2]
         //ばらし・洗浄・投入
-        if let arr = json["KOTEI_LST"] as? [Dictionary<String,Any>], arr.count>0 {
+        //print(json)
+        if let arr = json["KOTEI_LST"] as? [Dictionary<String,Any>] {
             
             for list in koteiList {
                 var kotei = Kotei(kotei:list.val,date:"未")
-                
-                for dic in arr {
-                    print(dic)
-                    var date = ""
-                    if let _date = dic["DATE"] as? String, _date.count == 8  { //yyyy/mm/ddに変換
-                        let str = Array(_date)
-                        date = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-                    }
-                    
-                    if dic["KOTEI"] as? String == list.key {
-                        print(list.val+" = "+date)
-                        var weather  = ""
-                        if let cd = dic["WEATHER"] as? String{
-                            if let obj = weatherList.first(where: {$0.key==cd}) {
-                                weather = obj.val
-                            }
+                //工場受付
+                if list.key == "03" {
+//                    if var uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
+//                        if uketuke.count == 8 {
+//                            let str = Array(uketuke)
+//                            uketuke = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+//                        }
+//                        print(uketuke)
+//                        kotei.date = uketuke
+//                    }
+                    //最終検査
+                }else if list.key == "07" {
+                    if var saisyu = json["SAISYU"] as? String, saisyu != "0" {
+                        if saisyu.count == 8 {
+                            let str = Array(saisyu)
+                            saisyu = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
                         }
-                        kotei = Kotei(kotei:list.val,
-                                      date:date,
-                                      tanto:dic["TANTO"] as? String ?? "",
-                                      juryo:dic["JURYO"] as? String ?? "",
-                                      temp:dic["TEMP"] as? String ?? "",
-                                      humid:dic["HUMID"] as? String ?? "",
-                                      weather:weather
-                        )
+                        kotei.date = saisyu
+                    }
+                    //}else if list.key == "" {
+                    
+                }else {
+                    for dic in arr {
+                        //print(dic)
+                        var date = ""
+                        if let _date = dic["DATE"] as? String, _date.count == 8  { //yyyy/mm/ddに変換
+                            let str = Array(_date)
+                            date = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                        }
                         
-                    }else if list.key == "03" { //工場受付
-                        if var uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
-                            if uketuke.count == 8 {
-                                let str = Array(uketuke)
-                                uketuke = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                        if dic["KOTEI"] as? String == list.key {
+                            //print(list.val+" = "+date)
+                            var weather  = ""
+                            if let cd = dic["WEATHER"] as? String{
+                                if let obj = weatherList.first(where: {$0.key==cd}) {
+                                    weather = obj.val
+                                }
                             }
-                            kotei.date = uketuke
+                            kotei = Kotei(kotei:list.val,
+                                          date:date,
+                                          tanto:dic["TANTO"] as? String ?? "",
+                                          juryo:dic["JURYO"] as? String ?? "",
+                                          temp:dic["TEMP"] as? String ?? "",
+                                          humid:dic["HUMID"] as? String ?? "",
+                                          weather:weather
+                            )
+                            
                         }
+                        
                     }
-                    
                 }
                 koteiArray.append(kotei)
                 
             }
-            /*
-            for dic in arr {
-                print(dic)
-                var date = ""
-                if let _date = dic["DATE"] as? String, _date.count == 8  { //yyyy/mm/ddに変換
-                    let str = Array(_date)
-                    date = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-                }
-                
-                print(koteiList)
-                for list in koteiList {
-                    var kotei = Kotei()
-                    if dic["KOTEI"] as? String == list.key {
-                        print(list.val+" = "+date)
-                        var weather  = ""
-                        if let cd = dic["WEATHER"] as? String{
-                            if let obj = weatherList.first(where: {$0.key==cd}) {
-                                weather = obj.val
-                            }
-                        }
-                        kotei = Kotei(kotei:list.val,
-                                      date:date,
-                                      tanto:dic["TANTO"] as? String ?? "",
-                                      juryo:dic["JURYO"] as? String ?? "",
-                                      temp:dic["TEMP"] as? String ?? "",
-                                      humid:dic["HUMID"] as? String ?? "",
-                                      weather:weather
-                        )
-
-                    }else {
-                        kotei = Kotei(kotei:list.val,
-                                      date:"未")
-                    }
-                    koteiArray.append(kotei)
-                    
-                }
-                
-            }
- */
         }
-        //最終検査
-        var kotei3 = Kotei(kotei: "最終検査",date:"未")
-        if var saisyu = json["SAISYU"] as? String, saisyu != "0" {
-            if saisyu.count == 8 {
-                let str = Array(saisyu)
-                saisyu = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
-            }
-            
-            //self.saisyuLabel.text = saisyu
-            kotei3.date = saisyu
-        }
-        koteiArray.append(kotei3)
+        
         //出荷
-        var kotei4 = Kotei(kotei: "出荷",date:"未")
+        var kotei4 = Kotei(kotei: "出荷予定",date:"未")
         if var syukka = json["SYUKKA"] as? String, syukka != "20000000" {
             if syukka.count == 8 {
                 let str = Array(syukka)

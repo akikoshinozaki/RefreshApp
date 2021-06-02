@@ -387,9 +387,9 @@
 			isa = PBXGroup;
 			children = (
 				4E6E771025D36F4E00BBA885 /* BRLabelView.xib */,
+				4E6E771325D36F6500BBA885 /* BRLabelView.swift */,
 				4EE50239262531C600AAE522 /* BRLabelView2.swift */,
 				4EE502362625181C00AAE522 /* BRLavelView2.xib */,
-				4E6E771325D36F6500BBA885 /* BRLabelView.swift */,
 				4E50A5BD25F767960015B997 /* _BRLabelView.xib */,
 				4EBCC91125BE9A0100882906 /* SelectDateView.xib */,
 				4EBCC91325BE9A2C00882906 /* SelectDateView.swift */,
@@ -796,7 +796,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.33;
+				CURRENT_PROJECT_VERSION = 1.34;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -812,7 +812,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.33;
+				MARKETING_VERSION = 1.34;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -830,7 +830,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.33;
+				CURRENT_PROJECT_VERSION = 1.34;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -846,7 +846,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.33;
+				MARKETING_VERSION = 1.34;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -926,7 +926,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.33;
+				CURRENT_PROJECT_VERSION = 1.34;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -942,7 +942,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.33;
+				MARKETING_VERSION = 1.34;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -1017,7 +1017,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.33;
+				CURRENT_PROJECT_VERSION = 1.34;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -1033,7 +1033,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.33;
+				MARKETING_VERSION = 1.34;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
