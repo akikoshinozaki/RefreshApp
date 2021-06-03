@@ -141,7 +141,8 @@ class GetLists: NSObject {
                 for li in obj.list {
                     let key = li["KEY"] as? String ?? ""
                     let val = li["VALUE"] as? String ?? ""
-                    koteiList.append((key:key, val:val))
+                    let flag = li["FLAG"] as? String == "1"
+                    koteiList.append((key:key, val:val, flag:flag))
                 }
                 if koteiList.count == 0 {
                     //デフォルト値

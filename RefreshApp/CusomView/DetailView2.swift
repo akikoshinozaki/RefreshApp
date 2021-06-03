@@ -48,12 +48,108 @@ class DetailView2: UIView {
         // Drawing code
         if json == nil {return}
         //２ページ目
-        //預り重量
-        //洗浄後重量
-        //洗浄前重量
-        //投入重量
         koteiArray = []
         
+        for list in koteiList { // koteiList(IBMから取得した工程All)
+            var kotei = Kotei(kotei:list.val,date:"未")
+            
+            switch list.val {
+            //case "iPad受注入力": //BLK031
+            case "預かり日": //BLK005
+                if var azu = json["AZUKARI"] as? String, azu != "0" {
+                    if azu.count == 8 {
+                        let str = Array(azu)
+                        azu = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                    }
+                    kotei.date = azu
+                }
+            case "受付検査": //BLK031
+                if var kensa = json["UKE_KNS"] as? String, kensa != "0" {
+                    if kensa.count == 8 {
+                        let str = Array(kensa)
+                        kensa = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                    }
+                    kotei.date = kensa
+                }
+            case "工場受付": //BLX099
+                if var uketuke = json["UKETUKE"] as? String, uketuke != "20000000" {
+                    if uketuke.count == 8 {
+                        let str = Array(uketuke)
+                        uketuke = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                    }
+                    kotei.date = uketuke
+                }
+            case "最終検査": //FJB005
+                if var saisyu = json["SAISYU"] as? String, saisyu != "0" {
+                    if saisyu.count == 8 {
+                        let str = Array(saisyu)
+                        saisyu = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                    }
+                    kotei.date = saisyu
+                }
+            case "出荷": //BLK010
+                if var syukka = json["SYUKKA"] as? String, syukka != "20000000" {
+                    if syukka.count == 8 {
+                        let str = Array(syukka)
+                        syukka = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                    }
+                    kotei.date = syukka
+                }
+            default: //それ以外
+                if let arr = json["KOTEI_LST"] as? [Dictionary<String,Any>] {
+                    for dic in arr {
+                        //print(dic)
+                        var date = ""
+                        if let _date = dic["DATE"] as? String, _date.count == 8  { //yyyy/mm/ddに変換
+                            let str = Array(_date)
+                            date = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+                        }
+                        
+                        if dic["KOTEI"] as? String == list.key {
+                            //print(list.val+" = "+date)
+                            var weather  = ""
+                            if let cd = dic["WEATHER"] as? String{
+                                if let obj = weatherList.first(where: {$0.key==cd}) {
+                                    weather = obj.val
+                                }
+                            }
+                            kotei = Kotei(kotei:list.val,
+                                          date:date,
+                                          tanto:dic["TANTO"] as? String ?? "",
+                                          juryo:dic["JURYO"] as? String ?? "",
+                                          temp:dic["TEMP"] as? String ?? "",
+                                          humid:dic["HUMID"] as? String ?? "",
+                                          weather:weather
+                            )
+                            
+                        }
+                        
+                    }
+                }
+            }
+            
+            koteiArray.append(kotei)
+
+        }
+        //出荷
+        var kotei4 = Kotei(kotei: "出荷",date:"未")
+        if var syukka = json["SYUKKA"] as? String, syukka != "20000000" {
+            if syukka.count == 8 {
+                let str = Array(syukka)
+                syukka = str[0...3]+"/"+str[4...5]+"/"+str[6...7]
+            }
+            kotei4.date = syukka
+        }
+        koteiArray.append(kotei4)
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.allowsSelection = false
+        tableView.register(UINib(nibName: "DetailTableViewCell", bundle: nil), forCellReuseIdentifier: "DetailTableViewCell")
+        tableView.reloadData()
+    }
+    /*
+    func taihi(){
         //受付検査
         var kotei1 = Kotei(kotei: "受付検査")
         if var kensa = json["UKE_KNS"] as? String, kensa != "0" {
@@ -148,25 +244,24 @@ class DetailView2: UIView {
             kotei4.date = syukka
         }
         koteiArray.append(kotei4)
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.allowsSelection = false
-        tableView.register(UINib(nibName: "DetailTableViewCell", bundle: nil), forCellReuseIdentifier: "DetailTableViewCell")
-        tableView.reloadData()
     }
+ */
     
-//    //コードから生成したときに通る初期化処理
-//    override init(frame: CGRect, json:Dictionary<String,Any>!) {
-//        self.json = json
-//        super.init(frame: frame)
-//        self.nibInit()
-//    }
+
     init(frame: CGRect, json:Dictionary<String,Any>!) {
         self.json = json
         super.init(frame: frame)
         self.nibInit()
     }
+
+    /*//コードから生成したときに通る初期化処理
+    override init(frame: CGRect, json:Dictionary<String,Any>!) {
+        self.json = json
+        super.init(frame: frame)
+        self.nibInit()
+    }
+     */
+    
     // ストーリーボードで配置した時の初期化処理
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

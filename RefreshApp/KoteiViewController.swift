@@ -10,7 +10,7 @@ import UIKit
 import SwiftyPickerPopover
 
 var weatherList:[(key:String,val:String)] = []
-var koteiList:[(key:String,val:String)] = []
+var koteiList:[(key:String,val:String, flag:Bool)] = []
 
 
 class KoteiViewController: UIViewController {
@@ -20,6 +20,8 @@ class KoteiViewController: UIViewController {
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var kanriLabel: UILabel!
     @IBOutlet weak var koteiBtn: UIButton!
+    @IBOutlet weak var entryBtn: UIButton!
+    @IBOutlet weak var clearBtn: UIButton!
     
     @IBOutlet var textFields: [UITextField]!
     @IBOutlet weak var tagField: UITextField!
@@ -42,9 +44,10 @@ class KoteiViewController: UIViewController {
     var workDay:Date!
     var tareWeight:Double = 0.2
     var maxrow:Int = 0//工程選択ピッカー用
+    var _koteiList:[(key:String,val:String, flag:Bool)] = []
     
     /* inquiryVCからコピー ---START---*/
-    @IBOutlet weak var yoteiLabel:UILabel!
+    //@IBOutlet weak var yoteiLabel:UILabel!
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var infoCollection: UICollectionView!
     var conAlert:UIAlertController!
@@ -63,9 +66,9 @@ class KoteiViewController: UIViewController {
         dspInit()
         scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
         koteiBtn.addTarget(self, action: #selector(selectKotei(_:)), for: .touchUpInside)
-
-        //        print(koteiList)
-//        print(weatherList)
+        entryBtn.layer.cornerRadius = 8
+        clearBtn.layer.cornerRadius = 8
+        _koteiList = koteiList.filter({$0.flag==true})
 
     }
 
@@ -123,7 +126,9 @@ class KoteiViewController: UIViewController {
         infoView.isHidden = true
         kotei = "" //"04:ばらし"
         koteiBtn.setTitle("", for: .normal)
-        koteiBtn.isEnabled = false
+        //koteiBtn.isEnabled = false
+        koteiBtn.isHidden = true
+        entryBtn.isEnabled = false
         
         _tagNO = ""
         weight = 0
@@ -206,14 +211,14 @@ class KoteiViewController: UIViewController {
     
     
     @objc func selectKotei(_ sender:UIButton) {
+        print(maxrow)//ばらししか選択できない時はピッカー出さない
+        if maxrow == 0 {return}
         var array:[String] = []
         var popTitle = ""
         var row:Int = 0
         popTitle = "工程選択"
-        row = koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
-        
-        //array = koteiList.map({($0.key+":"+$0.val)})
-        array = koteiList[0...maxrow].map({($0.key+":"+$0.val)})
+        row = _koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
+        array = _koteiList[0...maxrow].map({($0.key+":"+$0.val)})
 
         let font = UIFont(name: "HelveticaNeue",size: 17.0)!
         let picker = StringPickerPopover(title: popTitle, choices: array)
@@ -221,8 +226,8 @@ class KoteiViewController: UIViewController {
             .setDoneButton(action: {
                 (_, idx, item) in
                 
-                sender.setTitle(item, for: .normal)
-                self.kotei = koteiList[idx].key
+                sender.setTitle(self._koteiList[idx].val, for: .normal)
+                self.kotei = self._koteiList[idx].key
                 
             })
             .setSelectedRow(row)
@@ -259,6 +264,7 @@ class KoteiViewController: UIViewController {
     }
     
     @IBAction func entry(_ sender: UIButton) {
+        sender.isEnabled = false
         conAlert = UIAlertController(title: "登録中", message: "", preferredStyle: .alert)
         sender.isUserInteractionEnabled = false
         self.view.endEditing(true)
@@ -306,6 +312,9 @@ class KoteiViewController: UIViewController {
             self.present(conAlert, animated: true, completion: nil)
             IBM().IBMRequest(type: "HBR031", parameter: param, completionClosure: { [self](_,json,err) in
                 print("IBMRequest")
+                DispatchQueue.main.async {
+                    sender.isEnabled = true
+                }
                 if err == nil, json != nil {
                     //print(json!)
                     if json!["RTNCD"] as! String != "000" { //IBMエラー
@@ -326,8 +335,9 @@ class KoteiViewController: UIViewController {
                             self.conAlert.message = "正常に登録できました"
                             self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                                 Void in
+                                sender.isEnabled = false //二重登録禁止
                                 //print(_json)
-                                self.dspInit() //表示クリア
+                                //self.dspInit() //表示クリア
                                 
                             }))
                         }
@@ -354,6 +364,24 @@ class KoteiViewController: UIViewController {
         
         
     }
+    
+    @IBAction func clearData(_ sender: UIButton) {
+        
+        if entryBtn.isEnabled {
+            let alert = UIAlertController(title: "データをクリアしてよろしいですか？", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                Void in
+                self.dspInit()
+            }))
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+
+        }else {
+            self.dspInit()
+        }
+        
+    }
+    
     @objc func back() {
         //self.dismiss(animated: true, completion: nil)
         self.navigationController?.popViewController(animated: true)
@@ -628,7 +656,6 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
         infoCollection.dataSource = self
         infoCollection.isPagingEnabled = true
 
-        //var yotei_hi = ""
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
             //登録済み → 再印刷or削除
             infoView.isHidden = false
@@ -639,35 +666,36 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
             infoView.layer.shadowOpacity = 0.6
             infoView.layer.shadowRadius = 4
             
-            //yotei_hi = yotei.date.short
-            yoteiLabel.text = yotei.date.toString(format: "yyyy年MM月dd日")
-            kanri = yotei
+            let renban = json["RENBAN"] as? String ?? ""
+            kanri = yotei+"-"+renban
+            
+            kanriLabel.text = kanri
+            
         }else {
             //未登録 → 登録&印刷
             SimpleAlert.make(title: "登録なし", message: "リフレッシュ受付がされていません")
             return
         }
 
-        let renban = json["RENBAN"] as? String ?? ""
-        kanri += "-"+renban+"-"+_tagNO
-        kanriLabel.text = kanri
         tagLabel.text = _tagNO
         
         //工程を確認
-        koteiBtn.isEnabled = true
+//        koteiBtn.isEnabled = true
+        koteiBtn.isHidden = false
+        entryBtn.isEnabled = true
         if let arr = json["KOTEI_LST"] as? [Dictionary<String,Any>], arr.count>0 {
 
             var koteiArr = arr.map({$0["KOTEI"] as? String ?? ""})
             koteiArr.sort()
             print(koteiArr.last!)
             let ko = koteiArr.last! //既に登録済みの工程
-            var idx = Int(koteiList.firstIndex(where: {$0.key==ko}) ?? 0)
+            var idx = Int(_koteiList.firstIndex(where: {$0.key==ko}) ?? 0)
             print(idx)
-            if idx < koteiList.count-1 {
+            if idx < _koteiList.count-1 {
                 idx += 1
             }
-            kotei = koteiList[idx].key
-            koteiBtn.setTitle(koteiList[idx].val, for: .normal)
+            kotei = _koteiList[idx].key
+            koteiBtn.setTitle(_koteiList[idx].val, for: .normal)
 
         }else {
             //工程履歴がなければ、バラシから
@@ -675,7 +703,7 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
             koteiBtn.setTitle("ばらし", for: .normal)
         }
         
-        maxrow = koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
+        maxrow = _koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
         self.infoCollection.reloadData()
         //infoCollectionを１ページ目にセット
         self.infoCollection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
