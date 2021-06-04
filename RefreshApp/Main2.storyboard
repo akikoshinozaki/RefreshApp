@@ -388,50 +388,40 @@
                                             <constraint firstAttribute="height" constant="30" id="AEJ-5N-RHg"/>
                                         </constraints>
                                     </stackView>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="777" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ame-ni-GbG">
-                                        <rect key="frame" x="0.0" y="40" width="420" height="571"/>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="777" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kkP-xE-VtK">
+                                        <rect key="frame" x="10" y="40" width="400" height="571"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="420" id="neg-H1-BKH"/>
+                                            <constraint firstAttribute="width" constant="400" id="1bR-iW-YAL"/>
                                         </constraints>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Yn6-aT-lhD">
-                                            <size key="itemSize" width="420" height="500"/>
-                                            <size key="estimatedItemSize" width="420" height="550"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="rVX-mm-tDp">
+                                            <size key="itemSize" width="400" height="581"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="oJp-5Z-J8M">
-                                                <rect key="frame" x="0.0" y="35.5" width="420" height="500"/>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="9Zu-Te-Ntn">
+                                                <rect key="frame" x="0.0" y="-5" width="400" height="581"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="1dq-SK-uBq">
-                                                    <rect key="frame" x="0.0" y="0.0" width="420" height="500"/>
+                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="u6f-EH-UbC">
+                                                    <rect key="frame" x="0.0" y="0.0" width="400" height="581"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <color key="backgroundColor" red="1" green="0.74689458590000002" blue="0.63627315849999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <color key="backgroundColor" systemColor="systemGray5Color"/>
                                                 </collectionViewCellContentView>
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
-                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="dtF-kA-lsg">
-                                        <rect key="frame" x="150" y="596" width="120" height="25"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="25" id="K0c-sI-i5w"/>
-                                            <constraint firstAttribute="width" constant="120" id="eeH-tG-bcu"/>
-                                        </constraints>
-                                    </pageControl>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="16H-Yq-WIb" firstAttribute="top" secondItem="uug-dL-1lJ" secondAttribute="top" id="1Ev-Kn-xXu"/>
-                                    <constraint firstItem="dtF-kA-lsg" firstAttribute="centerX" secondItem="uug-dL-1lJ" secondAttribute="centerX" id="1a2-20-VWS"/>
                                     <constraint firstAttribute="trailing" secondItem="16H-Yq-WIb" secondAttribute="trailing" id="9D2-Yk-uVi"/>
-                                    <constraint firstItem="ame-ni-GbG" firstAttribute="top" secondItem="16H-Yq-WIb" secondAttribute="bottom" constant="10" id="RKw-hM-1Ei"/>
-                                    <constraint firstItem="ame-ni-GbG" firstAttribute="centerX" secondItem="uug-dL-1lJ" secondAttribute="centerX" id="SpV-TR-DdM"/>
+                                    <constraint firstItem="kkP-xE-VtK" firstAttribute="top" secondItem="16H-Yq-WIb" secondAttribute="bottom" constant="10" id="Ans-d7-3Bw"/>
+                                    <constraint firstItem="kkP-xE-VtK" firstAttribute="centerX" secondItem="uug-dL-1lJ" secondAttribute="centerX" id="O6T-RG-lbP"/>
+                                    <constraint firstAttribute="bottom" secondItem="kkP-xE-VtK" secondAttribute="bottom" constant="10" id="cMT-iA-boy"/>
                                     <constraint firstItem="16H-Yq-WIb" firstAttribute="leading" secondItem="uug-dL-1lJ" secondAttribute="leading" id="ieD-Jt-n8o"/>
-                                    <constraint firstAttribute="bottom" secondItem="dtF-kA-lsg" secondAttribute="bottom" id="imA-RV-C0T"/>
                                     <constraint firstAttribute="width" constant="420" id="jLk-Fq-Ouu"/>
-                                    <constraint firstAttribute="bottom" secondItem="ame-ni-GbG" secondAttribute="bottom" constant="10" id="ydp-FF-NrY"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MUW-tL-8wg">
@@ -734,8 +724,9 @@
                         <outlet property="clearBtn" destination="jvq-Oc-NuH" id="YDk-Z6-q2Z"/>
                         <outlet property="entryBtn" destination="xQe-J9-qcS" id="38e-cH-TI1"/>
                         <outlet property="humidField" destination="qbt-nK-VcB" id="QIo-iP-Px0"/>
-                        <outlet property="infoCollection" destination="ame-ni-GbG" id="JCg-ev-CRv"/>
+                        <outlet property="infoCollection" destination="kkP-xE-VtK" id="wOu-1j-Cxn"/>
                         <outlet property="infoView" destination="uug-dL-1lJ" id="Ymp-px-Wlx"/>
+                        <outlet property="infoView2" destination="MUW-tL-8wg" id="qM3-8e-Z30"/>
                         <outlet property="kanriLabel" destination="wM4-ma-EoW" id="itp-4A-DNZ"/>
                         <outlet property="koteiBtn" destination="woD-9c-23g" id="Nht-3r-CJu"/>
                         <outlet property="scanBtn" destination="N5D-H9-ahN" id="Dp6-1s-KUg"/>
@@ -1345,6 +1336,9 @@
         </systemColor>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray5Color">
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

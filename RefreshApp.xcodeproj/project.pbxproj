@@ -40,6 +40,7 @@
 		4EB9B126260345EC003CCEFB /* RefListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB9B125260345EC003CCEFB /* RefListViewController.swift */; };
 		4EBCC91225BE9A0100882906 /* SelectDateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EBCC91125BE9A0100882906 /* SelectDateView.xib */; };
 		4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCC91325BE9A2C00882906 /* SelectDateView.swift */; };
+		4EC1E10E2669BEF800AD6DD8 /* kotei.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1E10D2669BEF800AD6DD8 /* kotei.png */; };
 		4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */; };
 		4ED33534265F7EDF00EB821D /* KoteiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED33533265F7EDF00EB821D /* KoteiViewController.swift */; };
 		4ED33539265FC09D00EB821D /* MyPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4ED33537265FC09D00EB821D /* MyPickerView.xib */; };
@@ -151,6 +152,7 @@
 		4EB9B125260345EC003CCEFB /* RefListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefListViewController.swift; sourceTree = "<group>"; };
 		4EBCC91125BE9A0100882906 /* SelectDateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectDateView.xib; sourceTree = "<group>"; };
 		4EBCC91325BE9A2C00882906 /* SelectDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateView.swift; sourceTree = "<group>"; };
+		4EC1E10D2669BEF800AD6DD8 /* kotei.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kotei.png; sourceTree = "<group>"; };
 		4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceptionViewController.swift; sourceTree = "<group>"; };
 		4ED33533265F7EDF00EB821D /* KoteiViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoteiViewController.swift; sourceTree = "<group>"; };
 		4ED33537265FC09D00EB821D /* MyPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPickerView.xib; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 				C34D6B362643D4000072B8B6 /* bn04.png */,
 				4E8857BE26368F8000E9D05C /* camera2.png */,
 				4E8857C126368FB100E9D05C /* entry2.png */,
+				4EC1E10D2669BEF800AD6DD8 /* kotei.png */,
 				4E8857C42636905900E9D05C /* scan.png */,
 			);
 			path = img;
@@ -523,6 +526,7 @@
 				4E81401725F48DF600CAE545 /* DetailView2.xib in Resources */,
 				C3C95DF225889D6F00BBE180 /* rj4030ai_102mm152mm.bin in Resources */,
 				C3E4C31225BFB63E009AD55C /* reception.png in Resources */,
+				4EC1E10E2669BEF800AD6DD8 /* kotei.png in Resources */,
 				4E8857B926368B9900E9D05C /* bn01.png in Resources */,
 				C35E2FBD255A191E009C9057 /* barcode.png in Resources */,
 				4E8857C226368FB100E9D05C /* entry2.png in Resources */,
@@ -796,7 +800,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.35;
+				CURRENT_PROJECT_VERSION = 1.36;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -812,7 +816,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -830,7 +834,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.35;
+				CURRENT_PROJECT_VERSION = 1.36;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = "";
 				ENABLE_BITCODE = YES;
@@ -846,7 +850,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -926,7 +930,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.35;
+				CURRENT_PROJECT_VERSION = 1.36;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -942,7 +946,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";
@@ -1017,7 +1021,7 @@
 				BUNDLE_ID_SUFFIX = _dev;
 				CODE_SIGN_ENTITLEMENTS = RefreshApp/RefreshApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.35;
+				CURRENT_PROJECT_VERSION = 1.36;
 				DEVELOPMENT_TEAM = G4JZMC2GW3;
 				DISPLAY_NAME_PREFIX = Dev;
 				ENABLE_BITCODE = YES;
@@ -1033,7 +1037,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.35;
+				MARKETING_VERSION = 1.36;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oktss.RefreshApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/RefreshApp-Bridging-Header.h";

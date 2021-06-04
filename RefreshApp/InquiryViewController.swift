@@ -627,6 +627,7 @@ extension InquiryViewController:UITableViewDelegate,UITableViewDataSource {
 }
 
 extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView.tag == 888 { //imageCollectionView
             return tagImg.count
@@ -643,9 +644,8 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
             return cell
         }else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-            let colSize = collectionView.frame.size
             if indexPath.row == 0 { //1ページ目
-                detail = DetailView(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height), json: _json)
+                detail = DetailView(frame: CGRect(origin: .zero, size: cell.frame.size), json: _json)
                 detail.nextBtn.tag = 901
                 detail.nextBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
                 detail.backBtn.isHidden = true
@@ -658,7 +658,7 @@ extension InquiryViewController:UICollectionViewDelegate, UICollectionViewDataSo
 
             } else {
                 //2ページ目
-                detail2 = DetailView2(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height), json: _json)
+                detail2 = DetailView2(frame: CGRect(origin: .zero, size: cell.frame.size), json: _json)
                 detail2.nextBtn.isHidden = true
                 detail2.backBtn.tag = 902
                 detail2.backBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)

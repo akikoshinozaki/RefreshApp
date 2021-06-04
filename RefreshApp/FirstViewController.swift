@@ -36,7 +36,7 @@ class FirstViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("FirstViewController")
+        //print("FirstViewController")
         // Do any additional setup after loading the view.
         let bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         versionLabel.text = "Ver. "+bundleVersion
@@ -44,8 +44,6 @@ class FirstViewController: UIViewController {
         for btn in btns {
             btn.layer.cornerRadius = 8
         }
-        koteiBtn.layer.borderWidth = 2
-        koteiBtn.layer.borderColor = UIColor.systemBlue.cgColor
 
         //本番のデプロイのみ隠しボタン設置
         #if DEV

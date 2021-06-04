@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ngb-X9-bSv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ngb-X9-bSv">
     <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -143,14 +143,13 @@
                                     <action selector="listRefresh:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YF4-Px-vEb"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XBV-Va-I3M">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XBV-Va-I3M">
                                 <rect key="frame" x="692" y="160" width="200" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="3w7-mD-lo6"/>
                                     <constraint firstAttribute="height" constant="200" id="93q-hd-59q"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="工程管理"/>
+                                <state key="normal" image="kotei.png"/>
                                 <connections>
                                     <action selector="kotei:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iGh-tc-J8y"/>
                                 </connections>
@@ -1392,45 +1391,34 @@
                                         <rect key="frame" x="5" y="40" width="400" height="550"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="400" id="IJF-Bm-hAl"/>
+                                            <constraint firstAttribute="width" constant="400" id="bsI-Tt-vEu"/>
                                         </constraints>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="tIQ-WY-OEy">
-                                            <size key="itemSize" width="400" height="500"/>
-                                            <size key="estimatedItemSize" width="400" height="550"/>
+                                            <size key="itemSize" width="400" height="550"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="IRs-GV-MVU">
-                                                <rect key="frame" x="0.0" y="25" width="400" height="500"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="400" height="550"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="GLl-LX-RJe">
-                                                    <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="400" height="550"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <color key="backgroundColor" red="1" green="0.74689458590000002" blue="0.63627315849999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <color key="backgroundColor" systemColor="systemGray5Color"/>
                                                 </collectionViewCellContentView>
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
-                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="AgG-JR-rnh">
-                                        <rect key="frame" x="145" y="575" width="120" height="25"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="120" id="Tt7-Zv-qHT"/>
-                                            <constraint firstAttribute="height" constant="25" id="a8i-ZO-tYA"/>
-                                        </constraints>
-                                    </pageControl>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="X35-Up-WDL" secondAttribute="trailing" id="FRz-H1-3Wx"/>
                                     <constraint firstItem="X35-Up-WDL" firstAttribute="top" secondItem="B30-W2-Z9Q" secondAttribute="top" id="K9X-TX-8OJ"/>
                                     <constraint firstItem="I8K-mF-gIa" firstAttribute="centerX" secondItem="B30-W2-Z9Q" secondAttribute="centerX" id="UEL-j9-TDm"/>
-                                    <constraint firstItem="AgG-JR-rnh" firstAttribute="centerX" secondItem="B30-W2-Z9Q" secondAttribute="centerX" id="XLz-7E-3IF"/>
                                     <constraint firstAttribute="bottom" secondItem="I8K-mF-gIa" secondAttribute="bottom" constant="10" id="aod-Re-er6"/>
-                                    <constraint firstItem="I8K-mF-gIa" firstAttribute="top" secondItem="X35-Up-WDL" secondAttribute="bottom" constant="10" id="bPr-W4-56X"/>
                                     <constraint firstItem="X35-Up-WDL" firstAttribute="leading" secondItem="B30-W2-Z9Q" secondAttribute="leading" id="bty-z1-aus"/>
-                                    <constraint firstAttribute="bottom" secondItem="AgG-JR-rnh" secondAttribute="bottom" id="hg5-LT-AHH"/>
                                     <constraint firstItem="I8K-mF-gIa" firstAttribute="top" secondItem="X35-Up-WDL" secondAttribute="bottom" constant="10" id="ypx-fq-Dca"/>
                                 </constraints>
                             </view>
@@ -2801,6 +2789,7 @@
         <image name="entry2.png" width="500" height="160"/>
         <image name="inquiry.png" width="456" height="456"/>
         <image name="koshin.png" width="556" height="252"/>
+        <image name="kotei.png" width="456" height="456"/>
         <image name="left.png" width="50" height="200"/>
         <image name="reception.png" width="456" height="456"/>
         <image name="right.png" width="50" height="200"/>

@@ -46,18 +46,17 @@ class KoteiViewController: UIViewController {
     var maxrow:Int = 0//工程選択ピッカー用
     var _koteiList:[(key:String,val:String, flag:Bool)] = []
     
-    /* inquiryVCからコピー ---START---*/
+    /*--- inquiryVCからコピー ---START---*/
     //@IBOutlet weak var yoteiLabel:UILabel!
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var infoCollection: UICollectionView!
     var conAlert:UIAlertController!
     //let conAlert = UIAlertController(title: "登録中", message: "", preferredStyle: .alert)
     var keiyakuNO = ""
-    var json_:Dictionary<String,Any>!
     var detail:DetailView!
     var detail2:DetailView2!
-    /* inquiryVCからコピー ---END---*/
-    
+    /*--- inquiryVCからコピー ---END---*/
+    @IBOutlet weak var infoView2: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,7 +92,6 @@ class KoteiViewController: UIViewController {
             }else {
                 //社員cdがあって、名前がなかったら問い合わせ？
             }
-
         }
         //天気
         if let key = defaults.string(forKey: "weather"){
@@ -124,6 +122,7 @@ class KoteiViewController: UIViewController {
         tagLabel.text = ""
         kanriLabel.text = ""
         infoView.isHidden = true
+        infoView2.isHidden = true
         kotei = "" //"04:ばらし"
         koteiBtn.setTitle("", for: .normal)
         //koteiBtn.isEnabled = false
@@ -611,7 +610,13 @@ extension KoteiViewController: ScannerViewDelegate{
 
 }
 
-extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSource {
+extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //print(#function)
+        let size = collectionView.frame.size
+        return size
+    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 2
     }
@@ -619,21 +624,18 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        let colSize = collectionView.frame.size
+//        let cellSize = cell.frame.size
+//        print(cellSize)
         if indexPath.row == 0 { //1ページ目
-            detail2 = DetailView2(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height), json: _json)
+            detail2 = DetailView2(frame: CGRect(origin: .zero, size: cell.frame.size), json: _json)
             detail2.nextBtn.tag = 901
             detail2.nextBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
             detail2.backBtn.isHidden = true
-//            for lbl in detail2.labels{ //初期化
-//                lbl.text = ""
-//            }
             cell.contentView.addSubview(detail2)
-            
             
         } else {
             //2ページ目
-            detail = DetailView(frame: CGRect(x: 0, y: 0, width: colSize.width, height: colSize.height), json: _json)
+            detail = DetailView(frame: CGRect(origin: .zero, size: cell.frame.size), json: _json)
             detail.nextBtn.isHidden = true
             detail.backBtn.tag = 902
             detail.backBtn.addTarget(self, action: #selector(pageChange), for: .touchUpInside)
@@ -659,12 +661,18 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
             //登録済み → 再印刷or削除
             infoView.isHidden = false
+            infoView2.isHidden = false
 
             //keiyakuView.isHidden = false
             infoView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
             infoView.layer.shadowColor = UIColor.black.cgColor
             infoView.layer.shadowOpacity = 0.6
             infoView.layer.shadowRadius = 4
+            
+//            infoView2.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+//            infoView2.layer.shadowColor = UIColor.black.cgColor
+//            infoView2.layer.shadowOpacity = 0.6
+//            infoView2.layer.shadowRadius = 4
             
             let renban = json["RENBAN"] as? String ?? ""
             kanri = yotei+"-"+renban
