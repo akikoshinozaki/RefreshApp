@@ -36,6 +36,11 @@
 		4E8857C226368FB100E9D05C /* entry2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857C126368FB100E9D05C /* entry2.png */; };
 		4E8857C52636905900E9D05C /* scan.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E8857C42636905900E9D05C /* scan.png */; };
 		4E913929263142EA00DA29A9 /* entry.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E913928263142E900DA29A9 /* entry.png */; };
+		4E9A2F7C267853DB005391BB /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9A2F6D267853DB005391BB /* CustomButton.swift */; };
+		4E9A2F7D267853DB005391BB /* button_start@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A2F6F267853DB005391BB /* button_start@2x.png */; };
+		4E9A2F7E267853DB005391BB /* button_start.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E9A2F70267853DB005391BB /* button_start.png */; };
+		4E9A2F7F267853DB005391BB /* BreadCrumb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9A2F71267853DB005391BB /* BreadCrumb.swift */; };
+		4E9A2FC926789308005391BB /* ScanData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9A2FC826789308005391BB /* ScanData.swift */; };
 		4E9C66BB26255684003E29FF /* InfoViewController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9C66BA26255683003E29FF /* InfoViewController2.swift */; };
 		4EB9B126260345EC003CCEFB /* RefListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB9B125260345EC003CCEFB /* RefListViewController.swift */; };
 		4EBCC91225BE9A0100882906 /* SelectDateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EBCC91125BE9A0100882906 /* SelectDateView.xib */; };
@@ -148,6 +153,11 @@
 		4E8857C126368FB100E9D05C /* entry2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = entry2.png; sourceTree = "<group>"; };
 		4E8857C42636905900E9D05C /* scan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scan.png; sourceTree = "<group>"; };
 		4E913928263142E900DA29A9 /* entry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = entry.png; sourceTree = "<group>"; };
+		4E9A2F6D267853DB005391BB /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		4E9A2F6F267853DB005391BB /* button_start@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_start@2x.png"; sourceTree = "<group>"; };
+		4E9A2F70267853DB005391BB /* button_start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_start.png; sourceTree = "<group>"; };
+		4E9A2F71267853DB005391BB /* BreadCrumb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreadCrumb.swift; sourceTree = "<group>"; };
+		4E9A2FC826789308005391BB /* ScanData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanData.swift; sourceTree = "<group>"; };
 		4E9C66BA26255683003E29FF /* InfoViewController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController2.swift; sourceTree = "<group>"; };
 		4EB9B125260345EC003CCEFB /* RefListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefListViewController.swift; sourceTree = "<group>"; };
 		4EBCC91125BE9A0100882906 /* SelectDateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectDateView.xib; sourceTree = "<group>"; };
@@ -232,6 +242,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E9A2F6C267853DB005391BB /* BreadCrumb Control */ = {
+			isa = PBXGroup;
+			children = (
+				4E9A2F6D267853DB005391BB /* CustomButton.swift */,
+				4E9A2F6E267853DB005391BB /* Resources */,
+				4E9A2F71267853DB005391BB /* BreadCrumb.swift */,
+			);
+			name = "BreadCrumb Control";
+			path = "BreadCrumb Control/BreadCrumb Control";
+			sourceTree = "<group>";
+		};
+		4E9A2F6E267853DB005391BB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4E9A2F6F267853DB005391BB /* button_start@2x.png */,
+				4E9A2F70267853DB005391BB /* button_start.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		4EEC4D4B25556C69003AF923 = {
 			isa = PBXGroup;
 			children = (
@@ -260,6 +290,7 @@
 				4E5DB92525556E0600A53584 /* RefreshApp.entitlements */,
 				C3E6A40825E39DDA00AB420F /* Objects */,
 				C322589D255911B1007BB719 /* img */,
+				4E9A2F6C267853DB005391BB /* BreadCrumb Control */,
 				4EEC4D5725556C69003AF923 /* AppDelegate.swift */,
 				4EEC4D5B25556C69003AF923 /* ViewController.swift */,
 				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
@@ -382,6 +413,7 @@
 				C35E2FBE255A6F71009C9057 /* Common.swift */,
 				C3CD18B425C27E050088DE56 /* EnvironmentSwitch.swift */,
 				4E3D93162615AC6E00C584F9 /* GetLists.swift */,
+				4E9A2FC826789308005391BB /* ScanData.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -500,6 +532,7 @@
 				C3C95DF325889D6F00BBE180 /* 100×200.bmp in Resources */,
 				4E8857BF26368F8000E9D05C /* camera2.png in Resources */,
 				4E913929263142EA00DA29A9 /* entry.png in Resources */,
+				4E9A2F7D267853DB005391BB /* button_start@2x.png in Resources */,
 				4E8857C52636905900E9D05C /* scan.png in Resources */,
 				C3C95DF425889D6F00BBE180 /* rj4030ai_102mm.bin in Resources */,
 				4EF3EF702665D9110050AE42 /* DetailTableViewCell.xib in Resources */,
@@ -531,6 +564,7 @@
 				C35E2FBD255A191E009C9057 /* barcode.png in Resources */,
 				4E8857C226368FB100E9D05C /* entry2.png in Resources */,
 				C34D6B372643D4000072B8B6 /* bn04.png in Resources */,
+				4E9A2F7E267853DB005391BB /* button_start.png in Resources */,
 				4E776DE825580EEA009344EB /* right.png in Resources */,
 				4EE502372625181C00AAE522 /* BRLavelView2.xib in Resources */,
 				C322589A2558DEC1007BB719 /* deletebtn.png in Resources */,
@@ -600,6 +634,8 @@
 				4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */,
 				C38C13D925BA8E5A00653CE9 /* SimpleAlert.swift in Sources */,
 				4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */,
+				4E9A2F7C267853DB005391BB /* CustomButton.swift in Sources */,
+				4E9A2F7F267853DB005391BB /* BreadCrumb.swift in Sources */,
 				4E9C66BB26255684003E29FF /* InfoViewController2.swift in Sources */,
 				4E0ED3FF2623D9E800A4B714 /* InfoView.swift in Sources */,
 				C3DDC4DB25F8620700B2DEAC /* GawaImgViewController.swift in Sources */,
@@ -616,6 +652,7 @@
 				4E776DE02557C96C009344EB /* DispViewController.swift in Sources */,
 				4EF3EF6F2665D9110050AE42 /* DetailTableViewCell.swift in Sources */,
 				4ED3353A265FC09D00EB821D /* MyPickerView.swift in Sources */,
+				4E9A2FC926789308005391BB /* ScanData.swift in Sources */,
 				C35E2FBF255A6F71009C9057 /* Common.swift in Sources */,
 				4EE5023A262531C600AAE522 /* BRLabelView2.swift in Sources */,
 				4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */,

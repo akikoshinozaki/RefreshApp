@@ -10,6 +10,7 @@
 import UIKit
 import SwiftyPickerPopover
 import AVFoundation
+import ZBarSDK
 
 extension UIImage {
     static func makeCode(type:String,code:String) -> UIImage? {
@@ -95,7 +96,7 @@ struct PrinterSetting {
 
 var isImgUploaded:Bool = false
 
-class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDeviceTableViewControllerDelegate, RefListViewDelegate {
+class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControllerDelegate, RefListViewDelegate, ZBarReaderDelegate {
     
     @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var envLabel: UILabel!
@@ -114,7 +115,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
     var printerConnectBtn:UIBarButtonItem!
     let paperSizeArray:[(String,BRLMQLPrintSettingsLabelSize)] = [("ロール紙62mm",.rollW62),("ロール紙62mm赤黒",.rollW62RB)]
 
-    var scanner:ScannerView!
     var conAlert:UIAlertController!
     @IBOutlet weak var tagField: UITextField!
     @IBOutlet weak var tagLabel:UILabel!
@@ -203,7 +203,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
         tagField.delegate = self
         keiyakuField.delegate = self
-        scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
+        scanBtn.addTarget(self, action: #selector(scan(_ :)), for: .touchUpInside)
         printBtn.addTarget(self, action: #selector(display), for: .touchUpInside)
         detailBtn.addTarget(self, action: #selector(dispDetail), for: .touchUpInside)
         cameraBtn.addTarget(self, action: #selector(takePhoto), for: .touchUpInside)
@@ -471,44 +471,53 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         
     }
     
-    //MARK: - ScannerDelegate
-    
-    @objc func scan() {
-        self.view.endEditing(true)
-        tagField.text = ""
-        scanner = ScannerView(frame: self.view.frame)
+    //MARK: - ZBar Delegate
+    @objc func scan(_ sender: UIButton){
+        //ZBarReaderViewControllerのオブジェクトを生成
+        let reader = ZBarReaderViewController()
+        reader.readerDelegate = self
+        reader.cameraFlashMode = .off
         
-        scanner.delegate = self
-        scanner.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        scanner.frame = self.view.frame
-        self.view.addSubview(scanner)
+        let scanner:ZBarImageScanner = reader.scanner
+        scanner.setSymbology(ZBAR_I25, config: ZBAR_CFG_ENABLE, to: 0)
+        reader.isModalInPresentation = false //下スワイプで閉じないように
+        self.present(reader, animated: true, completion: nil)
+        
+//        reader.showsZBarControls = false
+        reader.showsCameraControls = false
 
-        //画面回転に対応
-        scanner.translatesAutoresizingMaskIntoConstraints = false
-        
-        scanner.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        scanner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        scanner.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        scanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
     }
-    
-    func getData(data: String) {
-        print(data)
-        if Int(data) != nil, data.count == 13 {
-            //バーコードの時
-            tagNO = String(Array(data)[4...11])
-        }else if data.hasPrefix("RF="){
-            if data.count > 10 {
-                //QRの時
-                tagNO = String(Array(data)[3...10])
-            }else {
-                SimpleAlert.make(title: "このコードは読み取れません", message: "")
-                return
+
+    //バーコードを読み取った後の処理(ZBar)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var symbol : ZBarSymbol? = nil
+        if let symbolset = info[UIImagePickerController.InfoKey(rawValue: "ZBarReaderControllerResults")] as? ZBarSymbolSet {
+            var iterator = NSFastEnumerationIterator(symbolset)
+            
+            while let value = iterator.next() {
+                if let sym = value as? ZBarSymbol {
+                    symbol = sym
+                    break
+                }
             }
         }
-        setTag()
+        
+        if symbol == nil {
+            return
+        }
+        let resultString = symbol!.data as String
+//        print(resultString)
+        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" {
+            let tag = ScanData().readCode(picker:picker, result: resultString)
+            if tag != "" {
+                tagNO = tag
+                setTag()
+                picker.dismiss(animated: true, completion: nil)
+            }
+                        
+        }
     }
-    
+
     func setTag(){
         if tagNO == "" {
             tagLabel.text = "TagNo.未入力"
@@ -519,7 +528,6 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
             tagLabel.textColor = .black
             dspInit()
             self.request(type: "ENTCHK", param: ["TAG_NO":tagNO])
-            //self.request(type: "INQUIRY", param: ["TAG_NO":tagNO])
             getImages(tag:tagNO)
             
         }
@@ -579,7 +587,7 @@ class ReceptionViewController: UIViewController, ScannerViewDelegate, BRSelectDe
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
         
-        print(printData)
+//        print(printData)
         
         lbl = BRLabelView(frame:self.view.frame)
         // シールのPrintView

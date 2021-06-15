@@ -9,6 +9,7 @@
 
 import UIKit
 import AVFoundation
+import ZBarSDK
 
 struct KEIYAKU {
     var tag:String = ""
@@ -18,7 +19,7 @@ struct KEIYAKU {
     var azukari:String = ""
 }
 
-class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDelegate {
+class InquiryViewController: UIViewController,RefListViewDelegate, ZBarReaderDelegate {
 
     @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var envLabel: UILabel!
@@ -48,7 +49,6 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
     var keiyakuNO = ""
     var syoCD = ""
     
-    var scanner:ScannerView!
     var conAlert:UIAlertController!
 
     var keiMeisai:[KEIYAKU] = []
@@ -263,38 +263,52 @@ class InquiryViewController: UIViewController, ScannerViewDelegate,RefListViewDe
         tagNO = tag
         self.setTag()
     }
-    
-    //MARK: - ScannerDelegate
-    
-    @objc func scan() {
-        self.view.endEditing(true)
-        tagField.text = ""
-        scanner = ScannerView(frame: self.view.frame)
         
-        scanner.delegate = self
-        scanner.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        scanner.frame = self.view.frame
-        self.view.addSubview(scanner)
+    //MARK: - ZBar Delegate
+    @objc func scan(_ sender: UIButton){
+        //ZBarReaderViewControllerのオブジェクトを生成
+        let reader = ZBarReaderViewController()
+        reader.readerDelegate = self
+        reader.cameraFlashMode = .off
+        
+        let scanner:ZBarImageScanner = reader.scanner
+        scanner.setSymbology(ZBAR_I25, config: ZBAR_CFG_ENABLE, to: 0)
+        reader.isModalInPresentation = false //下スワイプで閉じないように
+        self.present(reader, animated: true, completion: nil)
+        
+//        reader.showsZBarControls = false
+        reader.showsCameraControls = false
 
-        //画面回転に対応
-        scanner.translatesAutoresizingMaskIntoConstraints = false
-        
-        scanner.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        scanner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        scanner.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        scanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
     }
-    
-    func getData(data: String) {
-        print(data)
-        if Int(data) != nil, data.count == 13 {
-            //バーコードの時
-            tagNO = String(Array(data)[4...11])
-        }else if data.hasPrefix("RF="){
-            //QRの時
-            tagNO = String(Array(data)[3...10])
+
+    //バーコードを読み取った後の処理(ZBar)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var symbol : ZBarSymbol? = nil
+        if let symbolset = info[UIImagePickerController.InfoKey(rawValue: "ZBarReaderControllerResults")] as? ZBarSymbolSet {
+            var iterator = NSFastEnumerationIterator(symbolset)
+            
+            while let value = iterator.next() {
+                if let sym = value as? ZBarSymbol {
+                    symbol = sym
+                    break
+                }
+            }
         }
-        setTag()
+        
+        if symbol == nil {
+            return
+        }
+        let resultString = symbol!.data as String
+//        print(resultString)
+        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" {
+            let tag = ScanData().readCode(picker:picker, result: resultString)
+            if tag != "" {
+                tagNO = tag
+                setTag()
+                picker.dismiss(animated: true, completion: nil)
+            }
+                        
+        }
     }
     
     func setTag(){

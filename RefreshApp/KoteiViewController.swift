@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyPickerPopover
+import ZBarSDK
 
 var weatherList:[(key:String,val:String)] = []
 var koteiList:[(key:String,val:String, flag:Bool)] = []
@@ -16,7 +17,6 @@ var koteiList:[(key:String,val:String, flag:Bool)] = []
 class KoteiViewController: UIViewController {
     
     @IBOutlet weak var scanBtn: UIButton!
-    var scanner:ScannerView!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var kanriLabel: UILabel!
     @IBOutlet weak var koteiBtn: UIButton!
@@ -554,42 +554,53 @@ extension KoteiViewController: UITextFieldDelegate {
     
 }
 
-extension KoteiViewController: ScannerViewDelegate{
-    //MARK: - ScannerDelegate
-    
-    @objc func scan() {
-        self.view.endEditing(true)
-        tagField.text = ""
-        scanner = ScannerView(frame: self.view.frame)
-        
-        scanner.delegate = self
-        scanner.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        scanner.frame = self.view.frame
-        self.view.addSubview(scanner)
+//MARK: - ZBar Delegate
+extension KoteiViewController: ZBarReaderDelegate{
 
-        //画面回転に対応
-        scanner.translatesAutoresizingMaskIntoConstraints = false
+    @objc func scan(_ sender: UIButton){
+        //ZBarReaderViewControllerのオブジェクトを生成
+        let reader = ZBarReaderViewController()
+        reader.readerDelegate = self
+        reader.cameraFlashMode = .off
         
-        scanner.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        scanner.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        scanner.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        scanner.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        let scanner:ZBarImageScanner = reader.scanner
+        scanner.setSymbology(ZBAR_I25, config: ZBAR_CFG_ENABLE, to: 0)
+        reader.isModalInPresentation = false //下スワイプで閉じないように
+        self.present(reader, animated: true, completion: nil)
+        
+//        reader.showsZBarControls = false
+        reader.showsCameraControls = false
+
     }
-    
-    func getData(data: String) {
-        if Int(data) != nil, data.count == 13 {
-            //バーコードの時
-            _tagNO = String(Array(data)[4...11])
-        }else if data.hasPrefix("RF="){
-            if data.count > 10 {
-                //QRの時
-                _tagNO = String(Array(data)[3...10])
-            }else {
-                SimpleAlert.make(title: "このコードは読み取れません", message: "")
-                return
+
+    //バーコードを読み取った後の処理(ZBar)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var symbol : ZBarSymbol? = nil
+        if let symbolset = info[UIImagePickerController.InfoKey(rawValue: "ZBarReaderControllerResults")] as? ZBarSymbolSet {
+            var iterator = NSFastEnumerationIterator(symbolset)
+            
+            while let value = iterator.next() {
+                if let sym = value as? ZBarSymbol {
+                    symbol = sym
+                    break
+                }
             }
         }
-        setTag()
+        
+        if symbol == nil {
+            return
+        }
+        let resultString = symbol!.data as String
+//        print(resultString)
+        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" {
+            let tag = ScanData().readCode(picker:picker, result: resultString)
+            if tag != "" {
+                _tagNO = tag
+                setTag()
+                picker.dismiss(animated: true, completion: nil)
+            }
+                        
+        }
     }
     
     func setTag(){

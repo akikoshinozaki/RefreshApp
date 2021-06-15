@@ -17,7 +17,6 @@ class _ViewController: UIViewController {
 
     @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-    var scanner:ScannerView!
     
     //隠しボタンのテスト
     @IBOutlet weak var hiddenBtn: UIButton!
