@@ -361,8 +361,9 @@ extension UploadViewController: ZBarReaderDelegate{
             let tag = ScanData().readCode(picker:picker, result: resultString)
             if tag != "" {
                 tagNO = tag
-                setTag()
-                picker.dismiss(animated: true, completion: nil)
+                picker.dismiss(animated: true, completion: {
+                    self.setTag()
+                })
             }
                         
         }
