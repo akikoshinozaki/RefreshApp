@@ -31,8 +31,19 @@ class KoteiViewController: UIViewController {
     @IBOutlet weak var tempField: UITextField!
     @IBOutlet weak var humidField: UITextField!
     @IBOutlet weak var weatherField: UITextField!
+    
     @IBOutlet weak var weightField: UITextField!
     @IBOutlet weak var tareField: UITextField!
+    
+    //@IBOutlet weak var weight2Field: UITextField!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var title2Label: UILabel!
+    @IBOutlet weak var title3Label: UILabel!
+    @IBOutlet weak var kg_gLabel: UILabel!
+    @IBOutlet weak var tonyuView: UIView!
+    @IBOutlet weak var finishLabel: UILabel!
+    @IBOutlet weak var gawaImgBtn: UIButton!
+    
     var kotei:String! //"04:ばらし"
     var weather:String = ""
     var _tagNO:String = ""
@@ -43,8 +54,15 @@ class KoteiViewController: UIViewController {
     var weight:Double!
     var workDay:Date!
     var tareWeight:Double = 0.2
+    var gWeight:Int = 0 //側重量
+    var aWeight:Int = 0 //総重量
+    var tWeight:Int = 0 //投入量
+    var fWeight:Double = 0 //仕上がり重量
+    
     var maxrow:Int = 0//工程選択ピッカー用
     var _koteiList:[(key:String,val:String, flag:Bool)] = []
+    var gawaImg:[UIImage] = []
+    var syoCD:String = ""
     
     /*--- inquiryVCからコピー ---START---*/
     //@IBOutlet weak var yoteiLabel:UILabel!
@@ -109,12 +127,14 @@ class KoteiViewController: UIViewController {
         if humidity > 0 {
             humidField.text = String(humidity)
         }
-        //風袋
-        tareWeight = defaults.double(forKey: "tareWeight")
-        if tareWeight == 0 {
-            tareWeight = 0.2
+        //風袋(04:ばらし・05:洗浄の時)
+        if kotei == "04" || kotei == "05" {
+            tareWeight = defaults.double(forKey: "tareWeight")
+            if tareWeight == 0 {
+                tareWeight = 0.2
+            }
+            tareField.text = String(Int(tareWeight*1000)) //グラムに直す
         }
-        tareField.text = String(Int(tareWeight*1000)) //グラムに直す
         
     }
     
@@ -170,7 +190,7 @@ class KoteiViewController: UIViewController {
                     DispatchQueue.main.async {
                         //INQURY
                         self.conAlert.dismiss(animated: true, completion: {
-                            self.display(json: json!)
+                            self.display(json: json!, selected: false)
                         })
                     }
                 }
@@ -227,6 +247,9 @@ class KoteiViewController: UIViewController {
                 
                 sender.setTitle(self._koteiList[idx].val, for: .normal)
                 self.kotei = self._koteiList[idx].key
+                if _json != nil {
+                    self.display(json: _json, selected: true)
+                }
                 
             })
             .setSelectedRow(row)
@@ -425,6 +448,7 @@ class KoteiViewController: UIViewController {
             }
         })
     }
+    
 }
 
 extension KoteiViewController: UITextFieldDelegate {
@@ -524,31 +548,70 @@ extension KoteiViewController: UITextFieldDelegate {
             }
             
         case weightField: //重量
-            if let wei = Double(str), wei > tareWeight { //少なくとも風袋よりは大きく
-                weight = floor(wei*100)/100 //小数点3位以下は切り捨てる
-                textField.text = String(weight)
+//            var gWeight:Int = 0 //側重量
+//            var tWeight:Int = 0 //総重量
+            if kotei == "06" {
+                if let g = Int(str), str.count <= 4 { //最大桁数4桁
+                    gWeight = Int(g)
+                }else {
+                    SimpleAlert.make(title: "不正な値です", message: "")
+                    weight = 0
+                    textField.text = ""
+                    return
+                }
             }else {
-                SimpleAlert.make(title: "不正な値です", message: "")
-                weight = 0
-                textField.text = ""
-                return
+                if let wei = Double(str), wei > tareWeight { //少なくとも風袋よりは大きく
+                    weight = floor(wei*100)/100 //小数点3位以下は切り捨てる
+                    textField.text = String(weight)
+                }else {
+                    SimpleAlert.make(title: "不正な値です", message: "")
+                    weight = 0
+                    textField.text = ""
+                    return
+                }
             }
 
         case tareField: //風袋
-            if let tare = Double(str) ,tare > 0 {
-                tareWeight = floor(tare)/1000
-//                print(tareWeight)
-                textField.text = String(Int(tare))
-                defaults.set(tareWeight, forKey: "tareWeight")
+            if kotei == "06" {
+                if let t = Int(str), str.count <= 4{ //最大桁数4桁
+                    aWeight = Int(t)
+                }else {
+                    SimpleAlert.make(title: "不正な値です", message: "")
+                    return
+                }
             }else {
-                SimpleAlert.make(title: "不正な値です", message: "")
-                tareWeight = 0.2
-                textField.text = "200"
-                return
+                if let tare = Double(str) ,tare > 0 {
+                    tareWeight = floor(tare)/1000
+                    //print(tareWeight)
+                    textField.text = String(Int(tare))
+                    defaults.set(tareWeight, forKey: "tareWeight")
+                }else {
+                    SimpleAlert.make(title: "不正な値です", message: "")
+                    tareWeight = 0.2
+                    textField.text = "200"
+                    return
+                }
             }
 
         default:
             break
+        }
+        
+        if kotei == "06", weightField.text != "", tareField.text != "" {
+            if aWeight < gWeight {
+                //側重量の方が大きかったらエラー
+                SimpleAlert.make(title: "入力エラー", message: "総重量は側重量より大きい値を入力してください")
+                return
+            }else {
+                tWeight = aWeight-gWeight
+                title3Label.text = String(tWeight)
+                if fWeight>0, abs(Int(fWeight)-tWeight) <= 20 {
+                    //仕上り重量と投入量、±20g
+                    title3Label.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                }else {
+                    title3Label.backgroundColor = #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1)
+                }
+            }
         }
     }
     
@@ -614,11 +677,127 @@ extension KoteiViewController: ZBarReaderDelegate{
             tagLabel.textColor = .black
 
             self.request(type: "INQUIRY", param: ["TAG_NO":_tagNO])
-
         }
     }
     
+    //アップロード済みの画像取得
+    func getImages(parm:String,val:String) {
+
+        var json:Dictionary<String,Any>!
+        let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
+        let url = URL(string: path)!
+        //let param = "tagNo=\(tagNo)
+        let param = parm+"="+val
+        print(param)
+        let config = URLSessionConfiguration.default
+        //config.timeoutIntervalForRequest = 5.0
+        let session = URLSession(configuration: config)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = param.data(using: .utf8)
+        // 通信のタスクを生成.
+        let task = session.dataTask(with:request, completionHandler: {
+            (data, response, err) in
+            if (err == nil){
+                if(data != nil){
+                    //戻ってきたデータを解析
+                    do{
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? Dictionary<String,Any>
+                        print(json!)
+                        let arr = json["images"] as? [String] ?? []
+                        print(arr)
+                        DispatchQueue.main.async {
+                            self.imgDL(arr:arr, tag:val, syu:parm)
+                        }
+
+                    }catch{
+                        print("json error")
+                        errMsg += "E3001:json error"
+                    }
+                }else{
+                    print("レスポンスがない")
+                    errMsg += "E3001:No Response"
+                }
+                
+            } else {
+                print("error : \(err!)")
+                if (err! as NSError).code == -1001 {
+                    print("timeout")
+                }
+                
+                errMsg += "E3003:\(err!.localizedDescription)"
+            }
+
+        })
+        
+        // タスクの実行.
+        task.resume()
+        
+    }
     
+    func imgDL(arr:[String], tag:String, syu:String) {
+        var iArr:[UIImage] = []
+        DispatchQueue.global().async {
+            for file in arr {
+                //画像をダウンロードして配列に保存
+                let str = "https://ipad:m8mawata@oktss03.xsrv.jp/refreshPhoto/\(file)"
+                let encodeStr = str.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                let url = URL(string: encodeStr)!
+                
+                //print(url)
+                do{
+                    let imageData = try Data(contentsOf: url)
+                    let img = UIImage(data:imageData)
+                    
+                    iArr.append(img!)
+                    
+                }catch {
+                    //エラー
+                    print("imageファイルにアクセスできない")
+                }
+            }
+        
+        
+            DispatchQueue.main.async {
+                if syu == "tagNo" {
+//                    self.tagImg = iArr
+//                    if arr.count > 0 {
+//                        self.photoView.isHidden = false
+//                        self.imgCollection.reloadData()
+//                    }
+                    
+                }else {  //syoCD
+                    self.gawaImg = iArr
+                    if self.gawaImg.count > 0 {//リンクボタン青くする
+                        self.gawaImgBtn.isEnabled = true
+                        self.gawaImgBtn.setTitleColor(.systemBlue, for: .normal)
+                        
+                        let itemNM = _json["SYOHIN_NM"] as? String ?? ""
+                        self.gawaImgBtn.setTitle(self.syoCD+": "+itemNM, for: .normal)
+                        self.gawaImgBtn.addTarget(self, action: #selector(self.gawaLink(_:)), for: .touchUpInside)
+                    }
+                }
+            }
+        }
+//        imgAlert.dismiss(animated: true, completion: nil)
+        
+    }
+    
+    @objc func gawaLink(_ sender: Any) {
+        if gawaImg.count > 0 {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let gawaVC = storyboard.instantiateViewController(withIdentifier: "gawa") as! GawaImgViewController
+            gawaVC.isModalInPresentation = true
+            
+            gawaVC.arr = gawaImg
+            gawaVC.syoCD = self.syoCD
+            self.present(gawaVC, animated: true, completion: nil)
+        }else {
+            
+        }
+        
+    }
 
 }
 
@@ -660,12 +839,14 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
         return cell
     }
     
-    func display(json:Dictionary<String,Any>){
+    func display(json:Dictionary<String,Any>, selected:Bool){
 //        keiMeisai = []
         kanriLabel.text = ""
         keiyakuNO = ""
         _tagNO = json["TAG_NO"] as? String ?? ""
         var kanri = ""
+        syoCD = ""
+        
         infoCollection.delegate = self
         infoCollection.dataSource = self
         infoCollection.isPagingEnabled = true
@@ -685,12 +866,39 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
 //            infoView2.layer.shadowColor = UIColor.black.cgColor
 //            infoView2.layer.shadowOpacity = 0.6
 //            infoView2.layer.shadowRadius = 4
-            
+
+            //管理No.
             let renban = json["RENBAN"] as? String ?? ""
             kanri = yotei+"-"+renban
-            
             kanriLabel.text = kanri
             
+            //仕上り重量
+            if var wata = json["WATA"] as? String, wata != "0.0" {
+                wata = wata.trimmingCharacters(in: .whitespaces)
+                if let dwata = Double(wata) {
+                    fWeight = dwata*1000 //グラムに直す
+                    self.finishLabel.text = "仕上り重量 : "+wata+"Kg"
+                    //self.juryoLabel.text = "\(dwata)"
+                }else {
+                    fWeight = 0
+                    self.finishLabel.text = ""
+                    //self.juryoLabel.text = wata
+                }
+            }
+            //品番・品名
+            guard var cd = json["SYOHIN_CD"] as? String else {
+                gawaImgBtn.setTitle("", for: .normal)
+                gawaImgBtn.isEnabled = false
+                return
+            }
+            
+            syoCD = cd
+            if cd.count<=8 { //ファイル名・8桁に揃える
+                let zero = String(repeating: "0", count: 8-cd.count)
+                cd = zero+cd
+            }
+            self.getImages(parm: "syoCD", val: cd)
+
         }else {
             //未登録 → 登録&印刷
             SimpleAlert.make(title: "登録なし", message: "リフレッシュ受付がされていません")
@@ -714,17 +922,42 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
             if idx < _koteiList.count-1 {
                 idx += 1
             }
-            kotei = _koteiList[idx].key
-            koteiBtn.setTitle(_koteiList[idx].val, for: .normal)
+            if !selected { //ピッカーから選択されていなければ、自動でセット
+                kotei = _koteiList[idx].key
+                koteiBtn.setTitle(_koteiList[idx].val, for: .normal)
+            }
 
         }else {
             //工程履歴がなければ、バラシから
             kotei = "04"
             koteiBtn.setTitle("ばらし", for: .normal)
         }
+        print(kotei)
         
-        maxrow = _koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
-        self.infoCollection.reloadData()
+        if kotei == "06" { //投入
+            tonyuView.isHidden = false
+            titleLabel.text = "側重量"
+            title2Label.text = "総重量"
+            kg_gLabel.text = "g"
+            tareField.text = "" //風袋の重さ消す
+            
+        }else { //ばらし・洗浄
+            tonyuView.isHidden = true
+            titleLabel.text = "重量(風袋込み)"
+            title2Label.text = "風袋"
+            kg_gLabel.text = "Kg"
+            //風袋の重さをセット
+            tareWeight = defaults.double(forKey: "tareWeight")
+            if tareWeight == 0 {
+                tareWeight = 0.2
+            }
+            tareField.text = String(Int(tareWeight*1000)) //グラムに直す
+        }
+        
+        if !selected {
+            maxrow = _koteiList.firstIndex(where: {$0.key==kotei}) ?? 0 //工程選択ピッカーの数
+            self.infoCollection.reloadData()
+        }
         //infoCollectionを１ページ目にセット
         self.infoCollection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
