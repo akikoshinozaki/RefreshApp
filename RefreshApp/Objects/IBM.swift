@@ -25,7 +25,6 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
     func IBMRequest(type:String, parameter:[String:Any], completionClosure:@escaping CompletionClosure){
         IBMResponse = false
         var json:Dictionary<String,Any>!
-        //var json:Dictionary<String,Any>!
         errMsg = ""
         var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=\(type)&"
         

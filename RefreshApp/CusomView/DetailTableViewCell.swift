@@ -18,6 +18,11 @@ class DetailTableViewCell: UITableViewCell {
     @IBOutlet var humidLabel:UILabel!
     @IBOutlet var weatherLabel:UILabel!
 
+    @IBOutlet weak var tonyuView: UIView!
+    @IBOutlet weak var label1: UILabel!
+    @IBOutlet weak var label2: UILabel!
+    @IBOutlet weak var label3: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

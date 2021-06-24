@@ -16,6 +16,8 @@ struct Kotei {
     var temp:String = ""
     var humid:String = ""
     var weather:String = ""
+    var g_gram:Int = 0
+    var s_gram:Int = 0
 }
 
 class DetailView2: UIView {
@@ -119,7 +121,9 @@ class DetailView2: UIView {
                                           juryo:dic["JURYO"] as? String ?? "",
                                           temp:dic["TEMP"] as? String ?? "",
                                           humid:dic["HUMID"] as? String ?? "",
-                                          weather:weather
+                                          weather:weather,
+                                          g_gram:Int(dic["G_GRAM"] as? String ?? "0")!,
+                                          s_gram:Int(dic["S_GRAM"] as? String ?? "0")!
                             )
                             
                         }
@@ -285,6 +289,21 @@ class DetailView2: UIView {
 }
 
 extension DetailView2: UITableViewDelegate, UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 65
+//    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        print(#function)
+        let obj = koteiArray[indexPath.row]
+//        print(obj.kotei)
+        if obj.kotei == "投入" {
+            return 95
+        }else {
+            return 65
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return koteiArray.count
     }
@@ -292,9 +311,8 @@ extension DetailView2: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTableViewCell", for: indexPath) as! DetailTableViewCell
         
-        
         let obj = koteiArray[indexPath.row]
-        
+                
         cell.koteiLabel.text = obj.kotei
         cell.dateLabel.text = obj.date
         cell.tantoLabel.text = obj.tanto
@@ -303,6 +321,13 @@ extension DetailView2: UITableViewDelegate, UITableViewDataSource {
         cell.tempLabel.text = obj.temp != "" ? obj.temp+"℃":""
         cell.humidLabel.text = obj.humid != "" ? obj.humid+"%":""
         cell.weatherLabel.text = obj.weather
+
+        cell.tonyuView.isHidden = !(obj.kotei == "投入") //投入の時だけ表示
+        if obj.kotei == "投入" {
+            cell.label1.text = "側重量:\(obj.g_gram) g"
+            cell.label2.text = "総重量:\(obj.s_gram) g"
+            cell.label3.text = "投入量:\(obj.s_gram-obj.g_gram) g"
+        }
         
         return cell
     }

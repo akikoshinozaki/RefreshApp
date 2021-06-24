@@ -314,6 +314,14 @@ class KoteiViewController: UIViewController {
             errStr.append("重量を入力してください")
         }
         
+        if tareField.text == "" {
+            if kotei == "06" {
+                errStr.append("側重量を入力してください")
+            }else {
+                errStr.append("風袋の重量を入力してください")
+            }
+        }
+        
         if errStr.count > 0 { //未入力があったら登録しない
             SimpleAlert.make(title: "未入力の項目があります", message: errStr.joined(separator: "\n"))
             sender.isUserInteractionEnabled = true
@@ -325,10 +333,21 @@ class KoteiViewController: UIViewController {
             param["DATE"] = workDay.string2
             param["TEMP"] = temperature
             param["HUMID"] = humidity
-            //浮動小数点数の誤差対応
-            let w = floor((weight-tareWeight)*100)/100
-            param["WEIGHT"] = String(w)
+            
             param["WEATHER"] = weather
+            
+            if kotei == "06" {
+                param["G_GRAM"] = String(gWeight) //側重量(g)
+                param["S_GRAM"] = String(aWeight) //総重量(g)
+
+                let w = Double(tWeight)/1000
+                print(w)
+                param["WEIGHT"] = String(floor((w)*100)/100)
+            }else {
+                //浮動小数点数の誤差対応
+                let w = floor((weight-tareWeight)*100)/100
+                param["WEIGHT"] = String(w)
+            }
             
             print(param)
             self.present(conAlert, animated: true, completion: nil)
@@ -548,8 +567,6 @@ extension KoteiViewController: UITextFieldDelegate {
             }
             
         case weightField: //重量
-//            var gWeight:Int = 0 //側重量
-//            var tWeight:Int = 0 //総重量
             if kotei == "06" {
                 if let g = Int(str), str.count <= 4 { //最大桁数4桁
                     gWeight = Int(g)
@@ -774,7 +791,7 @@ extension KoteiViewController: ZBarReaderDelegate{
                         self.gawaImgBtn.setTitleColor(.systemBlue, for: .normal)
                         
                         let itemNM = _json["SYOHIN_NM"] as? String ?? ""
-                        self.gawaImgBtn.setTitle(self.syoCD+": "+itemNM, for: .normal)
+                        self.gawaImgBtn.setTitle("側生地画像 "+self.syoCD+": "+itemNM, for: .normal)
                         self.gawaImgBtn.addTarget(self, action: #selector(self.gawaLink(_:)), for: .touchUpInside)
                     }
                 }

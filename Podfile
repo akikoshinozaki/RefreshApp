@@ -10,5 +10,5 @@ target 'RefreshApp' do
   pod 'LUKeychainAccess'
   pod 'SwiftyPickerPopover'
   pod 'IQKeyboardManager'
-
+  pod 'ZBarSDK'
 end
