@@ -288,7 +288,7 @@ class KoteiViewController: UIViewController {
     @IBAction func entry(_ sender: UIButton) {
         sender.isEnabled = false
         conAlert = UIAlertController(title: "登録中", message: "", preferredStyle: .alert)
-        sender.isUserInteractionEnabled = false
+        sender.isEnabled = false
         self.view.endEditing(true)
         var errStr:[String] = []
         //ブランクチェック
@@ -322,9 +322,23 @@ class KoteiViewController: UIViewController {
             }
         }
         
+        if kotei == "06" {
+            if fWeight>0, abs(Int(fWeight)-tWeight) <= 20 {
+            }else {
+                errStr.append("仕上り重量と投入量が違います")
+            }
+        }
+        
         if errStr.count > 0 { //未入力があったら登録しない
-            SimpleAlert.make(title: "未入力の項目があります", message: errStr.joined(separator: "\n"))
-            sender.isUserInteractionEnabled = true
+//            SimpleAlert.make(title: "エラー", message: errStr.joined(separator: "\n"))
+            let alert = UIAlertController(title: "エラー",
+                                          message: errStr.joined(separator: "\n"),
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                Void in
+                sender.isEnabled = true
+            }))
+            self.present(alert, animated: true, completion: nil)
         }else { //-----登録-------
             var param:[String:Any] = [:]
             param["TAG_NO"] = _tagNO
@@ -397,7 +411,7 @@ class KoteiViewController: UIViewController {
                 }
                 print("isUserInteractionEnabled")
                 DispatchQueue.main.async {
-                    sender.isUserInteractionEnabled = true
+                    sender.isEnabled = true
                 }
                 
             })
