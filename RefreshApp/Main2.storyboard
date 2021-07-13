@@ -703,7 +703,6 @@
                                         <rect key="frame" x="5" y="529" width="368" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Button"/>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -757,15 +756,28 @@
                                     <constraint firstItem="c9j-CA-rhe" firstAttribute="centerY" secondItem="zJH-4Z-eGi" secondAttribute="centerY" id="wR7-lx-prk"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="夜間モード" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1d2-mQ-cOY">
+                                <rect key="frame" x="824" y="0.0" width="200" height="30"/>
+                                <color key="backgroundColor" red="0.66973684116881171" green="0.8592445589104627" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="Pep-te-j86"/>
+                                    <constraint firstAttribute="height" constant="30" id="fE4-kW-VWw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ha0-2o-3aV"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="1d2-mQ-cOY" firstAttribute="top" secondItem="ha0-2o-3aV" secondAttribute="top" id="8MG-8K-C68"/>
                             <constraint firstItem="uug-dL-1lJ" firstAttribute="leading" secondItem="ha0-2o-3aV" secondAttribute="leading" constant="20" id="IAu-dk-aHP"/>
                             <constraint firstItem="ha0-2o-3aV" firstAttribute="bottom" secondItem="uug-dL-1lJ" secondAttribute="bottom" constant="15" id="Jp4-ol-wN5"/>
                             <constraint firstItem="HBi-Lc-NMz" firstAttribute="top" secondItem="ha0-2o-3aV" secondAttribute="top" constant="5" id="NSV-aj-QhN"/>
                             <constraint firstItem="MUW-tL-8wg" firstAttribute="top" secondItem="ha0-2o-3aV" secondAttribute="top" constant="50" id="aTl-EW-mNZ"/>
                             <constraint firstItem="ha0-2o-3aV" firstAttribute="bottom" secondItem="MUW-tL-8wg" secondAttribute="bottom" constant="50" id="dch-8G-2Db"/>
+                            <constraint firstItem="1d2-mQ-cOY" firstAttribute="trailing" secondItem="ha0-2o-3aV" secondAttribute="trailing" id="dtL-gi-Mf4"/>
                             <constraint firstItem="uug-dL-1lJ" firstAttribute="top" secondItem="HBi-Lc-NMz" secondAttribute="bottom" constant="15" id="fFk-Ja-xrc"/>
                             <constraint firstItem="ha0-2o-3aV" firstAttribute="bottom" secondItem="uug-dL-1lJ" secondAttribute="bottom" constant="15" id="h2w-7c-7Md"/>
                             <constraint firstItem="HBi-Lc-NMz" firstAttribute="leading" secondItem="ha0-2o-3aV" secondAttribute="leading" constant="20" id="nky-KZ-BL0"/>
@@ -798,6 +810,7 @@
                         <outlet property="weatherField" destination="dBz-2b-Qrd" id="ieh-Tq-slJ"/>
                         <outlet property="weightField" destination="qI0-KV-GA9" id="Uel-zJ-U6v"/>
                         <outlet property="workField" destination="KCz-uU-EwF" id="XXg-ng-50y"/>
+                        <outlet property="yakanLabel" destination="1d2-mQ-cOY" id="G8v-SO-myA"/>
                         <outletCollection property="textFields" destination="dBz-2b-Qrd" collectionClass="NSMutableArray" id="C3x-WF-syS"/>
                         <outletCollection property="textFields" destination="qI0-KV-GA9" collectionClass="NSMutableArray" id="BND-r5-KoP"/>
                         <outletCollection property="textFields" destination="c9j-CA-rhe" collectionClass="NSMutableArray" id="wvz-lB-bRB"/>

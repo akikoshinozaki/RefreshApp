@@ -8,8 +8,8 @@
 
 import UIKit
 
-let kList:[String] = ["grdList","jitaList","hiritsu","koteiList","wetherList"]
-var lList:[(key:String,list:[Dictionary<String,Any>])] = []
+//let kList:[String] = ["grdList","jitaList","hiritsu","koteiList","wetherList"]
+//var lList:[(key:String,list:[Dictionary<String,Any>])] = []
 
 class GetLists: NSObject {
 

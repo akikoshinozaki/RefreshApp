@@ -29,6 +29,10 @@ extension Date {
         return toString(format: "yyyyMMdd")
     }
     
+    var timestamp: String {
+        return toString(format: "yyyyMMddHHmmss")
+    }
+    
 }
 
 extension String {
@@ -88,6 +92,17 @@ let m2xsrvURL = "https://oktss03.xsrv.jp/refreshPhoto/dev/refresh.php"
 let m8xsrvURL = "https://oktss03.xsrv.jp/refreshPhoto/refresh.php"
 var xsrvURL = m8xsrvURL
 
+var weatherList:[(key:String,val:String)] = []
+var koteiList:[(key:String,val:String, flag:Bool)] = []
+
+let kList:[String] = ["grdList","jitaList","hiritsu","koteiList","wetherList"]
+var lList:[(key:String,list:[Dictionary<String,Any>])] = []
+
 var grd_lst:[(cd:String, nm:String)] = []
 var jitaArray:[(cd:String, nm:String)] = []
 var hiritsuArr:[Int] = []
+var yakan:Bool = false
+//let workTime = 6..<21
+let workTime = 6..<17
+
+var localDB:LocalDB!

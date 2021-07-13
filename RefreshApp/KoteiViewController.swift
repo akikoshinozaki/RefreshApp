@@ -10,10 +10,6 @@ import UIKit
 import SwiftyPickerPopover
 import ZBarSDK
 
-var weatherList:[(key:String,val:String)] = []
-var koteiList:[(key:String,val:String, flag:Bool)] = []
-
-
 class KoteiViewController: UIViewController {
     
     @IBOutlet weak var scanBtn: UIButton!
@@ -43,6 +39,7 @@ class KoteiViewController: UIViewController {
     @IBOutlet weak var tonyuView: UIView!
     @IBOutlet weak var finishLabel: UILabel!
     @IBOutlet weak var gawaImgBtn: UIButton!
+    @IBOutlet weak var yakanLabel: UILabel!
     
     var kotei:String! //"04:ばらし"
     var weather:String = ""
@@ -75,10 +72,10 @@ class KoteiViewController: UIViewController {
     var detail2:DetailView2!
     /*--- inquiryVCからコピー ---END---*/
     @IBOutlet weak var infoView2: UIView!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         dspInit()
         scanBtn.addTarget(self, action: #selector(scan), for: .touchUpInside)
@@ -86,15 +83,36 @@ class KoteiViewController: UIViewController {
         entryBtn.layer.cornerRadius = 8
         clearBtn.layer.cornerRadius = 8
         _koteiList = koteiList.filter({$0.flag==true})
-
+        
     }
-
+    
     override func viewDidLayoutSubviews() {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        print(#function)
         setDefaultValue()
+        self.yakanSwitch()
+    }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        print(#function)
+//        self.yakanSwitch()
+//    }
+    func yakanSwitch() {
+        let time = Calendar.current.component(.hour, from: Date())
+        yakan = !(workTime.contains(time))
+        yakanLabel.isHidden = !yakan
+        
+        if yakan != defaults.bool(forKey: "yakanMode") {
+            if yakan {
+                SimpleAlert.make(title: "夜間モード切り替え", message: "")
+            }else {
+                SimpleAlert.make(title: "夜間モード終了", message: "")
+            }
+        }
+        defaults.set(yakan, forKey: "yakanMode")
     }
     
     func setDefaultValue() {
@@ -212,6 +230,68 @@ class KoteiViewController: UIViewController {
         
     }
     
+    func yakanDisplay(tagNo:String) {
+        self.dspInit()
+        _tagNO = tagNo
+        print(_tagNO)
+        kanriLabel.text = ""
+        keiyakuNO = ""
+        //登録済み → 再印刷or削除
+        //                infoView.isHidden = false
+        infoView2.isHidden = false
+        
+        //keiyakuView.isHidden = false
+        infoView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        infoView.layer.shadowColor = UIColor.black.cgColor
+        infoView.layer.shadowOpacity = 0.6
+        infoView.layer.shadowRadius = 4
+        
+        tagLabel.text = _tagNO
+        
+        //工程を確認
+        koteiBtn.isEnabled = true
+        koteiBtn.isHidden = false
+        entryBtn.isEnabled = true
+        if let str = defaults.string(forKey: "yakan_kotei"),
+           let ko = _koteiList.first(where: {$0.key==str}) {
+            print(str)
+            print(ko)
+            kotei = ko.key
+            koteiBtn.setTitle(ko.val, for: .normal)
+        }else {
+            print("no defaults")
+            //保存済みの工程がなければ、バラシから
+            kotei = "04"
+            koteiBtn.setTitle("ばらし", for: .normal)
+            defaults.setValue(kotei, forKey: "yakan_kotei")
+        }
+        print(kotei)
+        if kotei == "06" { //投入
+            tonyuView.isHidden = false
+            titleLabel.text = "側重量"
+            title2Label.text = "総重量"
+            kg_gLabel.text = "g"
+            tareField.text = "" //風袋の重さ消す
+            
+        }else { //ばらし・洗浄
+            tonyuView.isHidden = true
+            titleLabel.text = "重量(風袋込み)"
+            title2Label.text = "風袋"
+            kg_gLabel.text = "Kg"
+            //風袋の重さをセット
+            tareWeight = defaults.double(forKey: "tareWeight")
+            if tareWeight == 0 {
+                tareWeight = 0.2
+            }
+            tareField.text = String(Int(tareWeight*1000)) //グラムに直す
+        }
+        /*
+         if !selected {
+         maxrow = _koteiList.firstIndex(where: {$0.key==kotei}) ?? 0 //工程選択ピッカーの数
+         self.infoCollection.reloadData()
+         }*/
+    }
+    
     func pickerAppear(_ textField: UITextField) {
         //datepicker表示
         let datePickerView:UIDatePicker = UIDatePicker()
@@ -231,6 +311,11 @@ class KoteiViewController: UIViewController {
     
     @objc func selectKotei(_ sender:UIButton) {
         print(maxrow)//ばらししか選択できない時はピッカー出さない
+        print(koteiList)
+        print(_koteiList)
+        if yakan {//夜間はノーチェックでピッカー表示
+            maxrow = _koteiList.count-1
+        }
         if maxrow == 0 {return}
         var array:[String] = []
         var popTitle = ""
@@ -238,7 +323,7 @@ class KoteiViewController: UIViewController {
         popTitle = "工程選択"
         row = _koteiList.firstIndex(where: {$0.key==kotei}) ?? 0
         array = _koteiList[0...maxrow].map({($0.key+":"+$0.val)})
-
+        
         let font = UIFont(name: "HelveticaNeue",size: 17.0)!
         let picker = StringPickerPopover(title: popTitle, choices: array)
             .setFont(font)
@@ -247,7 +332,10 @@ class KoteiViewController: UIViewController {
                 
                 sender.setTitle(self._koteiList[idx].val, for: .normal)
                 self.kotei = self._koteiList[idx].key
-                if _json != nil {
+                if yakan {
+                    defaults.setValue(self.kotei, forKey: "yakan_kotei")
+                    self.yakanDisplay(tagNo: self._tagNO)
+                }else if _json != nil {
                     self.display(json: _json, selected: true)
                 }
                 
@@ -255,9 +343,9 @@ class KoteiViewController: UIViewController {
             .setSelectedRow(row)
             .setCancelButton(action: { _,_,_ in print("キャンセル") })
         picker.appear(originView: sender, baseViewController: self)
-
-    }
         
+    }
+    
     func selectWeather(_ textField:UITextField) {
         
         var array:[String] = []
@@ -277,18 +365,17 @@ class KoteiViewController: UIViewController {
                 textField.text = item
                 self.weather = weatherList[idx].key
                 defaults.setValue(self.weather, forKey: "weather")
-              
+                
             })
             .setSelectedRow(row)
             .setCancelButton(action: { _,_,_ in print("キャンセル") })
         picker.appear(originView: textField, baseViewController: self)
-
+        
     }
     
     @IBAction func entry(_ sender: UIButton) {
         sender.isEnabled = false
         conAlert = UIAlertController(title: "登録中", message: "", preferredStyle: .alert)
-        sender.isEnabled = false
         self.view.endEditing(true)
         var errStr:[String] = []
         //ブランクチェック
@@ -322,7 +409,7 @@ class KoteiViewController: UIViewController {
             }
         }
         
-        if kotei == "06" {
+        if kotei == "06", !yakan {
             if fWeight>0, abs(Int(fWeight)-tWeight) <= 20 {
             }else {
                 errStr.append("仕上り重量と投入量が違います")
@@ -330,7 +417,7 @@ class KoteiViewController: UIViewController {
         }
         
         if errStr.count > 0 { //未入力があったら登録しない
-//            SimpleAlert.make(title: "エラー", message: errStr.joined(separator: "\n"))
+            //SimpleAlert.make(title: "エラー", message: errStr.joined(separator: "\n"))
             let alert = UIAlertController(title: "エラー",
                                           message: errStr.joined(separator: "\n"),
                                           preferredStyle: .alert)
@@ -353,7 +440,7 @@ class KoteiViewController: UIViewController {
             if kotei == "06" {
                 param["G_GRAM"] = String(gWeight) //側重量(g)
                 param["S_GRAM"] = String(aWeight) //総重量(g)
-
+                
                 let w = Double(tWeight)/1000
                 print(w)
                 param["WEIGHT"] = String(floor((w)*100)/100)
@@ -365,58 +452,86 @@ class KoteiViewController: UIViewController {
             
             print(param)
             self.present(conAlert, animated: true, completion: nil)
-            IBM().IBMRequest(type: "HBR031", parameter: param, completionClosure: { [self](_,json,err) in
-                print("IBMRequest")
-                DispatchQueue.main.async {
-                    sender.isEnabled = true
-                }
-                if err == nil, json != nil {
-                    //print(json!)
-                    if json!["RTNCD"] as! String != "000" { //IBMエラー
-                        var msg = ""
-                        for m in json!["RTNMSG"] as? [String] ?? [] {
-                            msg += m+"\n"
-                        }
-                        DispatchQueue.main.async {
-                            self.conAlert.title = "エラー"
-                            self.conAlert.message = msg
-                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                            
-                        }
-                        
-                    }else {
-                        DispatchQueue.main.async {
-                            self.conAlert.title = "登録成功"
-                            self.conAlert.message = "正常に登録できました"
-                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-                                Void in
-                                sender.isEnabled = false //二重登録禁止
-                                //print(_json)
-                                //self.dspInit() //表示クリア
-                                
-                            }))
-                        }
-                    }
-                    
-                }else {
-                    if errMsg == "" {
-                        errMsg = "登録に失敗しました"
+            if yakan{
+                self.dbEntry(param: param)
+
+            }else {
+                self.ibmEntry(param: param)
+            }
+        }
+        
+    }
+    
+    
+    func ibmEntry(param:[String:Any]){//IBMへ登録
+        IBM().IBMRequest(type: "HBR031", parameter: param, completionClosure: { [self](_,json,err) in
+            //print("IBMRequest")
+            if err == nil, json != nil {
+                //print(json!)
+                if json!["RTNCD"] as! String != "000" { //IBMエラー
+                    var msg = ""
+                    for m in json!["RTNMSG"] as? [String] ?? [] {
+                        msg += m+"\n"
                     }
                     DispatchQueue.main.async {
                         self.conAlert.title = "エラー"
-                        self.conAlert.message = errMsg
+                        self.conAlert.message = msg
                         self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                         
                     }
-                }
-                print("isUserInteractionEnabled")
-                DispatchQueue.main.async {
-                    sender.isEnabled = true
+                    
+                }else {
+                    DispatchQueue.main.async {
+                        self.conAlert.title = "登録成功"
+                        self.conAlert.message = "正常に登録できました"
+                        self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                            Void in
+                            self.entryBtn.isEnabled = false //二重登録禁止
+                            
+                        }))
+                    }
                 }
                 
-            })
-        }
+            }else {
+                if errMsg == "" {
+                    errMsg = "登録に失敗しました"
+                }
+                DispatchQueue.main.async {
+                    self.conAlert.title = "エラー"
+                    self.conAlert.message = errMsg
+                    self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    
+                }
+            }
+            print("isUserInteractionEnabled")
+            DispatchQueue.main.async {
+                self.entryBtn.isEnabled = true
+            }
+            
+        })
+    }
+    func dbEntry(param:[String:Any]) {//夜間対応・DB登録
         
+        if localDB.insert(param: param) {
+            //登録成功
+            DispatchQueue.main.async {
+                self.conAlert.title = "登録成功"
+                self.conAlert.message = "正常に登録できました"
+                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
+                    Void in
+                    self.entryBtn.isEnabled = false //二重登録禁止
+                    
+                }))
+            }
+        }else {
+            //登録失敗
+            DispatchQueue.main.async {
+                self.conAlert.title = "エラー"
+                self.conAlert.message = "msg"
+                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.entryBtn.isEnabled = true
+            }
+        }
         
     }
     
@@ -430,7 +545,7 @@ class KoteiViewController: UIViewController {
             }))
             alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
             self.present(alert, animated: true, completion: nil)
-
+            
         }else {
             self.dspInit()
         }
@@ -446,11 +561,11 @@ class KoteiViewController: UIViewController {
         _syainCD = ""
         _syainNM = ""
         syainLabel.text = ""
-
+        
         IBM().search(param: "syain", cd: cd, completionClosure: {
             (str, json,err) in
             if err == nil, json != nil {
-//                print(json!)
+                //                print(json!)
                 var jsonErr:Bool = true
                 if json!["RTNCD"] as! String == "000" {
                     self._syainCD = json!["SYAIN_CD"] as? String ?? ""
@@ -496,19 +611,19 @@ extension KoteiViewController: UITextFieldDelegate {
         case workField:
             //print("作業日")
             self.pickerAppear(textField)
-//        case tempField:
-//            print("気温")
-//        case humidField:
-//            print("湿度")
+        //        case tempField:
+        //            print("気温")
+        //        case humidField:
+        //            print("湿度")
         case weatherField:
             //print("天気")
             self.selectWeather(textField)
             isBeginEditing = false
-//        case weightField:
-//            print("重量")
-//        case tareField:
-//            print("風袋")
-            
+        //        case weightField:
+        //            print("重量")
+        //        case tareField:
+        //            print("風袋")
+        
         default:
             break
         }
@@ -541,12 +656,18 @@ extension KoteiViewController: UITextFieldDelegate {
             
             _tagNO = textField.text!
             setTag()
-           
+            
         case workField:
             print("作業日")
         case syainField: //社員CD
             if Int(str) != nil, str.count == 5 {
-                syainCheck(cd: str)
+                if yakan {
+                    syainLabel.text = ""
+                    defaults.set(str, forKey: "syainCD")
+                    defaults.set("", forKey: "syainNM")
+                }else {
+                    syainCheck(cd: str)
+                }
             }else {
                 SimpleAlert.make(title: "不正な値です", message: "")
                 _syainCD = ""
@@ -560,14 +681,14 @@ extension KoteiViewController: UITextFieldDelegate {
                 temperature = floor(temp*10)/10 //小数点２位以下は切り捨てる
                 textField.text = String(temperature)
                 defaults.set(temperature, forKey: "temperature")
-
+                
             }else {
                 SimpleAlert.make(title: "不正な値です", message: "")
                 temperature = 0
                 textField.text = ""
                 return
             }
-
+            
         case humidField: //湿度
             if let humid = Double(str), humid<100, humid>0 {
                 humidity = floor(humid*10)/10 //小数点２位以下は切り捨てる
@@ -601,7 +722,7 @@ extension KoteiViewController: UITextFieldDelegate {
                     return
                 }
             }
-
+            
         case tareField: //風袋
             if kotei == "06" {
                 if let t = Int(str), str.count <= 4{ //最大桁数4桁
@@ -623,7 +744,7 @@ extension KoteiViewController: UITextFieldDelegate {
                     return
                 }
             }
-
+            
         default:
             break
         }
@@ -636,11 +757,13 @@ extension KoteiViewController: UITextFieldDelegate {
             }else {
                 tWeight = aWeight-gWeight
                 title3Label.text = String(tWeight)
-                if fWeight>0, abs(Int(fWeight)-tWeight) <= 20 {
-                    //仕上り重量と投入量、±20g
-                    title3Label.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-                }else {
-                    title3Label.backgroundColor = #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1)
+                if !yakan {
+                    if fWeight>0, abs(Int(fWeight)-tWeight) <= 20 {
+                        //仕上り重量と投入量、±20g
+                        title3Label.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                    }else {
+                        title3Label.backgroundColor = #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1)
+                    }
                 }
             }
         }
@@ -650,7 +773,7 @@ extension KoteiViewController: UITextFieldDelegate {
 
 //MARK: - ZBar Delegate
 extension KoteiViewController: ZBarReaderDelegate{
-
+    
     @objc func scan(_ sender: UIButton){
         //ZBarReaderViewControllerのオブジェクトを生成
         let reader = ZBarReaderViewController()
@@ -662,11 +785,11 @@ extension KoteiViewController: ZBarReaderDelegate{
         reader.isModalInPresentation = false //下スワイプで閉じないように
         self.present(reader, animated: true, completion: nil)
         
-//        reader.showsZBarControls = false
+        //        reader.showsZBarControls = false
         reader.showsCameraControls = false
-
+        
     }
-
+    
     //バーコードを読み取った後の処理(ZBar)
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         var symbol : ZBarSymbol? = nil
@@ -685,7 +808,7 @@ extension KoteiViewController: ZBarReaderDelegate{
             return
         }
         let resultString = symbol!.data as String
-//        print(resultString)
+        //        print(resultString)
         if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" {
             let tag = ScanData().readCode(picker:picker, result: resultString)
             if tag != "" {
@@ -694,11 +817,12 @@ extension KoteiViewController: ZBarReaderDelegate{
                     self.setTag()
                 })
             }
-                        
+            
         }
     }
     
     func setTag(){
+        self.yakanSwitch()
         if _tagNO == "" {
             tagLabel.text = "TagNo.未入力"
             tagLabel.textColor = .gray
@@ -706,14 +830,17 @@ extension KoteiViewController: ZBarReaderDelegate{
         }else {
             tagLabel.text = _tagNO
             tagLabel.textColor = .black
-
-            self.request(type: "INQUIRY", param: ["TAG_NO":_tagNO])
+            if yakan {
+                yakanDisplay(tagNo: _tagNO)
+            }else {
+                self.request(type: "INQUIRY", param: ["TAG_NO":_tagNO])
+            }
         }
     }
     
     //アップロード済みの画像取得
     func getImages(parm:String,val:String) {
-
+        
         var json:Dictionary<String,Any>!
         let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
         let url = URL(string: path)!
@@ -741,7 +868,7 @@ extension KoteiViewController: ZBarReaderDelegate{
                         DispatchQueue.main.async {
                             self.imgDL(arr:arr, tag:val, syu:parm)
                         }
-
+                        
                     }catch{
                         print("json error")
                         errMsg += "E3001:json error"
@@ -759,7 +886,7 @@ extension KoteiViewController: ZBarReaderDelegate{
                 
                 errMsg += "E3003:\(err!.localizedDescription)"
             }
-
+            
         })
         
         // タスクの実行.
@@ -788,15 +915,15 @@ extension KoteiViewController: ZBarReaderDelegate{
                     print("imageファイルにアクセスできない")
                 }
             }
-        
-        
+            
+            
             DispatchQueue.main.async {
                 if syu == "tagNo" {
-//                    self.tagImg = iArr
-//                    if arr.count > 0 {
-//                        self.photoView.isHidden = false
-//                        self.imgCollection.reloadData()
-//                    }
+                    //                    self.tagImg = iArr
+                    //                    if arr.count > 0 {
+                    //                        self.photoView.isHidden = false
+                    //                        self.imgCollection.reloadData()
+                    //                    }
                     
                 }else {  //syoCD
                     self.gawaImg = iArr
@@ -811,7 +938,7 @@ extension KoteiViewController: ZBarReaderDelegate{
                 }
             }
         }
-//        imgAlert.dismiss(animated: true, completion: nil)
+        //        imgAlert.dismiss(animated: true, completion: nil)
         
     }
     
@@ -829,7 +956,7 @@ extension KoteiViewController: ZBarReaderDelegate{
         }
         
     }
-
+    
 }
 
 extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -846,8 +973,8 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//        let cellSize = cell.frame.size
-//        print(cellSize)
+        //        let cellSize = cell.frame.size
+        //        print(cellSize)
         if indexPath.row == 0 { //1ページ目
             detail2 = DetailView2(frame: CGRect(origin: .zero, size: cell.frame.size), json: _json)
             detail2.nextBtn.tag = 901
@@ -871,7 +998,7 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func display(json:Dictionary<String,Any>, selected:Bool){
-//        keiMeisai = []
+        //        keiMeisai = []
         kanriLabel.text = ""
         keiyakuNO = ""
         _tagNO = json["TAG_NO"] as? String ?? ""
@@ -881,23 +1008,23 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
         infoCollection.delegate = self
         infoCollection.dataSource = self
         infoCollection.isPagingEnabled = true
-
+        
         if let yotei = json["YOTEI_HI"] as? String, yotei != ""{
             //登録済み → 再印刷or削除
             infoView.isHidden = false
             infoView2.isHidden = false
-
+            
             //keiyakuView.isHidden = false
             infoView.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
             infoView.layer.shadowColor = UIColor.black.cgColor
             infoView.layer.shadowOpacity = 0.6
             infoView.layer.shadowRadius = 4
             
-//            infoView2.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-//            infoView2.layer.shadowColor = UIColor.black.cgColor
-//            infoView2.layer.shadowOpacity = 0.6
-//            infoView2.layer.shadowRadius = 4
-
+            //            infoView2.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            //            infoView2.layer.shadowColor = UIColor.black.cgColor
+            //            infoView2.layer.shadowOpacity = 0.6
+            //            infoView2.layer.shadowRadius = 4
+            
             //管理No.
             let renban = json["RENBAN"] as? String ?? ""
             kanri = yotei+"-"+renban
@@ -929,21 +1056,21 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
                 cd = zero+cd
             }
             self.getImages(parm: "syoCD", val: cd)
-
+            
         }else {
             //未登録 → 登録&印刷
             SimpleAlert.make(title: "登録なし", message: "リフレッシュ受付がされていません")
             return
         }
-
+        
         tagLabel.text = _tagNO
         
         //工程を確認
-//        koteiBtn.isEnabled = true
+        //        koteiBtn.isEnabled = true
         koteiBtn.isHidden = false
         entryBtn.isEnabled = true
         if let arr = json["KOTEI_LST"] as? [Dictionary<String,Any>], arr.count>0 {
-
+            
             var koteiArr = arr.map({$0["KOTEI"] as? String ?? ""})
             koteiArr.sort()
             print(koteiArr.last!)
@@ -957,7 +1084,7 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
                 kotei = _koteiList[idx].key
                 koteiBtn.setTitle(_koteiList[idx].val, for: .normal)
             }
-
+            
         }else {
             //工程履歴がなければ、バラシから
             kotei = "04"
@@ -1006,5 +1133,5 @@ extension KoteiViewController:UICollectionViewDelegate, UICollectionViewDataSour
         infoCollection.isPagingEnabled = true
     }
     
-        
+    
 }

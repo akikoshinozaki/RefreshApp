@@ -2,12 +2,12 @@
 //  RefreshAppTests.swift
 //  RefreshAppTests
 //
-//  Created by administrator on 2021/02/02.
+//  Created by AkikoShinozaki on 2021/07/12.
 //  Copyright © 2021 Akiko Shinozaki. All rights reserved.
 //
 
 import XCTest
-@testable import RefreshApp
+//@testable import RefreshApp
 
 class RefreshAppTests: XCTestCase {
 
@@ -19,139 +19,40 @@ class RefreshAppTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    
-    func testExample() {
-        let exp = expectation(description: "test expectation")
+    func testExample() throws {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        //時間を調べて、IBM稼働中かチェック
+        let time = Calendar.current.component(.hour, from: Date())
+        yakan = !(workTime.contains(time))
+        //print(yakan)
         
-        //var json:NSDictionary!
-        var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=INQUIRY&"
-        param += "TAG_NO=72676340"
-        /*
-        for p in ["TAG_NO":"72676340"] {
-            param += "\(p.key)=\(p.value)&"
+
+        for key in kList {
+            let list = defaults.object(forKey: key) as? [Dictionary<String,Any>] ?? []
+            lList.append((key:key, list:list))
         }
+//        GetLists().setList(lists: lList)
+        print(lList)
         
-        if param.last == "&" {
-            param = String(param.dropLast())
-        }*/
+        let _koteiList = koteiList.filter({$0.flag==true})
+        let maxrow = _koteiList.count-1
+        print(koteiList)
+        print(_koteiList)
         
-        let url = URL(string: hostURL)!
+        
+        print(maxrow)
 
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 5.0
-        let session = URLSession(configuration: config)
-        
-        var request = URLRequest(url: url)
-        // POSTを指定
-        request.httpMethod = "POST"
-        // POSTするデータをBodyとして設定
-        request.httpBody = param.data(using: .utf8)
-        
-        session.dataTask(with: request) { (data, response, err) in
-            
-            if err != nil {
-                print(err!.localizedDescription)
-                XCTAssertNil(err)
-            }
-            
-            guard let data = data
-            else {
-                print("error found in data")
-                return
-            }
-            
-            print("*******")
-            
-            let outputStr  = String(data: data, encoding: String.Encoding.utf8) as String?
-            
-            print (outputStr!)
-            /*
-            do{
-                json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
 
-                print(json!)
-                XCTAssertNil(err)
-                XCTAssertNotNil(json)
-                //exp?.fulfill()
-                
-            }catch{
-                print("json error")
-            }*/
-            
-            exp.fulfill()
-            
-        }.resume()
-        
-        
-        waitForExpectations(timeout: 5.0) { (error) in
-            if error != nil {
-                XCTFail(error!.localizedDescription)
-            }
-        }
 
+        
     }
-    
-    /*
+
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        var json:NSDictionary!
-        //var errMsg = ""
-        var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR030&PROC_TYPE=INQUIRY&"
-        
-        for p in ["TAG_NO":"72676340"] {
-            param += "\(p.key)=\(p.value)&"
-        }
-        
-        if param.last == "&" {
-            param = String(param.dropLast())
-            //print(param)
-        }
-        
-        let url = URL(string: hostURL)!
-        print(url)
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 5.0
-        let session = URLSession(configuration: config)
-        
-        var request = URLRequest(url: url)
-        // POSTを指定
-        request.httpMethod = "POST"
-        // POSTするデータをBodyとして設定
-        request.httpBody = param.data(using: .utf8)
-        
         measure {
-            let task = session.dataTask(with:request, completionHandler: {
-                (data, response, err) in
-                
-                if (err == nil){
-                    if(data != nil){
-                        //戻ってきたデータを解析
-                        do{
-                            json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary
-
-                            print(json!)
-                            XCTAssertNil(err)
-                            XCTAssertNotNil(json)
-                            //exp?.fulfill()
-                            
-                        }catch{
-                            print("json error")
-                        }
-                    }else{
-                        print("レスポンスがない")
-                    }
-                    
-                } else {
-                    print("error : \(err!)")
-                }
-
-            })
-            // タスクの実行.
-            task.resume()
-            
-            
+            // Put the code you want to measure the time of here.
         }
-    }*/
-        
+    }
+
 }
-  

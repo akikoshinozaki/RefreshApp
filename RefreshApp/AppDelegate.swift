@@ -9,6 +9,13 @@
 import UIKit
 import CoreData
 import LUKeychainAccess
+import FMDB
+
+//FMDBの変数
+let dbName = "refresh.db"
+var _path:URL!
+var _db:FMDatabase!
+let manager = FileManager.default
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
@@ -41,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         let keychain = LUKeychainAccess.standard()
         
         idfv = keychain.string(forKey: "idfv") ?? ""
-        //print("idfv="+idfv)
+        
         //idfvが空の時（初回起動時）idfvを取得してセット
         if idfv == "" {
             let uuid = UIDevice.current.identifierForVendor
@@ -49,9 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             //保存
             keychain.setString(idfv, forKey: "idfv")
         }
-//        print("idfv="+idfv)
-        
-        //var id = "dev"
         #if DEV
         hostURL = m2URL //開発
         xsrvURL = m2xsrvURL
@@ -76,6 +80,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         let vc = storyboard.instantiateViewController(identifier: "first")
         window?.rootViewController = UINavigationController(rootViewController: vc)
         
+        /* FMDB変数 */
+        if let dir = manager.urls(for: .documentDirectory, in: .userDomainMask).first{
+            _path = dir.appendingPathComponent(dbName)
+            _db = FMDatabase(url: _path)
+        }
+        //print(_path!)
+        localDB = LocalDB(db:_db)
+        localDB.create()
+        
         return true
     }
     
@@ -88,24 +101,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #else
         iPadName = UIDevice.current.name.uppercased()
         #endif
-
-        //IBMと通信可能かチェック
-        hostConnect.delegate = self
-        hostConnect.start(hostName: hostName)
+        
+        //時間を調べて、IBM稼働中かチェック
+        let time = Calendar.current.component(.hour, from: Date())
+        yakan = !(workTime.contains(time))
+//        print(yakan)
+        
+        if yakan {
+            for key in kList {
+                let list = defaults.object(forKey: key) as? [Dictionary<String,Any>] ?? []
+                lList.append((key:key, list:list))
+                print(list)
+            }
+            GetLists().setList(lists: lList)
+            return
+        }
         
         let launchDate = defaults.object(forKey: "lastLaunchDate") as? String ?? ""
         print(launchDate)
         if Date().string2 != launchDate {//yyyyMMdd
             //最終起動日が今日じゃなければセット
             defaults.setValue(Date().string2, forKey: "lastLaunchDate")
-            defaults.removeObject(forKey: "yoteiHI")
-            //
+            defaults.removeObject(forKey: "yoteiHI")//管理日
             defaults.removeObject(forKey: "weather") //天気
             defaults.removeObject(forKey: "temperature") //気温
             defaults.removeObject(forKey: "humidity") //湿度
             defaults.removeObject(forKey: "tareWeight") //風袋
+            defaults.removeObject(forKey: "yakan_kotei") //工程
         }
+        //IBMと通信可能かチェック
+        hostConnect.delegate = self
+        hostConnect.start(hostName: hostName)
 
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
