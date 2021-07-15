@@ -4,27 +4,11 @@
 target 'RefreshApp' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-  
+
   # Pods for RefreshApp
-  pod 'FMDB'
   pod 'ReachabilitySwift'
   pod 'LUKeychainAccess'
   pod 'SwiftyPickerPopover'
   pod 'IQKeyboardManager'
   pod 'ZBarSDK'
-  
-  
-  
-  target 'RefreshAppTests' do
-    # Comment the next line if you don't want to use dynamic frameworks
-    use_frameworks!
-    
-    # Pods for RefreshApp
-#    pod 'ReachabilitySwift'
-#    pod 'LUKeychainAccess'
-    pod 'SwiftyPickerPopover'
-#    pod 'IQKeyboardManager'
-    pod 'ZBarSDK'
-    
-  end
 end

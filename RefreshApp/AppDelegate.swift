@@ -101,6 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #else
         iPadName = UIDevice.current.name.uppercased()
         #endif
+        localDB.removeOldData()
         
         //時間を調べて、IBM稼働中かチェック
         let time = Calendar.current.component(.hour, from: Date())
@@ -114,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
                 print(list)
             }
             GetLists().setList(lists: lList)
-            return
+            //return
         }
         
         let launchDate = defaults.object(forKey: "lastLaunchDate") as? String ?? ""

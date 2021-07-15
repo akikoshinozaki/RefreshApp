@@ -29,10 +29,6 @@ extension Date {
         return toString(format: "yyyyMMdd")
     }
     
-    var timestamp: String {
-        return toString(format: "yyyyMMddHHmmss")
-    }
-    
 }
 
 extension String {
@@ -103,6 +99,6 @@ var jitaArray:[(cd:String, nm:String)] = []
 var hiritsuArr:[Int] = []
 var yakan:Bool = false
 //let workTime = 6..<21
-let workTime = 6..<17
+let workTime = 6..<14
 
 var localDB:LocalDB!

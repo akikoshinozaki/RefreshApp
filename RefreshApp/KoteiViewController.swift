@@ -40,6 +40,7 @@ class KoteiViewController: UIViewController {
     @IBOutlet weak var finishLabel: UILabel!
     @IBOutlet weak var gawaImgBtn: UIButton!
     @IBOutlet weak var yakanLabel: UILabel!
+    @IBOutlet weak var dbBtn: UIButton!
     
     var kotei:String! //"04:ばらし"
     var weather:String = ""
@@ -100,6 +101,13 @@ class KoteiViewController: UIViewController {
 //        print(#function)
 //        self.yakanSwitch()
 //    }
+    
+    @IBAction func pushLocalDB(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main2", bundle: nil)
+        let recept = storyboard.instantiateViewController(withIdentifier: "local")
+        self.navigationController?.pushViewController(recept, animated: true)
+    }
+    
     func yakanSwitch() {
         let time = Calendar.current.component(.hour, from: Date())
         yakan = !(workTime.contains(time))
@@ -663,6 +671,7 @@ extension KoteiViewController: UITextFieldDelegate {
             if Int(str) != nil, str.count == 5 {
                 if yakan {
                     syainLabel.text = ""
+                    _syainCD = str
                     defaults.set(str, forKey: "syainCD")
                     defaults.set("", forKey: "syainNM")
                 }else {
@@ -919,11 +928,11 @@ extension KoteiViewController: ZBarReaderDelegate{
             
             DispatchQueue.main.async {
                 if syu == "tagNo" {
-                    //                    self.tagImg = iArr
-                    //                    if arr.count > 0 {
-                    //                        self.photoView.isHidden = false
-                    //                        self.imgCollection.reloadData()
-                    //                    }
+//                    self.tagImg = iArr
+//                    if arr.count > 0 {
+//                        self.photoView.isHidden = false
+//                        self.imgCollection.reloadData()
+//                    }
                     
                 }else {  //syoCD
                     self.gawaImg = iArr
@@ -938,7 +947,7 @@ extension KoteiViewController: ZBarReaderDelegate{
                 }
             }
         }
-        //        imgAlert.dismiss(animated: true, completion: nil)
+        //imgAlert.dismiss(animated: true, completion: nil)
         
     }
     
