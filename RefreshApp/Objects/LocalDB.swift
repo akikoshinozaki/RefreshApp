@@ -30,6 +30,7 @@ class LocalDB: NSObject {
             "CREATE TABLE IF NOT EXISTS \(tbName) (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "entryDate TEXT, " +
+            "workDay TEXT, " +
             "tagNO TEXT, " +
             "syain TEXT, " +
             "kotei TEXT, " +
@@ -54,6 +55,7 @@ class LocalDB: NSObject {
         var insertSuccess:Bool = false
 
         let entryDate = Date().string
+        let workDay = param["DATE"] as? String ?? ""
         let tag = param["TAG_NO"] as? String ?? ""
         let syain = param["SYAIN"] as? String ?? ""
         let kotei = param["KOTEI"] as? String ?? ""
@@ -69,14 +71,14 @@ class LocalDB: NSObject {
         //Insert
         let insert_SQL = "" +
             "INSERT INTO " + tbName +
-            " (entryDate, tagNO, syain, kotei, temp, humid, weather, weight, g_gram, s_gram, status, createDate) " +
+            " (entryDate, workDay, tagNO, syain, kotei, temp, humid, weather, weight, g_gram, s_gram, status, createDate) " +
             "VALUES " +
-            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
+            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" +
         ";"
 
         print(insert_SQL)
         if self.db.executeUpdate(insert_SQL, withArgumentsIn: [
-            entryDate, tag, syain, kotei, temp, humid, weather, weight, g_gram, s_gram,status,timestamp
+            entryDate, workDay, tag, syain, kotei, temp, humid, weather, weight, g_gram, s_gram,status,timestamp
             ]){
             //insert成功
             insertSuccess = true
@@ -141,6 +143,7 @@ class LocalDB: NSObject {
                 //print(results.columnCount)
                 let obj = SQLObj(id: Int(results.string(forColumn: "id")!)!,
                                  entryDate: results.string(forColumn: "entryDate") ?? "",
+                                 workDay: results.string(forColumn: "workDay") ?? "",
                                  tagNO: results.string(forColumn: "tagNO") ?? "",
                                  syain: results.string(forColumn: "syain") ?? "",
                                  kotei: results.string(forColumn: "kotei") ?? "",

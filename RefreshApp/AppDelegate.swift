@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
             _path = dir.appendingPathComponent(dbName)
             _db = FMDatabase(url: _path)
         }
-        //print(_path!)
+        print(_path!)
         localDB = LocalDB(db:_db)
         localDB.create()
         

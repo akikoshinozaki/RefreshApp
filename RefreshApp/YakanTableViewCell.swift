@@ -10,7 +10,8 @@ import UIKit
 
 class YakanTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var entryLabel: UILabel!
+//    @IBOutlet weak var entryLabel: UILabel!
+    @IBOutlet weak var workLabel: UILabel!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var koteiLabel: UILabel!
     @IBOutlet weak var weatherLabel: UILabel!
@@ -28,7 +29,7 @@ class YakanTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+			
         // Configure the view for the selected state
     }
 

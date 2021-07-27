@@ -90,6 +90,63 @@ class IBM: NSObject, URLSessionDelegate, URLSessionDataDelegate {
         task.resume()
         
     }
+    
+    func IBMRequest2(type:String, parameter:String, completionClosure:@escaping CompletionClosure){
+        IBMResponse = false
+        var json:Dictionary<String,Any>!
+        errMsg = ""
+        var param = "COMPUTER=\(iPadName)&IDENTIFIER=\(idfv)&PRCID=HBR031&PROC_TYPE=\(type)&"
+        param += parameter
+        
+        print(param)
+        let url = URL(string: hostURL)!
+        print(url)
+        
+        let config = URLSessionConfiguration.default
+        //config.timeoutIntervalForRequest = 5.0
+        let session = URLSession(configuration: config)
+        
+        var request = URLRequest(url: url)
+        // POSTを指定
+        request.httpMethod = "POST"
+        // POSTするデータをBodyとして設定
+        request.httpBody = param.data(using: .utf8)
+        // 通信のタスクを生成.
+        let task = session.dataTask(with:request, completionHandler: {
+            (data, response, err) in
+            if (err == nil){
+                if(data != nil){
+                    //戻ってきたデータを解析
+                    do{
+                        json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as? Dictionary<String,Any>
+                        IBMResponse = true
+                        print(json!)
+                    }catch{
+                        print("json error")
+                        errMsg += "E3001:json error"
+                    }
+                }else{
+                    print("レスポンスがない")
+                    errMsg += "E3001:No Response"
+                }
+                
+            } else {
+                print("error : \(err!)")
+                if (err! as NSError).code == -1001 {
+                    print("timeout")
+                }
+                
+                errMsg += "E3003:\(err!.localizedDescription)"
+            }
+
+            completionClosure(nil,json, err)
+
+        })
+        
+        // タスクの実行.
+        task.resume()
+        
+    }
 
     func search(param:String, cd:String,completionClosure:@escaping CompletionClosure){
         var json:Dictionary<String,Any>!

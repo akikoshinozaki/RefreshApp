@@ -98,7 +98,7 @@ var grd_lst:[(cd:String, nm:String)] = []
 var jitaArray:[(cd:String, nm:String)] = []
 var hiritsuArr:[Int] = []
 var yakan:Bool = false
-//let workTime = 6..<21
-let workTime = 6..<14
+let workTime = 6..<21
+//let workTime = 6..<13
 
 var localDB:LocalDB!
