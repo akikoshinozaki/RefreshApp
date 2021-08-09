@@ -40,7 +40,7 @@ class KoteiViewController: UIViewController {
     @IBOutlet weak var finishLabel: UILabel!
     @IBOutlet weak var gawaImgBtn: UIButton!
     @IBOutlet weak var yakanLabel: UILabel!
-    @IBOutlet weak var dbBtn: UIButton!
+    //@IBOutlet weak var dbBtn: UIButton!
     
     var kotei:String! //"04:ばらし"
     var weather:String = ""
@@ -84,6 +84,9 @@ class KoteiViewController: UIViewController {
         entryBtn.layer.cornerRadius = 8
         clearBtn.layer.cornerRadius = 8
         _koteiList = koteiList.filter({$0.flag==true})
+        
+        let dbBtn = UIBarButtonItem(title: "夜間入力リスト ＞", style: .plain, target: self, action: #selector(pushLocalDB(_:)))
+        navigationItem.rightBarButtonItem = dbBtn
         
     }
     

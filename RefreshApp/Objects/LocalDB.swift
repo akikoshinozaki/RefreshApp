@@ -138,6 +138,7 @@ class LocalDB: NSObject {
         //照会
         var arr:[SQLObj] = []
         let SQLSelect = "SELECT * FROM \(tbName) where status = '\(status)';"
+//        let SQLSelect = "SELECT * FROM \(tbName);"
         if let results = self.db.executeQuery(SQLSelect, withArgumentsIn: []) {
             while results.next() {
                 //print(results.columnCount)

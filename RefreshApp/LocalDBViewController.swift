@@ -23,17 +23,18 @@ struct SQLObj {
     var s_gram: String = ""
     var timeStamp : String = ""
     var status:String = ""
+    var error:Bool = false
 }
-
+var selectButtonItem: UIBarButtonItem!
 
 class LocalDBViewController: UIViewController {
 
     @IBOutlet weak var syainField: UITextField!
     @IBOutlet weak var syainLabel: UILabel!
-    @IBOutlet weak var editBtn: UIButton!
+//    @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var entryBtn: UIButton!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var selectBtn: UIButton!
+//    @IBOutlet weak var selectBtn: UIButton!
     
     var dspArr:[SQLObj] = []
     
@@ -51,72 +52,69 @@ class LocalDBViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         self.navigationController?.isNavigationBarHidden = false
-//        navigationItem.title = "title"
-//        navigationItem.rightBarButtonItem = editButtonItem
+        navigationItem.title = "IBMへ登録"
+        navigationItem.rightBarButtonItems = [editButtonItem]
         
         dspArr = localDB.selectTB(status: "unsent")
+        print(dspArr.count)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.allowsMultipleSelectionDuringEditing = true
         
         syainField.delegate = self
         
-        tbEditing = false
-        
-            selectBtn.isHidden = true
-            selectBtn.layer.cornerRadius = 5
-            selectBtn.addTarget(self, action: #selector(selectBtnTapped(_:)), for: .touchUpInside)
+//        tbEditing = false
+//        selectBtn.isHidden = true
+//        selectBtn.layer.cornerRadius = 5
+//        selectBtn.addTarget(self, action: #selector(selectBtnTapped(_:)), for: .touchUpInside)
 
-        editBtn.addTarget(self, action: #selector(tableEditing), for: .touchUpInside)
         
     }
     
-
-//    override func setEditing(_ editing: Bool, animated: Bool) {
-//        super.setEditing(editing, animated: animated)
-//        self.tableEditing(editing: editing)
-//    }
-    
-    @objc func tableEditing() {
-        tbEditing = !tbEditing
-        tableView.isEditing = tbEditing
-        selectBtn.isHidden = !tbEditing
-        if isEditing {
-//            self.editButtonItem.title = "完了"
-            editBtn.setTitle("完了", for: .normal)
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.isEditing = editing
+        selectButtonItem = UIBarButtonItem(title: "全て選択", style: .done, target: self, action: #selector(selectBtnTapped(_:)))
+        self.editButtonItem.tintColor = .systemBlue
+        if editing {
+            navigationItem.rightBarButtonItems = [editButtonItem,selectButtonItem]
         }else {
-//            self.editButtonItem.title = "編集"
-            editBtn.setTitle("編集", for: .normal)
+            navigationItem.rightBarButtonItems = [editButtonItem]
             self.deleteRows()
         }
         
     }
     
-    @objc func selectBtnTapped(_ sender:UIButton){
+    @objc func selectBtnTapped(_ sender:UIBarButtonItem){
 
         if tableView.isEditing {
             print("selectBtn")
-            cellAllSelected = !cellAllSelected
-            //セルを選択状態にする
-            for i in 0..<dspArr.count {
-                let cell = tableView.cellForRow(at: [0,i])
-                cell?.isSelected = cellAllSelected
-            }
-
-            selectedIndexPaths = []
-            if cellAllSelected {
-                selectBtn.setTitle("選択解除", for: .normal)
-                //選択したセルを配列に追加
+            
+            if selectedIndexPaths.count == 0 {
+                //全選択
+                //セルを選択状態にする
+                selectedIndexPaths = []
                 for i in 0..<dspArr.count {
                     selectedIndexPaths.append([0,i])
                 }
-//                self.editButtonItem.title = "Delete"
-                editBtn.setTitle("削除", for: .normal)
+                cellAllSelected = true
+                sender.title = "選択解除"
+                self.editButtonItem.title = "削除"
+                self.editButtonItem.tintColor = .systemRed
                 
             }else {
-                selectBtn.setTitle("全て選択", for: .normal)
-                editBtn.setTitle("完了", for: .normal)
-//                self.editButtonItem.title = "Done"
+                //選択解除
+                selectedIndexPaths = []
+                cellAllSelected = false
+                sender.title = "全て選択"
+                self.editButtonItem.title = "完了"
+                self.editButtonItem.tintColor = .systemBlue
+                
+            }
+            
+            for i in 0..<dspArr.count {
+                let cell = tableView.cellForRow(at: [0,i])
+                cell?.isSelected = cellAllSelected
             }
             
 
@@ -137,8 +135,11 @@ class LocalDBViewController: UIViewController {
             self.present(self.conAlert, animated: true, completion: nil)
         }
         
-        print(dspArr)
+//        print(dspArr)
         var paramStr = ""
+        let idList:[Int] = dspArr.map{ $0.id }
+//        localDB.updateData(column: "status", param: "unsent", idList: idList)
+        
         for (i,obj) in dspArr.enumerated() {
             paramStr += "" +
                 "DATA_NO=\(i+1)&" +
@@ -157,7 +158,7 @@ class LocalDBViewController: UIViewController {
             }
             
         }
-        
+                
         paramStr += "DETAILS_CNT=\(dspArr.count)"
         
         IBM().IBMRequest2(type: "YAKAN", parameter: paramStr, completionClosure: { (_,json,err) in
@@ -168,11 +169,24 @@ class LocalDBViewController: UIViewController {
                     for m in json!["RTNMSG"] as? [String] ?? [] {
                         msg += m+"\n"
                     }
+                    //エラーのあるデータのセルを判別
+                    for d in json!["DETAILS"] as? [NSDictionary] ?? [] {
+                        //print(d["ERR_ITEM"] as? [String] ?? [])
+                        if let err = d["ERR_ITEM"] as? [String], err.count > 0 {
+                            if let i = d["DATA_NO"] as? Int, i>1 {
+                                //errorをtrueにする（tableView reloadでセルを赤くする）
+                                self.dspArr[i-1].error = true
+                            }
+                        }
+                    }
+                    
+                    //print(msg)
+
                     DispatchQueue.main.async {
                         self.conAlert.title = "エラー"
                         self.conAlert.message = msg
                         self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-
+                        self.tableView.reloadData()
                     }
                     
                 }else {
@@ -182,6 +196,8 @@ class LocalDBViewController: UIViewController {
                         self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                             Void in
                             self.entryBtn.isEnabled = false //二重登録禁止
+                            //ステータスを【sent】にして、送信済みにする
+                            localDB.updateData(column: "status", param: "sent", idList: idList)
 
                         }))
                     }
@@ -241,30 +257,35 @@ extension LocalDBViewController: UITableViewDelegate, UITableViewDataSource {
         }
         cell.tantoLabel.text = obj.syain
         
+        if obj.error {
+            cell.contentView.backgroundColor = #colorLiteral(red: 1, green: 0.4932718873, blue: 0.4739984274, alpha: 1)
+        }else {
+            cell.contentView.backgroundColor = .clear
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("選択")
         // 編集モードじゃない場合はreturn
         guard tableView.isEditing else { return }
         //selectedIndexPaths = tableView.indexPathsForSelectedRows ?? []
         selectedIndexPaths.append(indexPath)
         print(selectedIndexPaths)
-
         //if let _ = self.tableView.indexPathsForSelectedRows {
         if selectedIndexPaths.count > 0 {
             // 選択肢にチェックが一つでも入ってたら「削除」を表示する。
-//            self.editButtonItem.title = "削除"
-            editBtn.setTitle("削除", for: .normal)
-            cellAllSelected = true
-            self.selectBtn.setTitle("選択解除", for: .normal)
-
+            self.editButtonItem.title = "削除"
+            self.editButtonItem.tintColor = .systemRed
+            selectButtonItem.title = "選択解除"
         }
 
     }
     
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        print("選択解除")
         // 編集モードじゃない場合はreturn
         guard tableView.isEditing else { return }
         //selectedIndexPaths = tableView.indexPathsForSelectedRows ?? []
@@ -277,15 +298,15 @@ extension LocalDBViewController: UITableViewDelegate, UITableViewDataSource {
 
         //if let _ = self.tableView.indexPathsForSelectedRows {
         if selectedIndexPaths.count > 0 {
-            self.editBtn.setTitle("削除", for: .normal)
-//            self.editButtonItem.title = "Delete"
+            self.editButtonItem.title = "削除"
+            self.editButtonItem.tintColor = .systemRed
             
         } else {
-            cellAllSelected = false
+            //cellAllSelected = false
             // 何もチェックされていないときは"Done"を表示
-//            self.editButtonItem.title = "Done"
-            self.editBtn.setTitle("完了", for: .normal)
-            selectBtn.setTitle("全て選択", for: .normal)
+            self.editButtonItem.title = "完了"
+            self.editButtonItem.tintColor = .systemBlue
+            selectButtonItem.title = "全て選択"
 
         }
     }

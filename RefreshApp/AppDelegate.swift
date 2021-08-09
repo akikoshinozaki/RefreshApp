@@ -101,6 +101,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HostConnectDelegate {
         #else
         iPadName = UIDevice.current.name.uppercased()
         #endif
+        
+        //30日経過したDBのデータを削除
         localDB.removeOldData()
         
         //時間を調べて、IBM稼働中かチェック
