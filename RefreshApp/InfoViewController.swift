@@ -207,8 +207,8 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         
         //自社・他社区分1
         if let jita1 = json["JITAK1"] as? String, jita1 != "" {
-            jitak1 = Int(jita1) ?? 0
-            if jitak1 > 0 {
+            if let i = Int(jita1), i>0 {
+                jitak1 = i
                 let obj = jitaArray[jitak1-1]
                 jita1Field.text = obj.cd+":"+obj.nm
             }
@@ -228,12 +228,11 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         }
         //自社・他社区分2
 	        if let jita2 = json["JITAK2"] as? String, jita2 != "" {
-            jitak2 = Int(jita2) ?? 0
-            if jitak2 > 0 {
-                let obj = jitaArray[jitak2-1]
-                jita2Field.text = obj.cd+":"+obj.nm
-
-            }
+                if let i = Int(jita2), i>0 {
+                    jitak2 = i
+                    let obj = jitaArray[jitak2-1]
+                    jita2Field.text = obj.cd+":"+obj.nm
+                }
         }
         //羽毛グレード2
         if let grd = json["GRADE2"] as? String, grd != "  " {
@@ -511,7 +510,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
             
             //自社・他社区分
             var j1 = ""
-            if jitak1 != nil {
+            if jitak1 != nil, jitak1>0 {
                 j1 = String(jitak1)
             }
             param["JITAK1"] = j1
@@ -535,7 +534,7 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
 
             //自社・他社区分
             var j2 = ""
-            if jitak2 != nil {
+            if jitak2 != nil, jitak2>0 {
                 j2 = String(jitak2)
             }
             param["JITAK2"] = j2
