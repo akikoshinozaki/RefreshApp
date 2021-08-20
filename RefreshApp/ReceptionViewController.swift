@@ -1007,17 +1007,17 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     }
 
     
-    @IBAction func showImages(_ sender: UIButton) {
-        if imageArr.count == 0 {
-            SimpleAlert.make(title: "表示する写真がありません", message: "")
-            return
-        }
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let photo = storyboard.instantiateViewController(withIdentifier: "photo")
-        
-        self.navigationController?.pushViewController(photo, animated: true)
-
-    }
+//    @IBAction func showImages(_ sender: UIButton) {
+//        if imageArr.count == 0 {
+//            SimpleAlert.make(title: "表示する写真がありません", message: "")
+//            return
+//        }
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let photo = storyboard.instantiateViewController(withIdentifier: "photo")
+//
+//        self.navigationController?.pushViewController(photo, animated: true)
+//
+//    }
     
     @IBAction func entryDataAndImage(_ sender: UIButton) {
         print(_json)
@@ -1137,7 +1137,14 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                 self.conAlert.title = "画像送信中"
             }
             //self.present(self.postAlert, animated: true, completion: nil)
-            Upload().uploadData()
+            print(_json["YOTEI_HI"] as? String)
+            var date = Date().string
+            if let yotei = _json["YOTEI_HI"] as? String {
+                date = yotei.date.string
+            }
+            print(date)
+            
+            Upload().uploadData(date:date)
             NotificationCenter.default.addObserver(self, selector: #selector(self.finishUpload), name: Notification.Name(rawValue:"postImage"), object: nil)
         }
     }

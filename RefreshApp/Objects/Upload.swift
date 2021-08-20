@@ -48,7 +48,7 @@ class Upload: NSObject {
     }
 
     
-    func uploadData(){
+    func uploadData(date:String){
         let url = URL(string: xsrvURL)!
         var request = URLRequest(url:url)
         let boundary = "---------------------------168072824752491622650073"
@@ -62,7 +62,8 @@ class Upload: NSObject {
 //        body.append("name=\"tagNo\"\r\n\r\n".data(using: .utf8)!)
 //        body.append("\(tagNO)\r\n".data(using: .utf8)!)
         body.append("name=\"today\"\r\n\r\n".data(using: .utf8)!)
-        body.append("\(Date().string)\r\n".data(using: .utf8)!)
+        //body.append("\(Date().string)\r\n".data(using: .utf8)!)
+        body.append("\(date)\r\n".data(using: .utf8)!)
         //何個画像を送るか
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data;".data(using: .utf8)!)
