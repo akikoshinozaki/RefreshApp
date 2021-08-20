@@ -144,7 +144,7 @@ class UploadViewController: UIViewController {
             DispatchQueue.main.async {
                 
                 self.present(self.postAlert, animated: true, completion: nil)
-                Upload().uploadData()
+                Upload().uploadData(date: "その他画像")
                 NotificationCenter.default.addObserver(self, selector: #selector(self.finishUpload), name: Notification.Name(rawValue:"postImage"), object: nil)
             }
         }))
