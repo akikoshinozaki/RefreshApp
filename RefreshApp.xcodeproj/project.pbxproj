@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18390178F3B72A020687F64B /* Pods_RefreshApp_RefreshAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 380D61101C7AF19AC27D8322 /* Pods_RefreshApp_RefreshAppTests.framework */; };
 		396DCE2C269D3F720035DC74 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E2FBE255A6F71009C9057 /* Common.swift */; };
 		396DCE2E269D69470035DC74 /* LocalDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396DCE2D269D69460035DC74 /* LocalDB.swift */; };
 		4E0ED3FF2623D9E800A4B714 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0ED3FE2623D9E800A4B714 /* InfoView.swift */; };
@@ -46,17 +45,19 @@
 		4EBCC91425BE9A2C00882906 /* SelectDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCC91325BE9A2C00882906 /* SelectDateView.swift */; };
 		4EC1E10E2669BEF800AD6DD8 /* kotei.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EC1E10D2669BEF800AD6DD8 /* kotei.png */; };
 		4EC1EB3625CA8DAC00D35377 /* ReceptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */; };
+		4EC42844271D5D0600C97694 /* KensaLabelView.swift in Resources */ = {isa = PBXBuildFile; fileRef = 4EE50239262531C600AAE522 /* KensaLabelView.swift */; };
 		4ED33534265F7EDF00EB821D /* KoteiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED33533265F7EDF00EB821D /* KoteiViewController.swift */; };
 		4ED33539265FC09D00EB821D /* MyPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4ED33537265FC09D00EB821D /* MyPickerView.xib */; };
 		4ED3353A265FC09D00EB821D /* MyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED33538265FC09D00EB821D /* MyPickerView.swift */; };
-		4EE502372625181C00AAE522 /* BRLavelView2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EE502362625181C00AAE522 /* BRLavelView2.xib */; };
-		4EE5023A262531C600AAE522 /* BRLabelView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE50239262531C600AAE522 /* BRLabelView2.swift */; };
+		4EE502372625181C00AAE522 /* KensaLabelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EE502362625181C00AAE522 /* KensaLabelView.xib */; };
+		4EE5023A262531C600AAE522 /* KensaLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE50239262531C600AAE522 /* KensaLabelView.swift */; };
 		4EEC4D5825556C69003AF923 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5725556C69003AF923 /* AppDelegate.swift */; };
 		4EEC4D5C25556C69003AF923 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5B25556C69003AF923 /* ViewController.swift */; };
 		4EEC4D5F25556C69003AF923 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D5D25556C69003AF923 /* Main.storyboard */; };
 		4EEC4D6225556C69003AF923 /* RefreshApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6025556C69003AF923 /* RefreshApp.xcdatamodeld */; };
 		4EEC4D6425556C6C003AF923 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6325556C6C003AF923 /* Assets.xcassets */; };
 		4EEC4D6725556C6C003AF923 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EEC4D6525556C6C003AF923 /* LaunchScreen.storyboard */; };
+		4EF2DB84271D521E0068C437 /* LabelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF2DB83271D521E0068C437 /* LabelViewController.swift */; };
 		4EF3EF6F2665D9110050AE42 /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF3EF6D2665D9110050AE42 /* DetailTableViewCell.swift */; };
 		4EF3EF702665D9110050AE42 /* DetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EF3EF6E2665D9110050AE42 /* DetailTableViewCell.xib */; };
 		C313E80025E38F7C00666210 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C313E7FF25E38F7C00666210 /* FirstViewController.swift */; };
@@ -124,7 +125,6 @@
 
 /* Begin PBXFileReference section */
 		13000F623F650A5F2C7ED428 /* Pods_RefreshApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RefreshApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		380D61101C7AF19AC27D8322 /* Pods_RefreshApp_RefreshAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RefreshApp_RefreshAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		396DCE2D269D69460035DC74 /* LocalDB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalDB.swift; sourceTree = "<group>"; };
 		4E0ED3FE2623D9E800A4B714 /* InfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4E37C87525F3D11400314885 /* DetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailView.xib; sourceTree = "<group>"; };
@@ -166,8 +166,8 @@
 		4ED33533265F7EDF00EB821D /* KoteiViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoteiViewController.swift; sourceTree = "<group>"; };
 		4ED33537265FC09D00EB821D /* MyPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPickerView.xib; sourceTree = "<group>"; };
 		4ED33538265FC09D00EB821D /* MyPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPickerView.swift; sourceTree = "<group>"; };
-		4EE502362625181C00AAE522 /* BRLavelView2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BRLavelView2.xib; sourceTree = "<group>"; };
-		4EE50239262531C600AAE522 /* BRLabelView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRLabelView2.swift; sourceTree = "<group>"; };
+		4EE502362625181C00AAE522 /* KensaLabelView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KensaLabelView.xib; sourceTree = "<group>"; };
+		4EE50239262531C600AAE522 /* KensaLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KensaLabelView.swift; sourceTree = "<group>"; };
 		4EEC4D5425556C69003AF923 /* RefreshApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RefreshApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EEC4D5725556C69003AF923 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EEC4D5B25556C69003AF923 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -176,13 +176,10 @@
 		4EEC4D6325556C6C003AF923 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4EEC4D6625556C6C003AF923 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4EEC4D6825556C6C003AF923 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4EF2DB83271D521E0068C437 /* LabelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LabelViewController.swift; path = /Users/shinozakiakiko/Documents/iOS_Apps/RefreshApp/RefreshApp/LabelViewController.swift; sourceTree = "<absolute>"; };
 		4EF3EF6D2665D9110050AE42 /* DetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTableViewCell.swift; sourceTree = "<group>"; };
 		4EF3EF6E2665D9110050AE42 /* DetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailTableViewCell.xib; sourceTree = "<group>"; };
-		5E940EAB961E2665551DCB73 /* Pods-RefreshApp-RefreshAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp-RefreshAppTests.release.xcconfig"; path = "Target Support Files/Pods-RefreshApp-RefreshAppTests/Pods-RefreshApp-RefreshAppTests.release.xcconfig"; sourceTree = "<group>"; };
-		75ACDDA01AD76937A63B9D4C /* Pods-RefreshApp-RefreshAppTests.dev-release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp-RefreshAppTests.dev-release.xcconfig"; path = "Target Support Files/Pods-RefreshApp-RefreshAppTests/Pods-RefreshApp-RefreshAppTests.dev-release.xcconfig"; sourceTree = "<group>"; };
 		7C47E5FEF43F033786A47B69 /* Pods-RefreshApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.release.xcconfig"; sourceTree = "<group>"; };
-		83F2A7A35FE46EF2FDE9DE5A /* Pods-RefreshApp-RefreshAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp-RefreshAppTests.debug.xcconfig"; path = "Target Support Files/Pods-RefreshApp-RefreshAppTests/Pods-RefreshApp-RefreshAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		A42F5141DB95722448D030AA /* Pods-RefreshApp-RefreshAppTests.dev-debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp-RefreshAppTests.dev-debug.xcconfig"; path = "Target Support Files/Pods-RefreshApp-RefreshAppTests/Pods-RefreshApp-RefreshAppTests.dev-debug.xcconfig"; sourceTree = "<group>"; };
 		ADAB64EF3A0D9F56C9F19713 /* Pods-RefreshApp.dev-release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RefreshApp.dev-release.xcconfig"; path = "Target Support Files/Pods-RefreshApp/Pods-RefreshApp.dev-release.xcconfig"; sourceTree = "<group>"; };
 		C313E7FF25E38F7C00666210 /* FirstViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		C32258992558DEC1007BB719 /* deletebtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deletebtn.png; sourceTree = "<group>"; };
@@ -241,7 +238,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18390178F3B72A020687F64B /* Pods_RefreshApp_RefreshAppTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +275,7 @@
 				4EEC4D5725556C69003AF923 /* AppDelegate.swift */,
 				4EEC4D5B25556C69003AF923 /* ViewController.swift */,
 				4EC1EB3525CA8DAC00D35377 /* ReceptionViewController.swift */,
+				4EF2DB83271D521E0068C437 /* LabelViewController.swift */,
 				4E6E772625D4F37800BBA885 /* InfoViewController.swift */,
 				4E9C66BA26255683003E29FF /* InfoViewController2.swift */,
 				C388924C25E3750900EFD720 /* InquiryViewController.swift */,
@@ -317,10 +314,6 @@
 				7C47E5FEF43F033786A47B69 /* Pods-RefreshApp.release.xcconfig */,
 				E90B360D0AE395D81EBCEF83 /* Pods-RefreshApp.dev-debug.xcconfig */,
 				ADAB64EF3A0D9F56C9F19713 /* Pods-RefreshApp.dev-release.xcconfig */,
-				83F2A7A35FE46EF2FDE9DE5A /* Pods-RefreshApp-RefreshAppTests.debug.xcconfig */,
-				A42F5141DB95722448D030AA /* Pods-RefreshApp-RefreshAppTests.dev-debug.xcconfig */,
-				5E940EAB961E2665551DCB73 /* Pods-RefreshApp-RefreshAppTests.release.xcconfig */,
-				75ACDDA01AD76937A63B9D4C /* Pods-RefreshApp-RefreshAppTests.dev-release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -377,7 +370,6 @@
 			children = (
 				C3B74FB42574C6A700C78794 /* BRLMPrinterKit.framework */,
 				13000F623F650A5F2C7ED428 /* Pods_RefreshApp.framework */,
-				380D61101C7AF19AC27D8322 /* Pods_RefreshApp_RefreshAppTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -416,8 +408,8 @@
 			children = (
 				4E6E771025D36F4E00BBA885 /* BRLabelView.xib */,
 				4E6E771325D36F6500BBA885 /* BRLabelView.swift */,
-				4EE50239262531C600AAE522 /* BRLabelView2.swift */,
-				4EE502362625181C00AAE522 /* BRLavelView2.xib */,
+				4EE502362625181C00AAE522 /* KensaLabelView.xib */,
+				4EE50239262531C600AAE522 /* KensaLabelView.swift */,
 				4E50A5BD25F767960015B997 /* _BRLabelView.xib */,
 				4EBCC91125BE9A0100882906 /* SelectDateView.xib */,
 				4EBCC91325BE9A2C00882906 /* SelectDateView.swift */,
@@ -464,11 +456,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C3B6424725C8F11300A2AB50 /* Build configuration list for PBXNativeTarget "RefreshAppTests" */;
 			buildPhases = (
-				A9D2AC75B20145288B5BB3E7 /* [CP] Check Pods Manifest.lock */,
 				C3B6423825C8F11300A2AB50 /* Sources */,
 				C3B6423925C8F11300A2AB50 /* Frameworks */,
 				C3B6423A25C8F11300A2AB50 /* Resources */,
-				305E4B9DFFFA1795CB375234 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -532,8 +522,10 @@
 				4EF3EF702665D9110050AE42 /* DetailTableViewCell.xib in Resources */,
 				4E6E771125D36F4E00BBA885 /* BRLabelView.xib in Resources */,
 				4ED33539265FC09D00EB821D /* MyPickerView.xib in Resources */,
+				4EE502372625181C00AAE522 /* KensaLabelView.xib in Resources */,
 				4E5DB92B2555748300A53584 /* ScannerView.xib in Resources */,
 				C3C95DF525889D6F00BBE180 /* Main2.storyboard in Resources */,
+				4EC42844271D5D0600C97694 /* KensaLabelView.swift in Resources */,
 				4E776DE725580EEA009344EB /* left.png in Resources */,
 				C34B5BDF25F5FBF300CB41F4 /* inquiry.png in Resources */,
 				4EEC4D6425556C6C003AF923 /* Assets.xcassets in Resources */,
@@ -559,7 +551,6 @@
 				4E8857C226368FB100E9D05C /* entry2.png in Resources */,
 				C34D6B372643D4000072B8B6 /* bn04.png in Resources */,
 				4E776DE825580EEA009344EB /* right.png in Resources */,
-				4EE502372625181C00AAE522 /* BRLavelView2.xib in Resources */,
 				C322589A2558DEC1007BB719 /* deletebtn.png in Resources */,
 				C35E2FBB255A1669009C9057 /* unsent.png in Resources */,
 				C35ABDA5261C4CCD00687CB4 /* InfoView2.xib in Resources */,
@@ -577,23 +568,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		305E4B9DFFFA1795CB375234 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RefreshApp-RefreshAppTests/Pods-RefreshApp-RefreshAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RefreshApp-RefreshAppTests/Pods-RefreshApp-RefreshAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RefreshApp-RefreshAppTests/Pods-RefreshApp-RefreshAppTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		86CE9ADFEE35B30D28448FEA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -633,28 +607,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A9D2AC75B20145288B5BB3E7 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-RefreshApp-RefreshAppTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -686,9 +638,10 @@
 				4ED3353A265FC09D00EB821D /* MyPickerView.swift in Sources */,
 				4E9A2FC926789308005391BB /* ScanData.swift in Sources */,
 				C35E2FBF255A6F71009C9057 /* Common.swift in Sources */,
-				4EE5023A262531C600AAE522 /* BRLabelView2.swift in Sources */,
+				4EE5023A262531C600AAE522 /* KensaLabelView.swift in Sources */,
 				4E5DB92E25557C7700A53584 /* CameraViewController.swift in Sources */,
 				4E5DB9282555747100A53584 /* ScannerView.swift in Sources */,
+				4EF2DB84271D521E0068C437 /* LabelViewController.swift in Sources */,
 				396DCE2E269D69470035DC74 /* LocalDB.swift in Sources */,
 				4E81401625F48DF600CAE545 /* DetailView2.swift in Sources */,
 				C322589C2558E4D3007BB719 /* Upload.swift in Sources */,
@@ -1120,7 +1073,6 @@
 		};
 		C3B6424325C8F11300A2AB50 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 83F2A7A35FE46EF2FDE9DE5A /* Pods-RefreshApp-RefreshAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1142,7 +1094,6 @@
 		};
 		C3B6424425C8F11300A2AB50 /* Dev-Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A42F5141DB95722448D030AA /* Pods-RefreshApp-RefreshAppTests.dev-debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1164,7 +1115,6 @@
 		};
 		C3B6424525C8F11300A2AB50 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5E940EAB961E2665551DCB73 /* Pods-RefreshApp-RefreshAppTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1186,7 +1136,6 @@
 		};
 		C3B6424625C8F11300A2AB50 /* Dev-Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75ACDDA01AD76937A63B9D4C /* Pods-RefreshApp-RefreshAppTests.dev-release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

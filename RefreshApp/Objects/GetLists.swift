@@ -35,7 +35,7 @@ class GetLists: NSObject {
                     }
                 }else {
                     //取得成功
-                    print(json!)
+//                    print(json!)
                     
                     lList = []
                     var isEmpty:Bool = false

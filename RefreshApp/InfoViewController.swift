@@ -171,20 +171,41 @@ class InfoViewController: UIViewController, SelectDateViewDelegate {
         }
         enrollLabel.isHidden = !isBLXexist
         
+//        printData = PrintData(date: yotei_hi,
+//                                   renban: json["RENBAN"] as? String ?? "",
+//                                   customer: json["CUSTOMER_NM"] as? String ?? "",
+//                                   tagNO: json["TAG_NO"] as? String ?? "",
+//                                   itemCD: json["SYOHIN_CD"] as? String ?? "",
+//                                   itemNM: json["SYOHIN_NM"] as? String ?? "",
+//                                   nouki: json["NOUKI"] as? String ?? "",
+//                                   kigen: json["KIGEN"] as? String ?? "",
+//                                   grade1: json["GRADE1"] as? String ?? "",
+//                                   ritsu1: json["RITSU1"] as? String ?? "0.0",
+//                                   jita1: json["JITAK1"] as? String ?? "",
+//                                   grade2: json["GRADE2"] as? String ?? "",
+//                                   ritsu2: json["RITSU2"] as? String ?? "0.0",
+//                                   jita2: json["JITAK2"] as? String ?? "")
         printData = PrintData(date: yotei_hi,
-                                   renban: json["RENBAN"] as? String ?? "",
-                                   customer: json["CUSTOMER_NM"] as? String ?? "",
-                                   tagNO: json["TAG_NO"] as? String ?? "",
-                                   itemCD: json["SYOHIN_CD"] as? String ?? "",
-                                   itemNM: json["SYOHIN_NM"] as? String ?? "",
-                                   nouki: json["NOUKI"] as? String ?? "",
-                                   kigen: json["KIGEN"] as? String ?? "",
-                                   grade1: json["GRADE1"] as? String ?? "",
-                                   ritsu1: json["RITSU1"] as? String ?? "0.0",
-                                   jita1: json["JITAK1"] as? String ?? "",
-                                   grade2: json["GRADE2"] as? String ?? "",
-                                   ritsu2: json["RITSU2"] as? String ?? "0.0",
-                                   jita2: json["JITAK2"] as? String ?? "")
+                              renban: _json["RENBAN"] as? String ?? "",
+                              customer: _json["CUSTOMER_NM"] as? String ?? "",
+                              tagNO: _json["TAG_NO"] as? String ?? "",
+                              keiNO: _json["KEI_NO"] as? String ?? "",
+                              itemCD: _json["SYOHIN_CD"] as? String ?? "",
+                              itemNM: _json["SYOHIN_NM"] as? String ?? "",
+                              nouki: _json["NOUKI"] as? String ?? "",
+                              kigen: _json["KIGEN"] as? String ?? "",
+                              juryo: _json["WATA"] as? String ?? "0.0",
+                              zogen: _json["ZOGEN"] as? String ?? "0",
+                              grade1: _json["GRADE1"] as? String ?? "",
+                              ritsu1: _json["RITSU1"] as? String ?? "0.0",
+                              jita1: _json["JITAK1"] as? String ?? "",
+                              grade2: _json["GRADE2"] as? String ?? "",
+                              ritsu2: _json["RITSU2"] as? String ?? "0.0",
+                              jita2: _json["JITAK2"] as? String ?? "",
+                              haiso_cd: _json["H_STNCD"] as? String ?? "",
+                              haiso_nm: _json["H_STNNM"] as? String ?? "",
+                              tanto:_json["TANTO_NM"] as? String ?? ""
+        )
 
         tagLabel.text = printData.tagNO
         syohinLabel.text = printData.itemCD+": "+printData.itemNM

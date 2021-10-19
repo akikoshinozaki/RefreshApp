@@ -102,3 +102,28 @@ let workTime = 6..<21
 //let workTime = 6..<13
 
 var localDB:LocalDB!
+var isImgUploaded:Bool = false
+
+struct PrintData {
+    var date:String = ""
+    var renban:String = ""
+    var customer:String = ""
+    var tagNO:String = ""
+    var keiNO:String = ""
+    var itemCD:String = ""
+    var itemNM:String = ""
+    var nouki:String = ""
+    var kigen:String = ""
+    var seizou:String = ""
+    var juryo:String = ""
+    var zogen:String = ""
+    var grade1:String = ""
+    var ritsu1:String = ""
+    var jita1:String = ""
+    var grade2:String = ""
+    var ritsu2:String = ""
+    var jita2:String = ""
+    var haiso_cd:String = ""
+    var haiso_nm:String = ""
+    var tanto:String = ""
+}

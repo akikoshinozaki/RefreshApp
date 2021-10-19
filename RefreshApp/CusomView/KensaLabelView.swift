@@ -8,8 +8,8 @@
 
 import UIKit
 
-class BRLabelView2: UIView {
-    
+class KensaLabelView: UIView {
+    @IBOutlet weak var printView: UIView!
     @IBOutlet weak var sitenCD: UILabel!
     @IBOutlet weak var sitenNM: UILabel!
     @IBOutlet weak var nouki: UILabel!
@@ -20,7 +20,10 @@ class BRLabelView2: UIView {
     @IBOutlet weak var customer: UILabel!
     @IBOutlet weak var tantou: UILabel!
     
-
+    @IBOutlet weak var takuhai: UILabel!
+    @IBOutlet weak var barcodeLabel: UILabel!
+    @IBOutlet weak var barcodeView: UIImageView!
+    
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -44,7 +47,7 @@ class BRLabelView2: UIView {
     // xibファイルを読み込んでviewに重ねる
     fileprivate func nibInit() {
         // File's OwnerをXibViewにしたので ownerはself になる
-        guard let view = UINib(nibName: "BRLabelView2", bundle: nil).instantiate(withOwner: self, options: nil).first as? UIView else {
+        guard let view = UINib(nibName: "KensaLabelView", bundle: nil).instantiate(withOwner: self, options: nil).first as? UIView else {
             return
         }
         view.frame = self.bounds

@@ -67,36 +67,15 @@ extension UIView {
 
 }
 
-struct PrintData {
-    var date:String = ""
-    var renban:String = ""
-    var customer:String = ""
-    var tagNO:String = ""
-    var itemCD:String = ""
-    var itemNM:String = ""
-    var nouki:String = ""
-    var kigen:String = ""
-    var seizou:String = ""
-    var juryo:String = ""
-    var zogen:String = ""
-    var grade1:String = ""
-    var ritsu1:String = ""
-    var jita1:String = ""
-    var grade2:String = ""
-    var ritsu2:String = ""
-    var jita2:String = ""
-}
-
-struct PrinterSetting {
-    var printer:String = "QL-820NWB"
-    var model:BRLMPrinterModel = .QL_820NWB
-    var paperName:String = "ロール紙62mm"
-    var paper:BRLMQLPrintSettingsLabelSize = .rollW62
-}
-
-var isImgUploaded:Bool = false
 
 class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControllerDelegate, RefListViewDelegate, ZBarReaderDelegate {
+    
+    struct PrinterSetting {
+        var printer:String = "QL-820NWB"
+        var model:BRLMPrinterModel = .QL_820NWB
+        var paperName:String = "ロール紙62mm"
+        var paper:BRLMQLPrintSettingsLabelSize = .rollW62
+    }
     
     @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var envLabel: UILabel!
@@ -111,7 +90,6 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     var isConnectPrinter = false
     var setting:PrinterSetting!
     @IBOutlet weak var paperBtn: UIButton!
-    //@IBOutlet weak var printerConnectBtn:UIButton!
     var printerConnectBtn:UIBarButtonItem!
     let paperSizeArray:[(String,BRLMQLPrintSettingsLabelSize)] = [("ロール紙62mm",.rollW62),("ロール紙62mm赤黒",.rollW62RB)]
 
@@ -131,7 +109,6 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     var cellEditing: Bool = false
     var yusen:Bool = false
     var keiNO:String = ""
-    //@IBOutlet var edtBtn:UIButton!
     
     @IBOutlet weak var fnLabel1: UILabel!
     @IBOutlet weak var fnLabel2: UILabel!
@@ -141,7 +118,9 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     //IBMへ送るパラメーター
     var YOTEI_HI:Date!
     var seizouHI:Date!
-    var lbl:BRLabelView! //印刷用のView
+    var brLabel:BRLabelView! //印刷用のView
+    var kensaLabel:KensaLabelView! //ラベル（大）
+    
     @IBOutlet weak var uploadedLabel: UILabel!
     var entryData:[String:Any] = [:] //infoViewから受け取ったパラメータ（ENTRY用）
     var iArr:[UIImage] = [] //サーバー上の画像を格納する
@@ -170,8 +149,6 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     @IBOutlet weak var kLabel15: UILabel!
     var _type:String = ""
     
-    
-    
     deinit {
         //print("deinit")
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.BRDeviceDidConnect, object: nil)
@@ -183,7 +160,6 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         //tagLabel.text = tagNO
-        
         //printerConnectBtn.addTarget(self, action: #selector(printerControl(_:)), for: .touchUpInside)
         self.navigationItem.hidesBackButton = true
         printerConnectBtn = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(printerControl(_:)))
@@ -548,7 +524,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         }
     }
 
-    //ラベルシールのイメージを表示
+    //ラベルシールのイメージを表示→印刷
     @objc func display(){
         kanriLabel.text = ""
         labelImgView.image = nil
@@ -568,50 +544,73 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         yusen = _json["YUSEN"] as? String == "1"
         
         printData = PrintData(date: yotei_hi,
-                                   renban: _json["RENBAN"] as? String ?? "",
-                                   customer: _json["CUSTOMER_NM"] as? String ?? "",
-                                   tagNO: _json["TAG_NO"] as? String ?? "",
-                                   itemCD: _json["SYOHIN_CD"] as? String ?? "",
-                                   itemNM: _json["SYOHIN_NM"] as? String ?? "",
-                                   nouki: _json["NOUKI"] as? String ?? "",
-                                   kigen: _json["KIGEN"] as? String ?? "",
-                                   juryo: _json["WATA"] as? String ?? "0.0",
-                                   zogen: _json["ZOGEN"] as? String ?? "0",
-                                   grade1: _json["GRADE1"] as? String ?? "",
-                                   ritsu1: _json["RITSU1"] as? String ?? "0.0",
-                                   jita1: _json["JITAK1"] as? String ?? "",
-                                   grade2: _json["GRADE2"] as? String ?? "",
-                                   ritsu2: _json["RITSU2"] as? String ?? "0.0",
-                                   jita2: _json["JITAK2"] as? String ?? ""
-                                   )
+                              renban: _json["RENBAN"] as? String ?? "",
+                              customer: _json["CUSTOMER_NM"] as? String ?? "",
+                              tagNO: _json["TAG_NO"] as? String ?? "",
+                              keiNO: _json["KEI_NO"] as? String ?? "",
+                              itemCD: _json["SYOHIN_CD"] as? String ?? "",
+                              itemNM: _json["SYOHIN_NM"] as? String ?? "",
+                              nouki: _json["NOUKI"] as? String ?? "",
+                              kigen: _json["KIGEN"] as? String ?? "",
+                              juryo: _json["WATA"] as? String ?? "0.0",
+                              zogen: _json["ZOGEN"] as? String ?? "0",
+                              grade1: _json["GRADE1"] as? String ?? "",
+                              ritsu1: _json["RITSU1"] as? String ?? "0.0",
+                              jita1: _json["JITAK1"] as? String ?? "",
+                              grade2: _json["GRADE2"] as? String ?? "",
+                              ritsu2: _json["RITSU2"] as? String ?? "0.0",
+                              jita2: _json["JITAK2"] as? String ?? "",
+                              haiso_cd: _json["H_STNCD"] as? String ?? "",
+                              haiso_nm: _json["H_STNNM"] as? String ?? "",
+                              tanto:_json["TANTO_NM"] as? String ?? ""
+        )
         
         kanri += "-"+printData.renban+"-"+printData.tagNO
         kanriLabel.text = kanri
+
+        //シール１の設定
+        settingLabel()
+        //viewをimageに変換
+        let img = brLabel.printView.toImage()
+        labelImgView.image = img
+        //シール２の設定
+        settingLabel2()
+        let img2 = kensaLabel.printView.toImage()
         
-//        print(printData)
+        //プリンターの状態チェック
+        if !isConnectPrinter {
+            SimpleAlert.make(title: "プリンターに接続してください", message: "")
+            return
+        }
+        //印刷
+        self.printLabel(image: img) //受付用ラベル
+        self.printLabel(image: img2) //検査ラベル
         
-        lbl = BRLabelView(frame:self.view.frame)
-        // シールのPrintView
+    }
+    
+    //MARK: - シール1の設定
+    func settingLabel() {
+        brLabel = BRLabelView(frame:self.view.frame)
         let QR = "RF="+tagNO
-        lbl.yusenLabel.isHidden = !yusen
-        lbl.label1.text = printData.date+"-"+printData.renban
-        lbl.label2.text = printData.customer+" 様"
-        lbl.label3.text = printData.tagNO
-        lbl.label4.text = printData.itemCD
-        lbl.label5.text = printData.itemNM
+        brLabel.yusenLabel.isHidden = !yusen
+        brLabel.label1.text = printData.date+"-"+printData.renban
+        brLabel.label2.text = printData.customer+" 様"
+        brLabel.label3.text = printData.tagNO
+        brLabel.label4.text = printData.itemCD
+        brLabel.label5.text = printData.itemNM
         let nouki = Array(printData.nouki)
         if nouki.count==8 {
             print(nouki.prefix(4))
             //lbl.label6.text = nouki[0...3]+"/"+nouki[4...5]+"/"+nouki[6...7]
-            lbl.label6.text = nouki[4...5]+"月"+nouki[6...7]+"日"
+            brLabel.label6.text = nouki[4...5]+"月"+nouki[6...7]+"日"
         }else {
             if printData.nouki.contains("/") {
                 let n = printData.nouki.components(separatedBy: "/")
                 if n.count>2 {
                     print(n)
-                    lbl.label6.text = n [1]+"月"+n[2]+"日"
+                    brLabel.label6.text = n [1]+"月"+n[2]+"日"
                 }else {
-                    lbl.label6.text = printData.nouki
+                    brLabel.label6.text = printData.nouki
                 }
             }
         }
@@ -619,31 +618,31 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         let kigen = Array(printData.kigen)
         if kigen.count==8 {
             //lbl.label7.text = kigen[0...3]+"/"+kigen[4...5]+"/"+kigen[6...7]
-            lbl.label7.text = kigen[4...5]+"月"+kigen[6...7]+"日"
+            brLabel.label7.text = kigen[4...5]+"月"+kigen[6...7]+"日"
         }else {
             if printData.kigen.contains("/") {
                 let n = printData.kigen.components(separatedBy: "/")
                 if n.count>2 {
                     print(n)
-                    lbl.label7.text = n[1]+"月"+n[2]+"日"
+                    brLabel.label7.text = n[1]+"月"+n[2]+"日"
                 }else {
-                    lbl.label7.text = printData.nouki
+                    brLabel.label7.text = printData.nouki
                 }
             }
         }
         if printData.juryo == "0.0" {
-            lbl.label8.text = "---"
+            brLabel.label8.text = "---"
         }else {
-            lbl.label8.text = printData.juryo
+            brLabel.label8.text = printData.juryo
         }
         if printData.zogen == "0" {
-            lbl.label9.text = "---"
+            brLabel.label9.text = "---"
         }else {
-            lbl.label9.text = printData.zogen
+            brLabel.label9.text = printData.zogen
         }
         //grade1
         if printData.grade1=="",printData.ritsu1=="", printData.jita1=="" {
-            lbl.label10.text = "---"
+            brLabel.label10.text = "---"
         }else {
             var grd = ""
             if let obj = grd_lst.first(where: {$0.cd==printData.grade1}) {
@@ -665,11 +664,11 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                 jita = ""
             }
 
-            lbl.label10.text = grd + "　\(ritsu)\(jita)"
+            brLabel.label10.text = grd + "　\(ritsu)\(jita)"
         }
         //grade2
         if printData.grade2=="",printData.ritsu2=="", printData.jita2=="" {
-            lbl.label11.text = "---"
+            brLabel.label11.text = "---"
         }else {
             var grd = ""
             if let obj = grd_lst.first(where: {$0.cd==printData.grade2}) {
@@ -691,17 +690,57 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                 jita = ""
             }
 
-            lbl.label11.text = grd + "　\(ritsu)\(jita)"
+            brLabel.label11.text = grd + "　\(ritsu)\(jita)"
         }
                 
-        lbl.qrView.image = UIImage.makeQR(code: QR)
-
-        
-        self._printLabel()
-        self.printLabel()
+        brLabel.qrView.image = UIImage.makeQR(code: QR)
         
     }
+    //MARK: - シール2の設定
+    func settingLabel2() {
+        kensaLabel = KensaLabelView(frame:self.view.frame)
+        kensaLabel.sitenCD.text = printData.haiso_cd
+        kensaLabel.sitenNM.text = printData.haiso_nm
+        kensaLabel.nouki.text = printData.nouki
+        kensaLabel.tagNO.text = printData.tagNO
+        kensaLabel.keiNO.text = printData.keiNO
+        kensaLabel.itemNO.text = printData.itemCD
+        kensaLabel.itemNM.text = printData.itemNM
+        kensaLabel.customer.text = printData.customer+" 様"
+        kensaLabel.tantou.text = printData.tanto
+        kensaLabel.takuhai.text = ""
+        let code = "2300"+printData.tagNO
+        if Int(code) != nil, code.count==12 {
+            //１文字ずつ分割
+            let array = Array(code).map({Int(String($0))!})
+            var chk = 0
+            for (i,val) in array.enumerated() {
+                //チェックデジットの計算
+                if i % 2 == 1 { //奇数
+                    chk += val*3
+                }else { //偶数
+                    chk += val
+                }
+            }
+            let digit = String(10-(chk % 10))
+            kensaLabel.barcodeLabel.text = code + digit
+            kensaLabel.barcodeView.image = UIImage.makeEAN13(code: code + digit)
+        }
+
+    }
        
+    //テスト用
+    @IBAction func dspLabel(_ sender:UIButton) {
+        self.settingLabel2()
+        //表示テスト
+        let img = kensaLabel.printView.toImage()
+        let labelVC = LabelViewController()
+        labelVC.image = img
+        labelVC.modalPresentationStyle = .fullScreen
+        self.present(labelVC, animated: true, completion: nil)
+
+    }
+    
     func request(type:String, param:[String:Any]) {
         //self.dspInit()
         DispatchQueue.main.async {
@@ -715,7 +754,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
             printData = nil
             
             if err == nil, json != nil {
-                //print(json!)
+                print(json!)
                 _json = json
                 //print(json!["CUSTOMER_NM"] as? String ?? "")
                 if json!["RTNCD"] as! String != "000" {
@@ -726,31 +765,19 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                     DispatchQueue.main.async {
                         self.conAlert.title = "エラー"
                         self.conAlert.message = msg
-                        if !self.isDouble {
-                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                        }else {
-                            enrolled = false
-                        }
+                        print(self.isDouble)
+                        enrolled = false
+//                        if !self.isDouble {
+//                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//                        }else {
+//                            enrolled = false
+//                        }
                     }
                     
                 }else {
                     if type == "ENTRY" || type == "UPDATE" {
                         _json = json
                         enrolled = true
-                        
-//                        if !self.isDouble {
-//                            DispatchQueue.main.async {
-//                                self.conAlert.title = "登録成功"
-//                                self.conAlert.message = "正常に登録できました"
-//                                self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
-//                                    Void in
-//                                    //print(_json)
-//                                    self.display()
-//
-//                                }))
-//                            }
-//                        }
- 
                     }else if json!["TAG_NO"] == nil { //契約No.でSearchした結果
                         //明細チェック
                         if let arr = json!["MEISAI"] as? [Dictionary<String,Any>], arr.count>0 {
@@ -807,7 +834,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         
     }
     
-    @objc func dispDetail(){
+    @objc func dispDetail(){//infoView表示
 
         if _json == nil {
             SimpleAlert.make(title: "表示する対象がありません", message: "")
@@ -884,91 +911,11 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         }
 
     }
+
     //MARK: -RefListViewDelegate
-    //RefListで選択した時の挙動
     func getTag(tag: String) {
         tagNO = tag
         self.setTag()
-    }
-    
-    @objc func _printLabel(){
-        if lbl == nil {
-            SimpleAlert.make(title: "対象のオブジェクトがありません", message: "")
-            return
-        }
-        
-        guard let img = lbl.printView.toImage().cgImage,
-              let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
-        else {
-            print("Error - Image file is not found.")
-            SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
-            return
-        }
-        
-        labelImgView.image = UIImage(cgImage: img)
-        
-    }
-    
-    @objc func printLabel() {
-        if lbl == nil {
-            SimpleAlert.make(title: "対象のオブジェクトがありません", message: "")
-            return
-        }
-        
-        //QL_820NWB
-        guard let img = lbl.printView.toImage().cgImage,
-              let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
-        else {
-            print("Error - Image file is not found.")
-            SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
-            return
-        }
-        
-        labelImgView.image = UIImage(cgImage: img)
-        
-        
-        if !isConnectPrinter {
-            SimpleAlert.make(title: "プリンターに接続してください", message: "")
-            return
-        }
-        
-        let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
-        
-        let generateResult = BRLMPrinterDriverGenerator.open(channel)
-        guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
-              let printerDriver = generateResult.driver else {
-            print("Error - Open Channel: \(generateResult.error.code)")
-            SimpleAlert.make(title: "Error", message: "プリンターが見つかりません")
-            return
-        }
-        defer {
-            printerDriver.closeChannel()
-        }
-        
-        
-        
-        printSettings.labelSize = setting.paper
-        //printSettings.labelSize = .rollW62RB
-        //printSettings.labelSize = .rollW62
-        printSettings.autoCut = true
-        
-        let printError = printerDriver.printImage(with: img, settings: printSettings)
-        
-        if printError.code != .noError {
-            print("Error - Print Image: \(printError)")
-            SimpleAlert.make(title: "印刷できません", message: "\(printError)")
-            
-        }
-        else {
-            print("Success - Print Image")
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
-                let alert = UIAlertController(title: "印刷完了", message: "", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                
-                self.present(alert, animated: true, completion: nil)
-            })
-            
-        }
     }
     
     //MARK: PrinterConnectNotification
@@ -990,7 +937,53 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         isConnectPrinter = false
         connectChk()
     }
-        //MARK: - カメラ起動
+    
+    @objc func printLabel(image:UIImage) {
+        //QL_820NWB
+        guard let img = image.cgImage,
+              let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
+        else {
+            print("Error - Image file is not found.")
+            SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
+            return
+        }
+
+        let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
+        
+        let generateResult = BRLMPrinterDriverGenerator.open(channel)
+        guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
+              let printerDriver = generateResult.driver else {
+            print("Error - Open Channel: \(generateResult.error.code)")
+            SimpleAlert.make(title: "Error", message: "プリンターが見つかりません")
+            return
+        }
+        defer {
+            printerDriver.closeChannel()
+        }
+        
+        printSettings.labelSize = setting.paper
+        printSettings.autoCut = true
+        
+        let printError = printerDriver.printImage(with: img, settings: printSettings)
+        
+        if printError.code != .noError {
+            print("Error - Print Image: \(printError)")
+            SimpleAlert.make(title: "印刷できません", message: "\(printError)")
+            
+        }
+        else {
+            print("Success - Print Image")
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
+                let alert = UIAlertController(title: "印刷完了", message: "", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                
+                self.present(alert, animated: true, completion: nil)
+            })
+            
+        }
+    }
+    
+    //MARK: - カメラ起動
     //写真を撮る
     @objc func takePhoto() {
         if tagNO == "" {
@@ -1005,19 +998,6 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         self.present(camera, animated: true, completion: nil)
 
     }
-
-    
-//    @IBAction func showImages(_ sender: UIButton) {
-//        if imageArr.count == 0 {
-//            SimpleAlert.make(title: "表示する写真がありません", message: "")
-//            return
-//        }
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let photo = storyboard.instantiateViewController(withIdentifier: "photo")
-//
-//        self.navigationController?.pushViewController(photo, animated: true)
-//
-//    }
     
     @IBAction func entryDataAndImage(_ sender: UIButton) {
         print(_json)
@@ -1036,7 +1016,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
             return
         }
         
-        print(printData)
+        //print(printData)
         if printData.jita2 != "", printData.jita2 != "0" { //2枚目預りがある場合は、写真4枚以上必要
             imgCnt = 4
         }else {
@@ -1119,6 +1099,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                 self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: {
                     Void in
                     if enrolled {
+                        //ラベル印刷
                         self.display()
                     }
                 }))
@@ -1153,62 +1134,15 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         
         NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue:"postImage"), object: nil)
         DispatchQueue.main.async {
-            //if self.isDouble {
-                self.isPostImage = errorCode == ""
-                self.dispatchGroup.leave()
-                /*
-            }else {
-                if errorCode == "" {
-                    //アップロード成功
-                    SimpleAlert.make(title: "送信完了しました", message: "")
-                    
-                    Upload().deleteFM(tag: tagNO)
-//                    self.iArr = []
-//                    imageArr = []
-//                    self.photoCollection.reloadData()
-//                    tagNO = ""
-//                    self.tagField.text = ""
-//                    self.setTag()
-                    
-                    
-                }else {
-                    SimpleAlert.make(title: "画像アップロードに失敗しました", message: "画像は未送信データに一時的に保存されました\n"+errorCode)
-                    Upload().saveFM(tag: tagNO, arr: imageArr)
-                }
-            }*/
+            self.isPostImage = errorCode == ""
+            self.dispatchGroup.leave()
 
         }
-    }
-    
-    
-    @objc func back(){
-        if imageArr.count > 0, isPostImage == false {
-            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            
-            self.present(alert, animated: true, completion: nil)
-
-        }else if tagNO != "" {
-            let alert = UIAlertController(title: "データをクリアして戻ります", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler:  {
-                Void in
-                tagNO = ""
-                self.dspInit()
-                self.navigationController?.popViewController(animated: true)
-            }))
-            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }else {
-            dspInit()
-            self.navigationController?.popViewController(animated: true)
-
-        }
-        
     }
     
     //アップロード済みの画像取得
     func getImages(tag:String){
-
+        
         var json:Dictionary<String,Any>!
         //let path = "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php"
         let url = URL(string: "https://oktss03.xsrv.jp/refreshPhoto/refresh1.php")!
@@ -1248,7 +1182,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                                 isImgUploaded = false
                             }
                         }
-
+                        
                     }catch{
                         print("json error")
                         errMsg += "E3001:json error"
@@ -1266,14 +1200,14 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                 
                 errMsg += "E3003:\(err!.localizedDescription)"
             }
-
+            
         })
         
         // タスクの実行.
         task.resume()
         
     }
-
+    
     func imgDL(arr:[String], tag:String) {
         iArr = []
         
@@ -1304,7 +1238,34 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         
     }
     
+    
+    @objc func back(){
+        if imageArr.count > 0, isPostImage == false {
+            let alert = UIAlertController(title: "未送信の写真があります", message: "画像送信画面で送信または削除してください", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            self.present(alert, animated: true, completion: nil)
+            
+        }else if tagNO != "" {
+            let alert = UIAlertController(title: "データをクリアして戻ります", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler:  {
+                Void in
+                tagNO = ""
+                self.dspInit()
+                self.navigationController?.popViewController(animated: true)
+            }))
+            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }else {
+            dspInit()
+            self.navigationController?.popViewController(animated: true)
+            
+        }
+        
+    }
+    
 }
+
 extension ReceptionViewController:UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -1423,9 +1384,11 @@ extension ReceptionViewController:UITextFieldDelegate {
     
 }
 
+//MARK: InfoViewControllerDelegate
 extension ReceptionViewController:InfoViewControllerDelegate {
     func setEntry(param: [String : Any], type:String) {
-        print(_json)
+        //print(_json)
+//        print(type)
         self.entryData = param
         print(param)
         _type = type
@@ -1444,7 +1407,7 @@ extension ReceptionViewController:InfoViewControllerDelegate {
     func setPrintInfo(json: Dictionary<String,Any>!, type: String) {
         print(type)
         if type == "print" {
-            print(json!)
+            //print(json!)
             _json = json
             self.display()
         //}else{
@@ -1464,3 +1427,4 @@ extension ReceptionViewController:InfoViewControllerDelegate {
     }
 
 }
+
