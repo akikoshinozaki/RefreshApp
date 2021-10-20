@@ -12,6 +12,8 @@ class KensaLabelView: UIView {
     @IBOutlet weak var printView: UIView!
     @IBOutlet weak var sitenCD: UILabel!
     @IBOutlet weak var sitenNM: UILabel!
+    @IBOutlet weak var hokan: UILabel!
+    
     @IBOutlet weak var nouki: UILabel!
     @IBOutlet weak var tagNO: UILabel!
     @IBOutlet weak var keiNO: UILabel!
@@ -20,7 +22,7 @@ class KensaLabelView: UIView {
     @IBOutlet weak var customer: UILabel!
     @IBOutlet weak var tantou: UILabel!
     
-    @IBOutlet weak var takuhai: UILabel!
+    @IBOutlet weak var kanriLabel: UILabel!
     @IBOutlet weak var barcodeLabel: UILabel!
     @IBOutlet weak var barcodeView: UIImageView!
     

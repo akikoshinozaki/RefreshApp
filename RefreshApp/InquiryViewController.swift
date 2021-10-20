@@ -300,7 +300,8 @@ class InquiryViewController: UIViewController,RefListViewDelegate, ZBarReaderDel
         }
         let resultString = symbol!.data as String
 //        print(resultString)
-        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" {
+//        print(symbol!.typeName)
+        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" || symbol!.typeName! == "CODE-128" {
             let tag = ScanData().readCode(picker:picker, result: resultString)
             if tag != "" {
                 tagNO = tag

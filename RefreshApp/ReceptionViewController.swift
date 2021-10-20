@@ -453,15 +453,14 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         let reader = ZBarReaderViewController()
         reader.readerDelegate = self
         reader.cameraFlashMode = .off
-        
+
         let scanner:ZBarImageScanner = reader.scanner
         scanner.setSymbology(ZBAR_I25, config: ZBAR_CFG_ENABLE, to: 0)
         reader.isModalInPresentation = false //下スワイプで閉じないように
         self.present(reader, animated: true, completion: nil)
-        
+
 //        reader.showsZBarControls = false
         reader.showsCameraControls = false
-
     }
 
     //バーコードを読み取った後の処理(ZBar)
@@ -483,7 +482,8 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         }
         let resultString = symbol!.data as String
 //        print(resultString)
-        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" {
+//        print(symbol!.typeName!)
+        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" || symbol!.typeName! == "CODE-128" {
             let tag = ScanData().readCode(picker:picker, result: resultString)
             if tag != "" {
                 tagNO = tag
@@ -491,7 +491,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                     self.setTag()
                 })
             }
-                        
+            
         }
     }
 
@@ -525,7 +525,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     }
 
     //ラベルシールのイメージを表示→印刷
-    @objc func display(){
+    @objc func display(label:[Int]){
         kanriLabel.text = ""
         labelImgView.image = nil
 //        print(_json)
@@ -583,8 +583,15 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
             return
         }
         //印刷
-        self.printLabel(image: img) //受付用ラベル
-        self.printLabel(image: img2) //検査ラベル
+        var images:[UIImage] = []
+        if label == [1] { //ラベル小のみ
+            images = [img]
+        }else if label == [2] {//ラベル大のみ
+            images = [img2]
+        }else if label == [1,2] {//両方印刷
+            images = [img,img2]
+        }
+        self.printLabel(images: images)
         
     }
     
@@ -698,9 +705,50 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     }
     //MARK: - シール2の設定
     func settingLabel2() {
+        //保管期限を求める
+        let nouki = Array(printData.nouki)
+        var mm:Int = 0
+        var dd:Int = 0
+        var hokan = ""
+
+        if nouki.count==8 {//yyyyMMddの時
+            mm = Int(String(nouki[4...5])) ?? 0
+            dd = Int(String(nouki[6...7])) ?? 0
+        }else {
+            if printData.nouki.contains("/") {//yyyy/MM/ddの時
+                let n = printData.nouki.components(separatedBy: "/")
+                if n.count>2 {
+                    mm = Int(n[1]) ?? 0
+                    dd = Int(n[2]) ?? 0
+                }
+            }
+        }
+        if mm > 0, dd > 0 {
+            if dd <= 10 {
+                //納期が上旬→保管は前月下旬
+                if mm == 1 {
+                    mm = 12
+                }else {
+                    mm -= 1
+                }
+                hokan = "\(mm)月下旬"
+            }else if dd >= 20 {
+                //納期が下旬→保管は中旬
+                hokan = "\(mm)月中旬"
+            }else {
+                //納期が中旬→保管は上旬
+                hokan = "\(mm)月上旬"
+            }
+        }
+        
         kensaLabel = KensaLabelView(frame:self.view.frame)
+        //予定日ー連番
+        if let yotei = _json["YOTEI_HI"] as? String, yotei != ""{
+            kensaLabel.kanriLabel.text = yotei+"-"+printData.renban
+        }
         kensaLabel.sitenCD.text = printData.haiso_cd
         kensaLabel.sitenNM.text = printData.haiso_nm
+        kensaLabel.hokan.text = hokan
         kensaLabel.nouki.text = printData.nouki
         kensaLabel.tagNO.text = printData.tagNO
         kensaLabel.keiNO.text = printData.keiNO
@@ -708,7 +756,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         kensaLabel.itemNM.text = printData.itemNM
         kensaLabel.customer.text = printData.customer+" 様"
         kensaLabel.tantou.text = printData.tanto
-        kensaLabel.takuhai.text = ""
+
         let code = "2300"+printData.tagNO
         if Int(code) != nil, code.count==12 {
             //１文字ずつ分割
@@ -730,16 +778,16 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     }
        
     //テスト用
-    @IBAction func dspLabel(_ sender:UIButton) {
-        self.settingLabel2()
-        //表示テスト
-        let img = kensaLabel.printView.toImage()
-        let labelVC = LabelViewController()
-        labelVC.image = img
-        labelVC.modalPresentationStyle = .fullScreen
-        self.present(labelVC, animated: true, completion: nil)
-
-    }
+//    @IBAction func dspLabel(_ sender:UIButton) {
+//        self.settingLabel2()
+//        //表示テスト
+//        let img = kensaLabel.printView.toImage()
+//        let labelVC = LabelViewController()
+//        labelVC.image = img
+//        labelVC.modalPresentationStyle = .fullScreen
+//        self.present(labelVC, animated: true, completion: nil)
+//
+//    }
     
     func request(type:String, param:[String:Any]) {
         //self.dspInit()
@@ -766,7 +814,12 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                         self.conAlert.title = "エラー"
                         self.conAlert.message = msg
                         print(self.isDouble)
-                        enrolled = false
+                        if type != "ENTRY" {
+                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        }else {
+                            enrolled = false
+                        }
+                        
 //                        if !self.isDouble {
 //                            self.conAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
 //                        }else {
@@ -804,7 +857,6 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                             self.conAlert.dismiss(animated: true, completion: {
                                 self.dispDetail()
                             })
-                            
                         }
                     }
                     
@@ -926,7 +978,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         }
         isConnectPrinter = true
         connectChk()
-        
+
     }
     
     @objc func printerDidDisconnect( notification : Notification) {
@@ -938,8 +990,54 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
         connectChk()
     }
     
-    @objc func printLabel(image:UIImage) {
+    @objc func printLabel(images:[UIImage]) {
         //QL_820NWB
+        guard let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
+        else {
+            //print("Error - Image file is not found.")
+            //SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
+            return
+        }
+        
+        let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
+        
+        let generateResult = BRLMPrinterDriverGenerator.open(channel)
+        guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
+              let printerDriver = generateResult.driver else {
+            print("Error - Open Channel: \(generateResult.error.code)")
+            SimpleAlert.make(title: "Error", message: "プリンターが見つかりません")
+            return
+        }
+        defer {
+            printerDriver.closeChannel()
+        }
+        
+        printSettings.labelSize = setting.paper
+        printSettings.autoCut = true
+        
+        for image in images {
+            let printError = printerDriver.printImage(with: image.cgImage!, settings: printSettings)
+            if printError.code != .noError {
+                print("Error - Print Image: \(printError)")
+                SimpleAlert.make(title: "印刷できません", message: "\(printError)")
+                
+            }else {
+                print("Success - Print Image")
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
+                    let alert = UIAlertController(title: "印刷完了", message: "", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    
+                    self.present(alert, animated: true, completion: nil)
+                })
+                
+            }
+        }
+    }
+    
+   /*//1枚づつ印刷する時
+    @objc func _printLabel(image:UIImage) {
+        //QL_820NWB
+        
         guard let img = image.cgImage,
               let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: .QL_820NWB)
         else {
@@ -947,7 +1045,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
             SimpleAlert.make(title: "Error", message: "オブジェクトが見つかりません")
             return
         }
-
+        
         let channel = BRLMChannel(bluetoothSerialNumber: prtSerial)
         
         let generateResult = BRLMPrinterDriverGenerator.open(channel)
@@ -970,8 +1068,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
             print("Error - Print Image: \(printError)")
             SimpleAlert.make(title: "印刷できません", message: "\(printError)")
             
-        }
-        else {
+        }else {
             print("Success - Print Image")
             DispatchQueue.main.asyncAfter(deadline: .now()+0.1, execute: {
                 let alert = UIAlertController(title: "印刷完了", message: "", preferredStyle: .alert)
@@ -981,7 +1078,7 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
             })
             
         }
-    }
+    }*/
     
     //MARK: - カメラ起動
     //写真を撮る
@@ -1000,8 +1097,8 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
     }
     
     @IBAction func entryDataAndImage(_ sender: UIButton) {
-        print(_json)
-        print(entryData)
+//        print(_json)
+//        print(entryData)
         
         if isPostImage { return } //二重登録禁止
         if _json == nil {
@@ -1100,7 +1197,11 @@ class ReceptionViewController: UIViewController, BRSelectDeviceTableViewControll
                     Void in
                     if enrolled {
                         //ラベル印刷
-                        self.display()
+                        if self._type == "update" {
+                            self.display(label:[1])
+                        }else {
+                            self.display(label:[1,2])
+                        }
                     }
                 }))
                     
@@ -1409,8 +1510,25 @@ extension ReceptionViewController:InfoViewControllerDelegate {
         if type == "print" {
             //print(json!)
             _json = json
-            self.display()
-        //}else{
+//
+//            let alert = UIAlertController(title: "印刷するラベルを選択して下さい", message: "", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "ラベル小", style: .default, handler: {_ in
+//                self.display(label: [1])
+//            }))
+//            alert.addAction(UIAlertAction(title: "ラベル大", style: .default, handler: {_ in
+//                self.display(label: [2])
+//            }))
+//
+//            alert.addAction(UIAlertAction(title: "両方", style: .default, handler: {_ in
+//                self.display(label: [1,2])
+//            }))
+//            alert.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+//
+//            self.present(alert, animated: true, completion: nil)
+//
+            self.display(label: [1,2])
+            
+
         }else if type == "delete" {
             self.dspInit()
             self.clear(self)

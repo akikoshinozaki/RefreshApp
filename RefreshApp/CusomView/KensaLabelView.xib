@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19158" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19141"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,15 +14,16 @@
                 <outlet property="barcodeLabel" destination="kxG-jB-Xf4" id="rOJ-Si-OV8"/>
                 <outlet property="barcodeView" destination="ruR-7T-eAQ" id="og8-0Y-TSD"/>
                 <outlet property="customer" destination="ail-Jk-1R7" id="Fxc-79-Ojy"/>
+                <outlet property="hokan" destination="Lgx-wp-Lqe" id="BfR-3l-Vb4"/>
                 <outlet property="itemNM" destination="nUt-mL-mET" id="CTc-t9-POe"/>
                 <outlet property="itemNO" destination="HJ5-IB-n3t" id="aDh-oK-kzP"/>
+                <outlet property="kanriLabel" destination="QyR-c1-FkX" id="UfO-9i-ohj"/>
                 <outlet property="keiNO" destination="MMV-dR-AVJ" id="KkS-Bb-LOO"/>
                 <outlet property="nouki" destination="5Ob-wx-Ugy" id="ylL-pL-jaH"/>
                 <outlet property="printView" destination="4EF-O7-Pub" id="TKC-Fi-MAA"/>
                 <outlet property="sitenCD" destination="eLJ-j7-Rlk" id="D1W-9b-Ai0"/>
                 <outlet property="sitenNM" destination="PNC-3F-e6C" id="sDc-HO-Mi4"/>
                 <outlet property="tagNO" destination="Rgt-mQ-Td8" id="gDC-sR-BB5"/>
-                <outlet property="takuhai" destination="QyR-c1-FkX" id="cVc-Qw-hiZ"/>
                 <outlet property="tantou" destination="uH4-HG-SFP" id="Gbe-O8-CFy"/>
             </connections>
         </placeholder>
@@ -46,13 +47,6 @@
                             <rect key="frame" x="30" y="45" width="100" height="40"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="35"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="宅配" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QyR-c1-FkX">
-                            <rect key="frame" x="178" y="55" width="35" height="21"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -166,9 +160,16 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2300999999999" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kxG-jB-Xf4">
-                            <rect key="frame" x="36" y="571" width="229" height="21"/>
+                            <rect key="frame" x="36" y="563" width="229" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="予定日ー連番" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="QyR-c1-FkX">
+                            <rect key="frame" x="131" y="55" width="171" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="25"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>

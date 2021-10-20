@@ -138,6 +138,7 @@ class ScannerView: UIView, AVCaptureMetadataOutputObjectsDelegate {
         print("------ scan --------")
         // 複数のメタデータを検出
         for metadata in metadataObjects as! [AVMetadataMachineReadableCodeObject] {
+            print(metadata.type)
             
             if metadata.type == .ean13 {
                 if let data = metadata.stringValue {

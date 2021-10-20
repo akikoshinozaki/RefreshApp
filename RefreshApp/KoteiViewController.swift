@@ -820,8 +820,8 @@ extension KoteiViewController: ZBarReaderDelegate{
             return
         }
         let resultString = symbol!.data as String
-        //        print(resultString)
-        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" {
+        //print(resultString)
+        if symbol!.typeName! == "EAN-13" || symbol!.typeName! == "QR-Code" || symbol!.typeName! == "CODE-128" {
             let tag = ScanData().readCode(picker:picker, result: resultString)
             if tag != "" {
                 _tagNO = tag
